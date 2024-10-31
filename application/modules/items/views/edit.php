@@ -65,7 +65,7 @@
                      <div class="col-md-2">
                         <label class="form-label">Quantity</label>
                         <?php echo form_error('quantity'); ?>
-                        <input name="quantity" type="text" value="<?=set_value('quantity', $info->quantity)?>" class="form-control input-sm" placeholder="">
+                        <input name="quantity" readonly type="number" value="<?=set_value('quantity', $info->quantity)?>" class="form-control input-sm" placeholder="">
                      </div>
                      <div class="col-md-3">
                         <label class="form-label">Status</label>

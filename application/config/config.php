@@ -34,11 +34,17 @@ $config['modules_locations'] = array(
 */
 //$config['base_url'] = '';
 
-if($_SERVER['HTTP_HOST'] === 'localhost'){
-    $config['base_url'] = 'http://localhost/bcct/';
-}else{
-    $config['base_url'] = 'http://119.148.59.122/bcct/';
-}
+// if($_SERVER['HTTP_HOST'] === 'localhost'){
+//     $config['base_url'] = 'http://localhost/bcct/';
+// }else{
+//     $config['base_url'] = 'http://119.148.59.122/bcct/';
+// }
+
+
+$hrsale_url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
+$hrsale_url .= "://".$_SERVER['HTTP_HOST'];
+$hrsale_url .= str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+$config['base_url'] = $hrsale_url;
 
 /*
 |--------------------------------------------------------------------------

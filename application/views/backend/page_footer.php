@@ -31,7 +31,7 @@
 
 <script src="<?=base_url();?>awedget/assets/plugins/boostrap-form-wizard/js/jquery.bootstrap.wizard.min.js" type="text/javascript"></script>
 <script src="<?=base_url();?>awedget/assets/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
-<script src="//oss.maxcdn.com/jquery.mask/1.11.4/jquery.mask.min.js"></script>
+<!-- <script src="https://oss.maxcdn.com/jquery.mask/1.11.4/jquery.mask.min.js"></script> -->
 <script src="<?=base_url();?>awedget/assets/plugins/jquery-validation/dist/additional-methods.min.js" type="text/javascript"></script>
 
 <?php /*
@@ -97,8 +97,9 @@
 
     // Jquery Onload
     $(document).ready(function() {
-      console.log( "run!" );
       $('select').select2();
+
+
 
       //Datepicker
       datetime();   
@@ -184,6 +185,13 @@ function showMessage(icon, message) {
       title: message,
   });
 }
+</script>
+
+<script>
+  setInterval(() => {
+    $('input[type="number"]').attr('min', '0');
+
+  }, 100);
 </script>
   </body>
   </html>

@@ -84,7 +84,7 @@
                      <div class="col-md-2">
                         <label class="form-label">Quantity <span class="required">*</span></label>
                         <?php echo form_error('quantity'); ?>
-                        <input name="quantity" type="text" value="<?=set_value('quantity')?>" class="form-control input-sm" placeholder="">
+                        <input name="quantity" readonly type="number" value="<?=set_value('quantity')?>" class="form-control input-sm" placeholder="">
                      </div>
                   </div>
 

@@ -469,7 +469,7 @@ function addNewRow() {
     items += '<td><strong class="availability_items_t"></strong></td>';
     items += '<td><strong class="prevdata"></strong></td>';
     items += '<td><strong class="qtdata"></strong></td>';
-    items += '<td><input style="width: 82px;" name="qty_request[]" value="" type="number" class="form-control input-sm qtyr"></td>';
+    items += '<td><input min="0" style="width: 82px;" name="qty_request[]" value="" type="number" class="form-control input-sm qtyr"></td>';
 
     items += '<td><textarea name="remark[]" value=""  class="form-control input-sm" style="width: 89px; height: 37px;"></textarea></td>';
     items +=
@@ -561,6 +561,12 @@ function subcategory_dd(sl) {
             }else{
                 avl_data = avl_data;
             }
+
+            if (data.availability_get==0) {
+                avl_data = avl_data;
+            }
+
+
             console.log($(obj).closest('.prevdata'));
             $(obj).closest('tr').find('.availability_items_t').html(availability_items_t);
             $(obj).closest('tr').find('.prevdata').html(previtem);
