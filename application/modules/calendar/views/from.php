@@ -20,7 +20,7 @@
 
       <div class="row">
          <div class="col-md-6">
-            <div class="grid simple horizontal red">
+            <div class="grid simple horizontal">
                <div class="grid-title">
                 <h4>Traditional <span class="semi-bold">Validation</span></h4>
                 <div class="tools">

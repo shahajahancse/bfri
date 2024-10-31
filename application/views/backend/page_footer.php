@@ -193,5 +193,15 @@ function showMessage(icon, message) {
 
   }, 100);
 </script>
+
+<style>
+  .grid-body {
+      padding: 2%!important;
+  }
+  body{
+
+    font-family: sans-serif;
+  }
+</style>
   </body>
   </html>

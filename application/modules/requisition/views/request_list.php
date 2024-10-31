@@ -192,9 +192,9 @@
                             <div class="col-sm-4 col-md-4 text-left" style="margin-top: 20px;"> Total <span
                                     style="color: green; font-weight: bold;"><?php echo $total_rows; ?> Requisition
                                 </span></div>
-                            <div class="col-sm-8 col-md-8 text-right">
+                            <!-- <div class="col-sm-8 col-md-8 text-right">
                                 <?php echo $pagination['links']; ?>
-                            </div>
+                            </div> -->
                         </div>
 
                     </div>

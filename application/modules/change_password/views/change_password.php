@@ -14,7 +14,7 @@
                   </div>
 
                   <div class="col-md-9 col-sm-9" style="margin-top: 20px;">
-                     <div class="grid simple horizontal red">
+                     <div class="grid simple horizontal">
                         <div class="grid-title">
                            <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
                            <div class="pull-right">                

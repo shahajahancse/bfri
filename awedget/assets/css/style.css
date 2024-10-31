@@ -4352,8 +4352,9 @@ body.menu-non-fixed .page-sidebar {
     color: #ffffff;
   }
   .grid.simple {
-    padding: 0px !important;
-    box-shadow: 0px 0px 7px 1px #adadad;
+    padding: 7px !important;
+    box-shadow: inset 0px 0px 9px 2px #adadad;
+    border-radius: 5px;
 }
   .grid.simple .grid-title {
     padding: 10px 15px 0px 15px;

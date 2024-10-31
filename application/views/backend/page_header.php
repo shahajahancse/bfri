@@ -80,7 +80,7 @@
 </style>
 <?php  if($this->router->fetch_class('my_message') == 'my_message'){ ?>
 
-<body class="inner-menu-always-open">
+<body class="inner-menu-always-open" style="font-family: sans-serif;">
     <?php }else{ ?>
 
     <body class="">

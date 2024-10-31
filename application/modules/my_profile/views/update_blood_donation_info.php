@@ -5,7 +5,7 @@
             <div class="tiles white">
                <div class="row">
                   <div class="col-md-12 col-sm-12" style="margin-top: 20px;">
-                     <div class="grid simple horizontal red">
+                     <div class="grid simple horizontal">
                         <div class="grid-title">
                            <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
                            <div class="pull-right">                

@@ -7,7 +7,7 @@
         </ul>
         <div class="row">
             <div class="col-md-12">
-                <div class="grid simple horizontal red">
+                <div class="grid simple horizontal">
                     <div class="grid-title">
                         <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
                         <div class="pull-right">
