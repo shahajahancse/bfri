@@ -4353,7 +4353,7 @@ body.menu-non-fixed .page-sidebar {
   }
   .grid.simple {
     padding: 7px !important;
-    box-shadow: inset 0px 0px 9px 2px #adadad;
+    box-shadow: inset 0px 0px 9px 2px #cecece;
     border-radius: 5px;
 }
   .grid.simple .grid-title {
