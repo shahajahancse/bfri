@@ -60,8 +60,7 @@
                            <tr>
                               <th class="tg-khup"> Requisition Title </th>
                               <td class="tg-ywa9"><?=$info->title?></td>
-                              <th class="tg-khup"> Status </th>
-                              <td class="tg-ywa9"><?=$status?></td>
+                              
                               <!-- <th class="tg-khup"> Fiscal Year</th>
                               <td class="tg-ywa9"><?=$info->fiscal_year_name?></td> -->
                            </tr> 
@@ -86,6 +85,7 @@
                               <td class="tg-ywa9"><?=($info->urgent_status==0)?'<span >No</span>':'<span class="text-danger">Yes</span>'?></td>
                               <th class="tg-khup"> Save </th>
                               <td class="tg-ywa9"><?=($info->is_save)?'<span class="text-success">Yes</span>':'No' ?></td>
+                             
                               
                            </tr> 
 
@@ -185,6 +185,10 @@
                                              ?>
                                           </table>
                                        </td>
+                              </tr>
+                              <tr>
+                              <th class="tg-khup"> Status </th>
+                              <td class="tg-ywa9"><?=$status?></td>
                               </tr>
                               <tr>
                                 <th class="tg-khup">Attachment</th>

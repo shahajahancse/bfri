@@ -179,7 +179,11 @@
 
 
                                         <?=anchor("requisition/details/" . encrypt_url($row->id), 'Details', array('class' => 'btn btn-primary btn-mini'))?>
-                                    </td>
+                                    
+                                        <?php if($row->status == 1 && $row->is_save == 1) {?>
+                                            <?=anchor("requisition/delete_requisition/".encrypt_url($row->id), 'Delete', array('class' => 'btn btn-danger btn-mini'))?>
+                                        <?php } ?>
+                                        </td>
                                 </tr>
                                 <?php endforeach;?>
                             </tbody>

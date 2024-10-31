@@ -681,6 +681,17 @@ class Requisition extends Backend_Controller
         }
     }
 
+    public function delete_requisition($id){
+        $dataID = (int) decrypt_url($id); //exit;
+        $this->db->where('id', $dataID);
+        if($this->db->delete('requisitions')){
+            $this->db->where('requisition_id', $dataID);
+            $this->db->delete('requisition_item');
+            $this->session->set_flashdata('success', 'Requisition delete successfully.');
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+    }
+
     public function send_sms($mobile, $message)
     {
         $api_key = "C20019945dde54c4697d80.43761214";

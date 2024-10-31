@@ -54,6 +54,7 @@
                            $status = '<span class="label">Rejected</span>';
                         }else{
                            $status = '<span class="label label-important">Pending</span>';
+
                         }
 
                         if($row->is_delivered == 1) {
@@ -106,6 +107,10 @@
                               <?php } ?>
 
                               <?=anchor("requisition/details/".encrypt_url($row->id), 'Details', array('class' => 'btn btn-primary btn-mini'))?>
+                              <?php if($row->status == 1 && $row->is_save == 1) {?>
+                              <?=anchor("requisition/delete/".encrypt_url($row->id), 'Details', array('class' => 'btn btn-primary btn-mini'))?>
+                              <?php } ?>
+
                            </td>
                         </tr>
                      <?php endforeach;?>                      

@@ -33,6 +33,8 @@ class Dashboard_model extends CI_Model {
         if($ta!=1){
             $this->db->where_in('r.desk_id', $desk_arr);
         }
+        $this->db->where('r.is_save', 0);
+        
       
         $this->db->order_by('r.id', 'DESC');
         $query = $this->db->get()->result();
