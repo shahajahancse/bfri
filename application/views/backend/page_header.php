@@ -324,6 +324,10 @@
                                         href="<?=base_url('reports/index')?>"> <i class="fa fa-th"></i>
                                         <span class="title">Reports</span> </a>
                                 </li>
+                                <li class="start <?=activate_menu_method('dynamic_report')?>"><a
+                                        href="<?=base_url('reports/dynamic_report')?>"> <i class="fa fa-th"></i>
+                                        <span class="title">Dynamic Report</span> </a>
+                                </li>
 
                                 <li class="start <?=backend_activate_menu_class('items')?>"> <a href="javascript:;"> <i
                                             class="fa fa-tags"></i> <span class="title">Item Setup</span> <span

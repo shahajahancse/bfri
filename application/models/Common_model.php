@@ -12,17 +12,17 @@ class Common_model extends CI_Model {
       $this->db->limit(1);
       $this->db->where('active', 1);
       $query = $this->db->get()->row();
-      // echo $this->db->last_query(); exit;
       return $query;
    }
 
-   public function get_fiscal_year($id) {
+   public function get_fiscal_year($id=null) {
       $this->db->select('*');
       $this->db->from('fiscal_year');
       $this->db->limit(1);
-      $this->db->where('id', $id);
+      if ($id) {
+         $this->db->where('id', $id);
+      }
       $query = $this->db->get()->row();
-      // echo $this->db->last_query(); exit;
       return $query;
    }
 

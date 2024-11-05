@@ -41,6 +41,15 @@ class Reports_model extends CI_Model {
     if($inputs['status']){
       $this->db->where('r.status', $inputs['status']);
     }
+
+    if($inputs['user_id'] && $inputs['user_id'] != ''){
+      $this->db->where('r.user_id', $inputs['user_id']);
+    }
+
+    if($inputs['fiscal_year'] && $inputs['fiscal_year'] != ''){
+      $this->db->where('r.f_year_id', $inputs['fiscal_year']);
+    }
+
     if($inputs['start_date'] && $inputs['end_date']){
       $this->db->where('DATE(r.created) BETWEEN "'. $inputs['start_date']. '" AND "'. $inputs['end_date'].'"');
     }
@@ -70,9 +79,15 @@ class Reports_model extends CI_Model {
     $this->db->join('department dp', 'dp.id = u.dept_id', 'LEFT');
     $this->db->join('designation dg', 'dg.id = u.desig_id', 'LEFT');
     $this->db->where('r.is_delivered', 1);
-    // if($userID){
-    //   $this->db->where('r.user_id', $userID);
-    // }
+
+    if($inputs['user_id'] && $inputs['user_id'] != ''){
+      $this->db->where('r.user_id', $inputs['user_id']);
+    }
+
+    if($inputs['fiscal_year'] && $inputs['fiscal_year'] != ''){
+      $this->db->where('r.f_year_id', $inputs['fiscal_year']);
+    }
+
     if($inputs['start_date'] && $inputs['end_date']){
       $this->db->where('DATE(r.created) BETWEEN "'. $inputs['start_date']. '" AND "'. $inputs['end_date'].'"');
     }
@@ -82,6 +97,79 @@ class Reports_model extends CI_Model {
     {
       $this->db->select('ri.*, i.item_name, iu.unit_name, c.category_name');
       $this->db->from('requisition_item ri');
+      $this->db->join('items i', 'i.id = ri.item_id', 'LEFT');
+      $this->db->join('item_unit iu', 'iu.id = i.unit_id', 'LEFT');
+      $this->db->join('categories c', 'c.id = i.cat_id', 'LEFT');
+      $this->db->where('ri.requisition_id', $value->id);
+      $data['details'][$key] = $this->db->get()->result();
+    }
+
+    return $data;
+  }
+  public function get_purchase(array $inputs){
+    $data = array();
+
+    $this->db->select('r.*, u.first_name, dp.dept_name, dg.desig_name');
+    $this->db->from('purchase r');
+    $this->db->join('users u', 'u.id = r.user_id', 'LEFT');
+    $this->db->join('department dp', 'dp.id = u.dept_id', 'LEFT');
+    $this->db->join('designation dg', 'dg.id = u.desig_id', 'LEFT');
+    if($inputs['status']){
+      $this->db->where('r.status', $inputs['status']);
+    }
+    if($inputs['user_id'] && $inputs['user_id'] != ''){
+      $this->db->where('r.user_id', $inputs['user_id']);
+    }
+
+    if($inputs['fiscal_year'] && $inputs['fiscal_year'] != ''){
+      $this->db->where('r.f_year_id', $inputs['fiscal_year']);
+    }
+    if($inputs['start_date'] && $inputs['end_date']){
+      $this->db->where('DATE(r.created) BETWEEN "'. $inputs['start_date']. '" AND "'. $inputs['end_date'].'"');
+    }
+    $data['summary'] = $this->db->get()->result();
+    // echo $this->db->last_query(); exit;
+
+    foreach($data['summary'] as $key=>$value)
+    {
+      $this->db->select('ri.*, i.item_name, iu.unit_name, c.category_name');
+      $this->db->from('purchase_item ri');
+      $this->db->join('items i', 'i.id = ri.item_id', 'LEFT');
+      $this->db->join('item_unit iu', 'iu.id = i.unit_id', 'LEFT');
+      $this->db->join('categories c', 'c.id = i.cat_id', 'LEFT');
+      $this->db->where('ri.requisition_id', $value->id);
+      $data['details'][$key] = $this->db->get()->result();
+    }
+
+    return $data;
+  }
+
+  public function get_purchase_delivered(array $inputs){
+    $data = array();
+
+    $this->db->select('r.*, u.first_name, dp.dept_name, dg.desig_name');
+    $this->db->from('purchase r');
+    $this->db->join('users u', 'u.id = r.user_id', 'LEFT');
+    $this->db->join('department dp', 'dp.id = u.dept_id', 'LEFT');
+    $this->db->join('designation dg', 'dg.id = u.desig_id', 'LEFT');
+    $this->db->where('r.is_received', 1);
+
+    if($inputs['user_id'] && $inputs['user_id'] != ''){
+      $this->db->where('r.user_id', $inputs['user_id']);
+    }
+
+    if($inputs['fiscal_year'] && $inputs['fiscal_year'] != ''){
+      $this->db->where('r.f_year_id', $inputs['fiscal_year']);
+    }
+    if($inputs['start_date'] && $inputs['end_date']){
+      $this->db->where('DATE(r.created) BETWEEN "'. $inputs['start_date']. '" AND "'. $inputs['end_date'].'"');
+    }
+    $data['summary'] = $this->db->get()->result();
+
+    foreach($data['summary'] as $key=>$value)
+    {
+      $this->db->select('ri.*, i.item_name, iu.unit_name, c.category_name');
+      $this->db->from('purchase_item ri');
       $this->db->join('items i', 'i.id = ri.item_id', 'LEFT');
       $this->db->join('item_unit iu', 'iu.id = i.unit_id', 'LEFT');
       $this->db->join('categories c', 'c.id = i.cat_id', 'LEFT');
@@ -170,43 +258,43 @@ public function get_scout_member($limit=1000, $offset=0) {
  $this->db->select('id, scout_id, first_name,  phone, email, active, profile_img');
  $this->db->from('users ');
 
- if($this->input->get('region') != NULL){
-  $this->db->where('sc_region_id', $this->input->get('region'));     
-}
-if($this->input->get('district') > '0'){
-  $this->db->where('sc_district_id', $this->input->get('district'));     
-}
-if($this->input->get('upazila') > '0'){
-  $this->db->where('sc_upa_tha_id', $this->input->get('upazila'));     
-}
-if($this->input->get('group') > '0'){
-  $this->db->where('sc_group_id', $this->input->get('group'));     
-}
+  if($this->input->get('region') != NULL){
+    $this->db->where('sc_region_id', $this->input->get('region'));     
+  }
+  if($this->input->get('district') > '0'){
+    $this->db->where('sc_district_id', $this->input->get('district'));     
+  }
+  if($this->input->get('upazila') > '0'){
+    $this->db->where('sc_upa_tha_id', $this->input->get('upazila'));     
+  }
+  if($this->input->get('group') > '0'){
+    $this->db->where('sc_group_id', $this->input->get('group'));     
+  }
 
-$this->db->limit($limit);
-$this->db->offset($offset);
+  $this->db->limit($limit);
+  $this->db->offset($offset);
 
-$result['rows'] = $this->db->get()->result();
-        // count query
-$this->db->select('COUNT(*) as count');
-$this->db->from('users');
-if($this->input->get('region') != NULL){
-  $this->db->where('sc_region_id', $this->input->get('region'));     
-}
-if($this->input->get('district') > '0'){
-  $this->db->where('sc_district_id', $this->input->get('district'));     
-}
-if($this->input->get('upazila') > '0'){
-  $this->db->where('sc_upa_tha_id', $this->input->get('upazila'));     
-}
-if($this->input->get('group') > '0'){
-  $this->db->where('sc_group_id', $this->input->get('group'));     
-}
+  $result['rows'] = $this->db->get()->result();
+          // count query
+  $this->db->select('COUNT(*) as count');
+  $this->db->from('users');
+  if($this->input->get('region') != NULL){
+    $this->db->where('sc_region_id', $this->input->get('region'));     
+  }
+  if($this->input->get('district') > '0'){
+    $this->db->where('sc_district_id', $this->input->get('district'));     
+  }
+  if($this->input->get('upazila') > '0'){
+    $this->db->where('sc_upa_tha_id', $this->input->get('upazila'));     
+  }
+  if($this->input->get('group') > '0'){
+    $this->db->where('sc_group_id', $this->input->get('group'));     
+  }
 
-$tmp = $this->db->get()->result();
-$result['num_rows'] = $tmp[0]->count;
+  $tmp = $this->db->get()->result();
+  $result['num_rows'] = $tmp[0]->count;
 
-return $result;
+  return $result;
 }
 
 public function get_scout_member_pdf() {
@@ -402,7 +490,7 @@ public function get_scout_group_committee($region_id=NULL, $sc_district_id=NULL,
    $query = $this->db->get()->result();
         }//echo '<pre>'; print_r($query);die();
         return $query;
-      }
+}
 
       public function get_current_region_from_committee($user_id=null) {
         // result query
