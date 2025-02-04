@@ -64,7 +64,7 @@
                      <div class="col-md-2">
                         <label class="form-label">Order Level </label>
                         <?php echo form_error('order_level'); ?>
-                        <input name="order_level" type="text" value="<?=set_value('order_level')?>" class="form-control input-sm" placeholder="">
+                        <input name="order_level" type="number" value="<?=set_value('order_level')?>" class="form-control input-sm" placeholder="">
                      </div>
                   </div>
 
@@ -84,7 +84,7 @@
                      <div class="col-md-2">
                         <label class="form-label">Quantity <span class="required">*</span></label>
                         <?php echo form_error('quantity'); ?>
-                        <input name="quantity" readonly type="number" value="<?=set_value('quantity')?>" class="form-control input-sm" placeholder="">
+                        <input name="quantity" readonly type="number" value="0" class="form-control input-sm" placeholder="">
                      </div>
                   </div>
 

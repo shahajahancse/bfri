@@ -196,7 +196,7 @@
                                  <tr>
                                     <td><?=$item->item_name?></td>
                                     <td><?=$item->pur_quantity?>  <?=$item->unit_name?></td>
-                                    <td><input name="pur_approve[]"  max="<?=$item->quantity?>" value="<?=$item->pur_approve?>" type="number" class="form-control input-sm"></td>
+                                    <td><input name="pur_approve[]"  value="<?=$item->pur_approve?>" type="number" class="form-control input-sm"></td>
                                     <td><?=$item->quantity?> <?=$item->unit_name?></td>
                                     <td><?=$item->pur_remark?></td>
                                     <input type="hidden" name="hide_id[]" value="<?=$item->id?>">

@@ -142,15 +142,19 @@ class Purchase extends Backend_Controller {
             );
          if($this->Common_model->save('purchase', $form_data)){     
             $insert_id = $this->db->insert_id();
-            for ($i=0; $i<sizeof($_POST['pur_item_id']); $i++) { 
+
+            //dd($_POST);
+
+            for ($i=0; $i<sizeof($_POST['item_id']); $i++) { 
                $form_data2 = array(
                   'purchase_id'        => $insert_id,
-                  'pur_item_id'        => $_POST['pur_item_id'][$i],
-                  'pur_quantity'       => $_POST['pur_quantity'][$i], 
+                  'pur_item_id'        => $_POST['item_id'][$i],
+                  'pur_quantity'       => $_POST['qty_request'][$i], 
                   'pur_approve'     => 0,                            
                   'pur_fiscal_year_id' => $fiscal_year->id,
-                  'pur_remark'         => $_POST['pur_remark'][$i]
+                  'pur_remark'         => $_POST['remark'][$i]
                   );
+               //dd($form_data2);
                $this->Common_model->save('purchase_item', $form_data2);
 
                // $pur_item = $_POST['pur_item_id'][$i];
