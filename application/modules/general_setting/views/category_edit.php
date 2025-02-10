@@ -1,5 +1,5 @@
-<div class="page-content">     
-   <div class="content">  
+<div class="page-content">
+   <div class="content">
       <ul class="breadcrumb">
          <li> <a href="<?=base_url()?>" class="active"> Dashboard </a> </li>
          <li> <?=$module_name?> </li>
@@ -11,14 +11,11 @@
             <div class="grid simple horizontal">
                <div class="grid-title">
                   <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
-                  <div class="pull-right">                
-                     <a href="<?=base_url('general_setting/category_edit').'/'.$category[0]->id?>" class="btn btn-success btn-xs btn-mini"> Sub Category List</a>  
+                  <div class="pull-right">
+                     <a href="<?=base_url('general_setting/categories')?>" class="btn btn-success btn-xs btn-mini"> Category List</a>
                   </div>
                </div>
                <div class="grid-body">
-                  <!-- <form id="form_traditional_validation" action="#"> -->
-                  <!-- <div id="infoMessage"><?php //echo $message;?></div> -->
-                  <div><?php //echo validation_errors(); ?></div>
                   <?php if($this->session->flashdata('success')):?>
                      <div class="alert alert-success">
                         <a class="close" data-dismiss="alert">&times;</a>
@@ -26,9 +23,9 @@
                      </div>
                   <?php endif; ?>
 
-                  <?php 
+                  <?php
                   $attributes = array('id' => 'jsvalidate');
-                  echo form_open_multipart("general_setting/category_edit", $attributes);?>
+                  echo form_open_multipart("general_setting/category_edit/".$category[0]->id, $attributes);?>
 
                   <div class="row form-row">
                      <div class="col-md-6">
@@ -38,7 +35,7 @@
                      </div>
                   </div>
 
-                  <div class="form-actions">  
+                  <div class="form-actions">
                      <div class="pull-right">
                         <button type="submit" class="btn btn-primary btn-cons"><i class="icon-ok"></i> Update</button>
                      </div>
@@ -46,7 +43,7 @@
 
                   <?php echo form_close();?>
 
-               </div>  <!-- END GRID BODY -->              
+               </div>  <!-- END GRID BODY -->
             </div> <!-- END GRID -->
          </div>
 

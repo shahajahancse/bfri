@@ -3,64 +3,61 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class General_setting_model extends CI_Model {
 
-   public function __construct() {
-      parent::__construct();
-   }
+       public function __construct() {
+       parent::__construct();
+       }
 
-   public function get_sub_categories($id=null) {
-      // result query
-      $this->db->select('sc.*, c.category_name');
-      $this->db->from('sub_categories sc');
-      $this->db->join('categories c', 'c.id=sc.cate_id');
-      if($id){
-         $this->db->where('sc.id', $id);
-      }
-      $query = $this->db->get()->result();
+       public function get_sub_categories($id=null) {
+              // result query
+              $this->db->select('sc.*, c.category_name');
+              $this->db->from('item_sub_categories sc');
+              $this->db->join('item_categories c', 'c.id=sc.cate_id');
+              if($id){
+                     $this->db->where('sc.id', $id);
+              }
+              $query = $this->db->get()->result();
+              return $query;
+       }
 
-      return $query;
-   }
+       public function get_categories($id=null) {
+              // result query
+              $this->db->select('*');
+              $this->db->from('item_categories');
+              if($id){
+                     $this->db->where('id', $id);
+              }
+              $query = $this->db->get()->result();
+              return $query;
+       }
 
-   public function get_categories($id=null) {
-      // result query
-      $this->db->select('*');
-      $this->db->from('categories');
-      if($id){
-         $this->db->where('id', $id);
-      }
-      $query = $this->db->get()->result();
+       public function get_item_unit() {
+              // result query
+              $this->db->select('*');
+                     // $this->db->where('is_delete',0);
+              $this->db->from('item_unit');
+              $query = $this->db->get()->result();
+              return $query;
+       }
 
-      return $query;
-   }
+       public function get_designation() {
+                     // result query
+              $this->db->select('*');
+                     // $this->db->where('is_delete',0);
+              $this->db->from('designation');
+              $query = $this->db->get()->result();
 
-   public function get_item_unit() {
-        // result query
-    $this->db->select('*');
-        // $this->db->where('is_delete',0);
-    $this->db->from('item_unit');
-    $query = $this->db->get()->result();
+              return $query;
+       }
 
-    return $query;
- }
+       public function get_department() {
+                     // result query
+              $this->db->select('*');
+                     // $this->db->where('is_delete',0);
+              $this->db->from('department');
+              $query = $this->db->get()->result();
 
- public function get_designation() {
-        // result query
-    $this->db->select('*');
-        // $this->db->where('is_delete',0);
-    $this->db->from('designation');
-    $query = $this->db->get()->result();
-
-    return $query;
- }
-
- public function get_department() {
-        // result query
-    $this->db->select('*');
-        // $this->db->where('is_delete',0);
-    $this->db->from('department');
-    $query = $this->db->get()->result();
-
-    return $query;
- }
+              return $query;
+       }
 
  public function get_upazila_thana($limit = 1000, $offset = 0, $division=NULL, $district=NULL) {
         // result query
@@ -70,13 +67,13 @@ class General_setting_model extends CI_Model {
     $this->db->join('district ds', 'ds.id=ut.dis_id');
     $this->db->where('ut.is_delete', 0);
     if($this->input->get('division') != NULL){
-      $this->db->where('ut.div_id', $this->input->get('division'));     
+      $this->db->where('ut.div_id', $this->input->get('division'));
    }
    if($this->input->get('district') != NULL){
-      $this->db->where('ut.dis_id', $this->input->get('district'));     
+      $this->db->where('ut.dis_id', $this->input->get('district'));
    }
    $this->db->limit($limit);
-   $this->db->offset($offset);        
+   $this->db->offset($offset);
    $this->db->order_by('ut.id', 'DESC');
 
    $result['rows'] = $this->db->get()->result();
@@ -85,10 +82,10 @@ class General_setting_model extends CI_Model {
    $q = $this->db->select('COUNT(*) as count');
    $this->db->where('is_delete', 0);
    if($this->input->get('division') != NULL){
-      $this->db->where('div_id', $this->input->get('division'));     
+      $this->db->where('div_id', $this->input->get('division'));
    }
    if($this->input->get('district') != NULL){
-      $this->db->where('dis_id', $this->input->get('district'));     
+      $this->db->where('dis_id', $this->input->get('district'));
    }
    $this->db->from('upazila_thana');
 
@@ -275,10 +272,10 @@ public function get_district($limit = 1000, $offset = 0, $division=NULL) {
   $this->db->join('division dv', 'dv.id=di.div_id');
   $this->db->where('di.is_delete', 0);
   if($this->input->get('division') != NULL){
-   $this->db->where('di.div_id', $this->input->get('division'));     
+   $this->db->where('di.div_id', $this->input->get('division'));
 }
 $this->db->limit($limit);
-$this->db->offset($offset);        
+$this->db->offset($offset);
 $this->db->order_by('di.id', 'DESC');
 
 $result['rows'] = $this->db->get()->result();
@@ -287,7 +284,7 @@ $result['rows'] = $this->db->get()->result();
 $q = $this->db->select('COUNT(*) as count');
 $this->db->where('is_delete', 0);
 if($this->input->get('division') != NULL){
-   $this->db->where('div_id', $this->input->get('division'));     
+   $this->db->where('div_id', $this->input->get('division'));
 }
 $this->db->from('district');
 
@@ -333,7 +330,7 @@ public function get_institute($limit = 1000, $offset = 0) {
  $this->db->from('institute in');
  $this->db->join('education_level el', 'el.id = in.education_level', 'left');
  $this->db->limit($limit);
- $this->db->offset($offset);        
+ $this->db->offset($offset);
  $this->db->order_by('in.id', 'DESC');
         // $query = $this->db->get();
         // echo $this->db->last_query(); exit;
@@ -369,6 +366,6 @@ function delete($id) {
  $this->db->delete('');
 
  return TRUE;
-}    
+}
 
 }

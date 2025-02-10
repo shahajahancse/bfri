@@ -1,5 +1,5 @@
-<div class="page-content">     
-   <div class="content">  
+<div class="page-content">
+   <div class="content">
       <ul class="breadcrumb" style="margin-bottom: 20px;">
          <li> <a href="<?=base_url()?>" class="active"> Dashboard </a> </li>
          <li> General Setting</li>
@@ -12,11 +12,11 @@
                   <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
                    <div class="pull-right">
                      <a href="<?=base_url('general_setting/category_add')?>" class="btn btn-blueviolet btn-xs btn-mini"> Add Category </a>
-                  </div>       
+                  </div>
                </div>
 
                <div class="grid-body ">
-                  <div id="infoMessage"><?php //echo $message;?></div>            
+                  <div id="infoMessage"><?php //echo $message;?></div>
                   <?php if($this->session->flashdata('success')):?>
                      <div class="alert alert-success">
                         <a class="close" data-dismiss="alert">&times;</a>
@@ -33,7 +33,7 @@
                         </tr>
                      </thead>
                      <tbody>
-                        <?php 
+                        <?php
                         $sl = 0;
                         foreach ($results as $row):
                            $sl++;
@@ -43,10 +43,9 @@
                            <td class="v-align-middle"><?=$row->category_name?></td>
                            <td class="v-align-middle">
                               <a href="<?=base_url('general_setting/category_edit/'.$row->id)?>" class="btn btn-primary btn-xs btn-mini">Edit</a>
-                              <a href="<?=base_url('general_setting/category_delete/'.$row->id)?>" class="btn btn-danger btn-xs btn-mini">Delete</a>
                            </td>
                         </tr>
-                     <?php endforeach;?>                      
+                     <?php endforeach;?>
                   </tbody>
                </table>
 

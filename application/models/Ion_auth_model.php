@@ -1871,20 +1871,19 @@ class Ion_auth_model extends CI_Model
 		$session_data = array(
 		    'identity'             => $user->{$this->identity_column},
 		    $this->identity_column => $user->{$this->identity_column},
+		    'unit_id'              => $user->unit_id,
 		    'email'                => $user->email,
-		    'first_name'		   	=> $user->first_name,
-		    'last_name'		   	=> $user->last_name,
+		    'first_name'		   => $user->first_name,
+		    'last_name'		   	   => $user->last_name,
 		    'user_id'              => $user->id, //everyone likes to overwrite id so we'll use user_id
-		    'is_office'				=> $user->is_office,
+		    'is_office'			   => $user->is_office,
 		    'created_on'           => $user->created_on,
 		    'old_last_login'       => $user->last_login,
 		    'last_check'           => time(),
 		);
 
 		$this->session->set_userdata($session_data);
-
 		$this->trigger_events('post_set_session');
-
 		return TRUE;
 	}
 
