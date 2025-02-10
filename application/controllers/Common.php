@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Common extends Backend_Controller {	
+class Common extends Backend_Controller {
    var $userID;
    // var $img_path;
 
@@ -46,18 +46,18 @@ class Common extends Backend_Controller {
       $upltype = $this->input->post('upltype');
 
       $originalPath = ROOT_UPLOAD_PATH; //$this->img_orginal_path;
-      $thumbPath = ROOT_UPLOAD_PATH.'_thumb/'; //$this->img_thumb_path; 
+      $thumbPath = ROOT_UPLOAD_PATH.'_thumb/'; //$this->img_thumb_path;
       $urlPath =  HTTP_USER_PROFILE_THUMB_PATH; //$this->img_thumb_path;
 
       $thumb = $this->Cropper_model->setDst($thumbPath);
       $this->Cropper_model->setSrc($avatar_src);
       $data = $this->Cropper_model->setData($avatar_data);
       // set file
-      $avatar_path = $this->Cropper_model->setFile($avatar_file, $originalPath); 
-      // crop       
+      $avatar_path = $this->Cropper_model->setFile($avatar_file, $originalPath);
+      // crop
       $this->Cropper_model->crop($avatar_path, $thumb, $data);
-      
-      // response       
+
+      // response
       // 'ussid' => $ussid,
       $json = array(
          'state'  => 200,
@@ -73,9 +73,9 @@ class Common extends Backend_Controller {
    // upload prifile avatar Crop Image
    public function uploadCropImg() {
       $json = array();
-      $image_url = $this->input->post('image_url');        
-      $user_id = base64_decode($this->input->post('member_id'));   
-      $upltype = $this->input->post('upltype');            
+      $image_url = $this->input->post('image_url');
+      $user_id = base64_decode($this->input->post('member_id'));
+      $upltype = $this->input->post('upltype');
       if (!empty($user_id) && !empty($upltype) && $upltype=='avatar') {
          $this->Common_model->seturl($image_url);
          //$this->Common_model->setUserID($user_id);
@@ -108,7 +108,7 @@ class Common extends Backend_Controller {
                $data['requisition'] = date('Y-m-d', strtotime($value->created));
                $data['status'] = 'yes';
                break;
-            } 
+            }
        }
        if ( $data['status'] =='yes'){
           break;
@@ -121,7 +121,7 @@ class Common extends Backend_Controller {
          foreach ($query2->result() as $key2 => $value2) {
             if ($value2->item_id == $id) {
               $availability_enjoy=$availability_get+$value2->qty_approve;
-            } 
+            }
        }
    };
 
@@ -131,4 +131,17 @@ class Common extends Backend_Controller {
 
    echo json_encode($data);
   }
+
+   function ajax_exists_nid(){
+      $item = $_POST['inputData'];
+      $this->db->from('users');
+      $this->db->where('username', $item);
+      $query = $this->db->get()->row();
+
+      if (empty($query)) {
+         echo 'true';
+      }else{
+         echo 'false';
+      }
+   }
 }

@@ -71,7 +71,7 @@ class Acl extends Backend_Controller {
                 /***********Activity Logs Start**********/
                 $insert_id = $this->db->insert_id();
                 func_activity_log(1, 'create access level ID :'.$insert_id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
-                /***********Activity Logs End**********/                
+                /***********Activity Logs End**********/
                 $this->session->set_flashdata('success', 'New access insert successfully.');
                 redirect('acl/access_level');
             }
@@ -86,7 +86,7 @@ class Acl extends Backend_Controller {
         // Load View
         $this->data['meta_title'] = 'Create Access Level';
         $this->data['subview'] = 'create_access_level';
-        $this->load->view('backend/_layout_main', $this->data);        
+        $this->load->view('backend/_layout_main', $this->data);
     }
 
     public function edit_access_level($id){
@@ -109,7 +109,7 @@ class Acl extends Backend_Controller {
                 /***********Activity Logs Start**********/
                 //$insert_id = $this->db->insert_id();
                 func_activity_log(2, 'create access level update ID :'.$insert_id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
-                /***********Activity Logs End**********/ 
+                /***********Activity Logs End**********/
                 $this->session->set_flashdata('success', 'Information update successfully.');
                 redirect('acl/access_level');
             }
@@ -127,7 +127,7 @@ class Acl extends Backend_Controller {
         // Load View
         $this->data['meta_title'] = 'Edit Access Level';
         $this->data['subview'] = 'edit_access_level';
-        $this->load->view('backend/_layout_main', $this->data);        
+        $this->load->view('backend/_layout_main', $this->data);
     }
 
     /******************** Task Register *********************/
@@ -165,7 +165,7 @@ class Acl extends Backend_Controller {
                 /***********Activity Logs Start**********/
                 $insert_id = $this->db->insert_id();
                 func_activity_log(1, 'New task insert ID :'.$insert_id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
-                /***********Activity Logs End**********/                 
+                /***********Activity Logs End**********/
                 $this->session->set_flashdata('success', 'New task insert successfully.');
                 redirect('acl/task_register');
             }
@@ -178,9 +178,9 @@ class Acl extends Backend_Controller {
 
         $this->data['meta_title'] = 'Create Task Register';
         $this->data['subview'] = 'create_task_register';
-        $this->load->view('backend/_layout_main', $this->data);        
+        $this->load->view('backend/_layout_main', $this->data);
     }
-    
+
     // create a new Task Register
     public function edit_task_register($id){
         // validate form input
@@ -195,7 +195,7 @@ class Acl extends Backend_Controller {
                 'task_name_bn' => $this->input->post('task_name_bn'),
                 'controller_name' => $this->input->post('controller_name'),
                 'controller_function' => $this->input->post('controller_function')
-                );
+            );
 
             // print_r($form_data); exit;
             if($this->Common_model->edit('task_register', $id, 'id', $form_data)){
@@ -216,95 +216,83 @@ class Acl extends Backend_Controller {
 
         $this->data['meta_title'] = 'Edit Task Register';
         $this->data['subview'] = 'edit_task_register';
-        $this->load->view('backend/_layout_main', $this->data);        
+        $this->load->view('backend/_layout_main', $this->data);
     }
 
     /******************** User *********************/
     // create a new user
     public function create_user()
     {
-        $tables = $this->config->item('tables','ion_auth');
         $identity_column = $this->config->item('identity','ion_auth');
         $this->data['identity_column'] = $identity_column;
-        // validate form input
         $this->form_validation->set_rules('full_name', 'full name', 'required');
-        if($identity_column!=='email')
-        {
-            $this->form_validation->set_rules('identity',$this->lang->line('create_user_validation_identity_label'),'required|is_unique['.$tables['users'].'.'.$identity_column.']');
-            $this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'valid_email');
-        } else {
-            $this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'required|valid_email|is_unique[' . $tables['users'] . '.email]');
-        }
-
-        $this->form_validation->set_rules('phone', $this->lang->line('create_user_validation_phone_label'), 'trim');
-        $this->form_validation->set_rules('password', $this->lang->line('create_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
-        $this->form_validation->set_rules('password_confirm', $this->lang->line('create_user_validation_password_confirm_label'), 'required');
-
+        $this->form_validation->set_rules('unit_id', 'Branch', 'required');
+        $this->form_validation->set_rules('identity', 'NID', 'required|is_unique[users.username]');
+        $this->form_validation->set_rules('dept_id', 'Department', 'required');
+        $this->form_validation->set_rules('desig_id', 'Designation', 'required');
 
         if ($this->form_validation->run() == true) {
             $email    = strtolower($this->input->post('email'));
-            $identity = ($identity_column==='email') ? $email : $this->input->post('identity');
+            $identity = $this->input->post('identity');
             $password = $this->input->post('password');
 
-            $additional_data = array(
+            $data = array(
                 'first_name' => ucwords($this->input->post('full_name')),
-                'phone'      => $this->input->post('phone')
-                );
+                'unit_id'      => $this->input->post('unit_id'),
+                'username'      => $this->input->post('identity'),
+                'phone'      => $this->input->post('phone'),
+                'dept_id'      => $this->input->post('dept_id'),
+                'desig_id'      => $this->input->post('desig_id'),
+                'status'      => $this->input->post('status'),
+            );
         }
-
-            // print_r($additional_data); exit;
-        if ($this->form_validation->run() == true && $this->ion_auth->register($identity, $password, $email, $additional_data)) {
-           
-            // check to see if we are creating the user
-            // redirect them back to the admin page
+        if ($this->form_validation->run() == true && $this->ion_auth->register($identity, $password, $email, $data)) {
             $this->session->set_flashdata('message', $this->ion_auth->messages());
             redirect('acl');
         } else {
-          
             $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-
             $this->data['full_name'] = array(
                 'name'  => 'full_name',
                 'id'    => 'full_name',
                 'type'  => 'text',
                 'class' => 'form-control input-sm',
                 'value' => $this->form_validation->set_value('full_name'),
-                );
+            );
             $this->data['identity'] = array(
                 'name'  => 'identity',
                 'id'    => 'identity',
                 'type'  => 'text',
                 'class' => 'form-control input-sm',
                 'value' => $this->form_validation->set_value('identity'),
-                );
+            );
             $this->data['email'] = array(
                 'name'  => 'email',
                 'id'    => 'email',
                 'type'  => 'text',
                 'class' => 'form-control input-sm',
                 'value' => $this->form_validation->set_value('email'),
-                );
+            );
             $this->data['phone'] = array(
                 'name'  => 'phone',
                 'id'    => 'phone',
                 'type'  => 'text',
                 'class' => 'form-control input-sm',
                 'value' => $this->form_validation->set_value('phone'),
-                );
+            );
             $this->data['password'] = array(
                 'name'  => 'password',
                 'id'    => 'password',
                 'type'  => 'password',
                 'class' => 'form-control input-sm',
                 'value' => $this->form_validation->set_value('password'),
-                );
+            );
             $this->data['password_confirm'] = array(
                 'name'  => 'password_confirm',
                 'id'    => 'password_confirm',
                 'type'  => 'password',
                 'class' => 'form-control input-sm',
                 'value' => $this->form_validation->set_value('password_confirm'),
-                );
+            );
 
             // Load Page
             $this->data['meta_title'] = $this->lang->line('create_user_heading');
@@ -327,8 +315,11 @@ class Acl extends Backend_Controller {
 
         // validate form input
         $this->form_validation->set_rules('full_name', 'full name', 'required');
-        $this->form_validation->set_rules('email', $this->lang->line('create_user_validation_email_label'), 'valid_email');
-        $this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'trim');
+        $this->form_validation->set_rules('email', 'Email', 'valid_email');
+        $this->form_validation->set_rules('phone', 'Phone Number', 'trim');
+        $this->form_validation->set_rules('unit_id', 'Branch', 'required');
+        $this->form_validation->set_rules('dept_id', 'Department', 'required');
+        $this->form_validation->set_rules('desig_id', 'Designation', 'required');
 
         if (isset($_POST) && !empty($_POST)){
 
@@ -337,7 +328,7 @@ class Acl extends Backend_Controller {
             }else{
                 $active = 1;
             }
-           
+
             if ($this->input->post('password')){
                 $this->form_validation->set_rules('password', $this->lang->line('edit_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
                 $this->form_validation->set_rules('password_confirm', $this->lang->line('edit_user_validation_password_confirm_label'), 'required');
@@ -347,48 +338,53 @@ class Acl extends Backend_Controller {
                     $config['upload_path'] = './profile_img/';
                     $config['allowed_types'] = 'jpg|png|jpeg';
                     $config['max_size'] = 10240000;
-                
+
                     $this->load->library('upload', $config);
-                
+
                     if ($this->upload->do_upload('profile_img')) {
                         $data = $this->upload->data();
                         $originalFileName = $data['file_name']; // Keep the original file name
-                
+
                         // Generate a unique file name
                         $uniqueFileName = uniqid() . '.' . pathinfo($originalFileName, PATHINFO_EXTENSION);
-                
+
                         // Move the uploaded file to the destination with the unique file name
                         $destination = base_url('profile_img/') . $uniqueFileName;
                         rename($config['upload_path'] . $originalFileName, $config['upload_path'] . $uniqueFileName);
-                
+
                         $data = array(
-                            'first_name' => $this->input->post('full_name'),
-                            'email'      => $this->input->post('email'),
-                            'phone'      => $this->input->post('phone'),
-                            'dept_id'    => $this->input->post('dept_id'),
-                            'desig_id'   => $this->input->post('desig_id'),
-                            'active'     => $active,
-                            'profile_img'     => $uniqueFileName
+                            'first_name'    => $this->input->post('full_name'),
+                            'unit_id'       => $this->input->post('unit_id'),
+                            'email'         => $this->input->post('email'),
+                            'phone'         => $this->input->post('phone'),
+                            'dept_id'       => $this->input->post('dept_id'),
+                            'desig_id'      => $this->input->post('desig_id'),
+                            'status'        => $this->input->post('status'),
+                            'active'        => $active,
+                            'profile_img'   => $uniqueFileName
                         );
                     }else{
                         $data = array(
                             'first_name' => $this->input->post('full_name'),
+                            'unit_id'    => $this->input->post('unit_id'),
                             'email'      => $this->input->post('email'),
                             'phone'      => $this->input->post('phone'),
                             'dept_id'    => $this->input->post('dept_id'),
                             'desig_id'   => $this->input->post('desig_id'),
-                            'active'     =>$active
-                            );
+                            'status'     => $this->input->post('status'),
+                            'active'     => $active
+                        );
                     }
-                
                 }else{
-                $data = array(
-                    'first_name' => $this->input->post('full_name'),
-                    'email'      => $this->input->post('email'),
-                    'phone'      => $this->input->post('phone'),
-                    'dept_id'    => $this->input->post('dept_id'),
-                    'desig_id'   => $this->input->post('desig_id'),
-                    'active'     =>$active
+                    $data = array(
+                        'first_name' => $this->input->post('full_name'),
+                        'unit_id'    => $this->input->post('unit_id'),
+                        'email'      => $this->input->post('email'),
+                        'phone'      => $this->input->post('phone'),
+                        'dept_id'    => $this->input->post('dept_id'),
+                        'desig_id'   => $this->input->post('desig_id'),
+                        'status'     => $this->input->post('status'),
+                        'active'     =>$active
                     );
                 }
 
@@ -400,11 +396,11 @@ class Acl extends Backend_Controller {
                     $groupData = $this->input->post('group');
                     // dd($groupData);
                     $this->ion_auth->remove_from_group('', $id);
-                    $this->ion_auth->add_to_group($groupData, $id);   
+                    $this->ion_auth->add_to_group($groupData, $id);
                 }
 
-                    
-            // check to see if we are updating the user
+
+                // check to see if we are updating the user
                 if($this->ion_auth->update($user->id, $data)){
                     // redirect them back to the admin page if admin, or to the base url if non admin
                     $this->session->set_flashdata('message', $this->ion_auth->messages() );
@@ -424,9 +420,6 @@ class Acl extends Backend_Controller {
                 }
             }
         }
-
-        // display the edit user form
-        //$this->data['csrf'] = $this->_get_csrf_nonce();
 
         // set the flash data error message if there is one
         $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
@@ -517,7 +510,7 @@ class Acl extends Backend_Controller {
                 );
 
             // print_r($form_data); exit;
-            if($this->Common_model->save('groups_type', $form_data)){                
+            if($this->Common_model->save('groups_type', $form_data)){
                 $this->session->set_flashdata('success', 'New group type insert successfully.');
                 redirect('acl/group_type');
             }
@@ -526,7 +519,7 @@ class Acl extends Backend_Controller {
         $this->data['meta_title'] = 'Create Group Type';
         $this->data['subview'] = 'create_group_type';
         $this->load->view('backend/_layout_main', $this->data);
-        
+
     }
 
     public function edit_group_type($id){
@@ -543,7 +536,7 @@ class Acl extends Backend_Controller {
                 'group_type_en' => $this->input->post('group_type_en'),
                 'group_type_bn' => $this->input->post('group_type_bn'),
                 'type_description' => $this->input->post('type_description')
-                );         
+                );
 
             // print_r($form_data); exit;
             if($this->Common_model->edit('groups_type', $id, 'id', $form_data)){
@@ -590,7 +583,7 @@ class Acl extends Backend_Controller {
                 /***********Activity Logs Start**********/
                 $insert_id = $this->db->insert_id();
                 func_activity_log(1, 'New role insert ID :'.$insert_id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
-                /***********Activity Logs End**********/                
+                /***********Activity Logs End**********/
                 $this->session->set_flashdata('success', 'New role insert successfully.');
                 redirect('acl/role_group');
             }
@@ -601,7 +594,7 @@ class Acl extends Backend_Controller {
         $this->data['meta_title'] = 'Create Role Group';
         $this->data['subview'] = 'create_role_group';
         $this->load->view('backend/_layout_main', $this->data);
-        
+
     }
 
     public function edit_role_group($id){
@@ -618,7 +611,7 @@ class Acl extends Backend_Controller {
             'role_name_en' => $this->input->post('role_name_en'),
             'role_name_bn' => $this->input->post('role_name_bn'),
             'role_description' => $this->input->post('role_description')
-            );          
+            );
 
             // print_r($form_data); exit;
          if($this->Common_model->edit('groups_role', $id, 'id', $form_data)){
@@ -699,7 +692,7 @@ public function edit_group($id)
         // bail if no group id given
     if(!$id || empty($id)) {
         redirect('dashboard');
-    }        
+    }
 
     if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
      redirect('dashboard');
@@ -729,13 +722,13 @@ $this->data['message'] = (validation_errors() ? validation_errors() : ($this->io
         // pass the user to the view
 $this->data['group'] = $group;
 
-$readonly = $this->config->item('admin_group', 'ion_auth') || $this->config->item('default_group', 'ion_auth') === $group->name ? 'readonly' : '';        
+$readonly = $this->config->item('admin_group', 'ion_auth') || $this->config->item('default_group', 'ion_auth') === $group->name ? 'readonly' : '';
 
 $this->data['group_name'] = array(
     'name'    => 'group_name',
     'id'      => 'group_name',
     'class'   => 'form-control input-sm',
-    'type'    => 'text',            
+    'type'    => 'text',
     'value'   => $this->form_validation->set_value('group_name', $group->name),
     $readonly => $readonly,
     );
@@ -818,7 +811,7 @@ public function deactivate($id = NULL){
 
     public function user_delete($id){
       if($this->ion_auth->is_admin()){
-         $this->Acl_model->user_destroy($id);          
+         $this->Acl_model->user_destroy($id);
          $this->session->set_flashdata('success', 'Delete region successfully.');
          redirect("acl");
       }else{

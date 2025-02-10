@@ -1,23 +1,23 @@
 </div>
-<!-- END CONTAINER --> 
+<!-- END CONTAINER -->
 
-<!-- BEGIN CORE JS FRAMEWORK--> 
+<!-- BEGIN CORE JS FRAMEWORK-->
 <?php /*
 <!-- <script src="<?=base_url();?>awedget/assets/plugins/jquery-1.8.3.min.js" type="text/javascript"></script>  -->
 */ ?>
-<script src="<?=base_url();?>awedget/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script> 
+<script src="<?=base_url();?>awedget/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
 <!-- <script src="<?=base_url();?>awedget/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>  -->
-<script src="<?=base_url();?>awedget/assets/plugins/boostrap-3.3.7/js/bootstrap.min.js" type="text/javascript"></script> 
+<script src="<?=base_url();?>awedget/assets/plugins/boostrap-3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
 <?php /*
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 */ ?>
-<script src="<?=base_url();?>awedget/assets/plugins/breakpoints.js" type="text/javascript"></script> 
-<script src="<?=base_url();?>awedget/assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script> 
-<script src="<?=base_url();?>awedget/assets/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript"></script> 
-<!-- END CORE JS FRAMEWORK --> 
-<!-- BEGIN PAGE LEVEL JS -->  
-<script src="<?=base_url();?>awedget/assets/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript"></script>  
-<script src="<?=base_url();?>awedget/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script> 
+<script src="<?=base_url();?>awedget/assets/plugins/breakpoints.js" type="text/javascript"></script>
+<script src="<?=base_url();?>awedget/assets/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script>
+<script src="<?=base_url();?>awedget/assets/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript"></script>
+<!-- END CORE JS FRAMEWORK -->
+<!-- BEGIN PAGE LEVEL JS -->
+<script src="<?=base_url();?>awedget/assets/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript"></script>
+<script src="<?=base_url();?>awedget/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
 <script src="<?=base_url();?>awedget/assets/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript"></script>
 <script src="<?=base_url();?>awedget/assets/plugins/pace/pace.min.js" type="text/javascript"></script>
 <!-- Datepicker -->
@@ -44,11 +44,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/min/dropzone.min.js"></script>
 
 
-<!-- BEGIN PAGE DATATABLE -->   
+<!-- BEGIN PAGE DATATABLE -->
 <script src="<?=base_url();?>awedget/assets/plugins/jquery-datatable/js/jquery.dataTables.min.js" type="text/javascript" ></script>
-<script src="<?=base_url();?>awedget/assets/plugins/jquery-datatable/extra/js/TableTools.min.js" type="text/javascript" ></script> 
- <script src="<?=base_url();?>awedget/assets/plugins/datatables-responsive/js/datatables.responsive.js" type="text/javascript"></script> 
- <script src="<?=base_url();?>awedget/assets/plugins/datatables-responsive/js/lodash.min.js" type="text/javascript"></script> 
+<script src="<?=base_url();?>awedget/assets/plugins/jquery-datatable/extra/js/TableTools.min.js" type="text/javascript" ></script>
+ <script src="<?=base_url();?>awedget/assets/plugins/datatables-responsive/js/datatables.responsive.js" type="text/javascript"></script>
+ <script src="<?=base_url();?>awedget/assets/plugins/datatables-responsive/js/lodash.min.js" type="text/javascript"></script>
  <script src="<?=base_url();?>awedget/assets/plugins/owl-carousel/owl.carousel.min.js" type="text/javascript"></script>
 <script src="<?=base_url();?>assets/plugins/jquery-metrojs/MetroJs.min.js" type="text/javascript" ></script>
 <!-- END PAGE LEVEL PLUGINS -->
@@ -64,23 +64,23 @@
 <!-- <script src="<?=base_url()?>awedget/assets/js/calender.js" type="text/javascript"></script> -->
 <?php //} ?>
 <?php if($this->router->fetch_class('my_message') == 'my_message'){ ?>
-<!-- END PAGE LEVEL PLUGINS --> 	
-<script src="<?=base_url()?>awedget/assets/js/email_comman.js" type="text/javascript"></script> 
+<!-- END PAGE LEVEL PLUGINS -->
+<script src="<?=base_url()?>awedget/assets/js/email_comman.js" type="text/javascript"></script>
 <?php } ?>
 <script src="<?=base_url()?>awedget/assets/js/messages_notifications.js" type="text/javascript"></script>
-<!-- BEGIN CORE TEMPLATE JS --> 
-<script src="<?=base_url();?>awedget/assets/js/core.js" type="text/javascript"></script> 
+<!-- BEGIN CORE TEMPLATE JS -->
+<script src="<?=base_url();?>awedget/assets/js/core.js" type="text/javascript"></script>
 <?php /*
 <!-- <script src="<?=base_url();?>awedget/assets/js/chat.js" type="text/javascript"></script>  -->
 */ ?>
- <script src="<?=base_url();?>awedget/assets/js/datatables.js" type="text/javascript"></script> 
-<script src="<?=base_url();?>awedget/assets/js/demo.js" type="text/javascript"></script> 
+ <script src="<?=base_url();?>awedget/assets/js/datatables.js" type="text/javascript"></script>
+<script src="<?=base_url();?>awedget/assets/js/demo.js" type="text/javascript"></script>
 <!-- <script src="<?=base_url();?>awedget/assets/croper/js/cropper.min.js"></script> -->
 <script src="<?=base_url();?>awedget/assets/js/bangla-input.js"></script>
 <script src="<?=base_url();?>awedget/assets/js/custom.js"></script>
 
 <?php /*
-<!-- END CORE TEMPLATE JS --> 
+<!-- END CORE TEMPLATE JS -->
 <!-- <script src="<?=base_url();?>awedget/assets/js/dashboard_v2.js" type="text/javascript"></script> -->
 <!-- <script type="text/javascript">
   $(document).ready(function () {
@@ -89,21 +89,21 @@
 </script> -->
 */ ?>
 <script>
-  $(function() {    
+  $(function() {
     // Call SuperBox - that's it!
-    $('.superbox').SuperBox();    
+    $('.superbox').SuperBox();
   });
 
 
     // Jquery Onload
     $(document).ready(function() {
-      $('select').select2();
+      $('.select2').select2();
 
 
 
       //Datepicker
-      datetime();   
-      // category_dd();   
+      datetime();
+      // category_dd();
 
       //Datepicker
       $('.datepicker').datepicker({
@@ -141,7 +141,7 @@
         //   autoclose: true
         // });
       }
-      
+
       setTimeout(function() {
         $('#mydivdanger').fadeOut('fast');
       }, 4000); // <-- time in milliseconds

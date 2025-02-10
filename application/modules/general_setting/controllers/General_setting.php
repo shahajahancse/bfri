@@ -10,13 +10,67 @@ class General_setting extends Backend_Controller {
          redirect('login');
       endif;
 
-      // if(!$this->ion_auth->is_admin()):
-      //     redirect('dashboard');
-      // endif;
-
       // $this->load->model('Common_model');
       $this->load->model('General_setting_model');
-      $this->img_path = realpath(APPPATH . '../scout_badge_img');       
+      $this->img_path = realpath(APPPATH . '../scout_badge_img');
+   }
+
+   public function units(){
+      $this->data['results'] = $this->db->get('units')->result();
+      $this->data['meta_title'] = 'All Branch List';
+      $this->data['subview'] = 'units';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+   public function unit_add(){
+      $this->form_validation->set_rules('name_bn', 'Name Bangla', 'required|trim');
+      $this->form_validation->set_rules('name_en', 'Name English', 'required|trim');
+      $this->form_validation->set_rules('address_bn', 'Address Bangla', 'required|trim');
+      $this->form_validation->set_rules('address_en', 'Address English', 'required|trim');
+
+      if ($this->form_validation->run() == true){
+         $form_data = array(
+            'name_bn'      => $this->input->post('name_bn'),
+            'name_en'      => $this->input->post('name_en'),
+            'address_bn'      => $this->input->post('address_bn'),
+            'address_en'      => $this->input->post('address_en'),
+         );
+         if($this->Common_model->save('units', $form_data)){
+            $this->session->set_flashdata('success', 'Branch create successfully.');
+            redirect('general_setting/units');
+         }
+      }
+
+      // Load page
+      $this->data['meta_title'] = 'Create Branch';
+      $this->data['subview'] = 'unit_add';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+   public function unit_edit($id){
+      $this->form_validation->set_rules('name_bn', 'Name Bangla', 'required|trim');
+      $this->form_validation->set_rules('name_en', 'Name English', 'required|trim');
+      $this->form_validation->set_rules('address_bn', 'Address Bangla', 'required|trim');
+      $this->form_validation->set_rules('address_en', 'Address English', 'required|trim');
+
+      if ($this->form_validation->run() == true){
+         $form_data = array(
+            'name_bn'       => $this->input->post('name_bn'),
+            'name_en'       => $this->input->post('name_en'),
+            'address_bn'       => $this->input->post('address_bn'),
+            'address_en'       => $this->input->post('address_en'),
+         );
+
+         if($this->Common_model->edit('units', $id, 'id', $form_data)){
+            $this->session->set_flashdata('success', 'Information update successfully.');
+            redirect('general_setting/units');
+         }
+      }
+
+      $this->data['info'] = $this->General_setting_model->get_info('units',$id);
+
+      // Load page
+      $this->data['meta_title'] = 'Edit Branch';
+      $this->data['subview'] = 'unit_edit';
+      $this->load->view('backend/_layout_main', $this->data);
    }
 
    public function index(){
@@ -32,7 +86,7 @@ class General_setting extends Backend_Controller {
          $form_data = array(
             'cate_id'             => $this->input->post('cate_id'),
             'sub_cate_name'      => $this->input->post('sub_cate_name')
-            );           
+            );
 
             // print_r($form_data); exit;
          if($this->Common_model->save('sub_categories', $form_data)){
@@ -57,12 +111,12 @@ class General_setting extends Backend_Controller {
          $form_data = array(
             'cate_id'             => $this->input->post('cate_id'),
             'sub_cate_name'      => $this->input->post('sub_cate_name')
-            );     
+            );
             $this->db->where('id', $id);
             $this->db->update('sub_categories', $form_data);
             $this->session->set_flashdata('success', 'Sub category update successfully.');
             redirect('general_setting/sub_categories');
-      
+
       }
 
       $this->data['categories'] = $this->Common_model->get_dropdown('categories', 'category_name', 'id');
@@ -79,18 +133,18 @@ class General_setting extends Backend_Controller {
       $this->db->delete('sub_categories');
       $this->session->set_flashdata('success', 'Sub category delete successfully.');
       redirect('general_setting/sub_categories');
-      
+
    }
 
    public function sub_categories(){
-      $this->data['results'] = $this->General_setting_model->get_sub_categories(); 
+      $this->data['results'] = $this->General_setting_model->get_sub_categories();
       $this->data['meta_title'] = 'Sub Categories List';
       $this->data['subview'] = 'sub_categories';
       $this->load->view('backend/_layout_main', $this->data);
-   } 
+   }
 
    public function categories(){
-      $this->data['results'] = $this->General_setting_model->get_categories(); 
+      $this->data['results'] = $this->General_setting_model->get_categories();
       $this->data['meta_title'] = 'Categories List';
       $this->data['subview'] = 'categories';
       $this->load->view('backend/_layout_main', $this->data);
@@ -98,7 +152,7 @@ class General_setting extends Backend_Controller {
    public function category_add(){
       $this->form_validation->set_rules('cate_name', 'category Name', 'required|trim');
       if ($this->form_validation->run() == true){
-         
+
          $form_data = array(
             'category_name'      => $this->input->post('cate_name'),
             'status'      => 'Enable'
@@ -111,12 +165,12 @@ class General_setting extends Backend_Controller {
          $this->data['subview'] = 'category_add';
          $this->load->view('backend/_layout_main', $this->data);
       }
-    
+
    }
    public function category_edit($id){
       $this->form_validation->set_rules('cate_name', 'category Name', 'required|trim');
       if ($this->form_validation->run() == true){
-         
+
          $form_data = array(
             'category_name'      => $this->input->post('cate_name'),
             'status'      => 'Enable'
@@ -139,29 +193,29 @@ class General_setting extends Backend_Controller {
       $this->session->set_flashdata('success', 'Category delete successfully.');
 
       redirect('general_setting/categories');
-      
+
    }
 
    public function item_unit(){
-      $this->data['results'] = $this->General_setting_model->get_item_unit(); 
+      $this->data['results'] = $this->General_setting_model->get_item_unit();
       $this->data['meta_title'] = 'Item Unit List';
       $this->data['subview'] = 'item_unit';
       $this->load->view('backend/_layout_main', $this->data);
    }
 
    public function designation(){
-      $this->data['results'] = $this->General_setting_model->get_designation(); 
+      $this->data['results'] = $this->General_setting_model->get_designation();
       $this->data['meta_title'] = 'All designation List';
       $this->data['subview'] = 'designation';
       $this->load->view('backend/_layout_main', $this->data);
-   }   
+   }
    public function designation_add(){
       $this->form_validation->set_rules('department_name', 'Department Name', 'required|trim');
 
       if ($this->form_validation->run() == true){
          $form_data = array(
             'desig_name'      => $this->input->post('department_name'),
-            ); 
+            );
 
          if($this->Common_model->save('designation', $form_data)){
             $this->session->set_flashdata('success', 'Designation create successfully.');
@@ -174,7 +228,6 @@ class General_setting extends Backend_Controller {
       $this->data['subview'] = 'designation_add';
       $this->load->view('backend/_layout_main', $this->data);
    }
-
    public function designation_edit($id){
       $this->form_validation->set_rules('department_name', 'Department Name', 'required|trim');
 
@@ -182,7 +235,7 @@ class General_setting extends Backend_Controller {
 
          $form_data = array(
             'desig_name'       => $this->input->post('department_name')
-            );        
+            );
 
 
          if($this->Common_model->edit('designation', $id, 'id', $form_data)){
@@ -200,7 +253,7 @@ class General_setting extends Backend_Controller {
    }
 
    public function department(){
-      $this->data['results'] = $this->General_setting_model->get_department(); 
+      $this->data['results'] = $this->General_setting_model->get_department();
       $this->data['meta_title'] = 'All Department List';
       $this->data['subview'] = 'department';
       $this->load->view('backend/_layout_main', $this->data);
@@ -214,7 +267,7 @@ class General_setting extends Backend_Controller {
 
          $form_data = array(
             'dept_name'      => $this->input->post('department_name'),
-            ); 
+            );
 
          if($this->Common_model->save('department', $form_data)){
             $this->session->set_flashdata('success', 'Department create successfully.');
@@ -235,7 +288,7 @@ class General_setting extends Backend_Controller {
 
          $form_data = array(
             'dept_name'       => $this->input->post('department_name')
-            );        
+            );
 
 
          if($this->Common_model->edit('department', $id, 'id', $form_data)){
@@ -253,7 +306,7 @@ class General_setting extends Backend_Controller {
    }
    // group crud
    public function group(){
-      $this->data['results'] = $this->db->get('groups')->result(); 
+      $this->data['results'] = $this->db->get('groups')->result();
       $this->data['meta_title'] = 'All Group List';
       $this->data['subview'] = 'group';
       $this->load->view('backend/_layout_main', $this->data);
@@ -266,7 +319,7 @@ class General_setting extends Backend_Controller {
             'name'=> $this->input->post('group_name'),
             'pw'  =>  implode(',', $this->input->post('pw')),
             'permission'  =>  implode(',', $this->input->post('permission')),
-            ); 
+            );
          if($this->Common_model->save('groups', $form_data)){
             $this->session->set_flashdata('success', 'Group create successfully.');
             redirect('general_setting/group');
@@ -287,7 +340,7 @@ class General_setting extends Backend_Controller {
             'name'       => $this->input->post('group_name'),
             'pw'  =>  implode(',', $this->input->post('pw')),
             'permission'  =>  implode(',', $this->input->post('permission'))
-            );        
+            );
          if($this->Common_model->edit('groups', $id, 'id', $form_data)){
             $this->session->set_flashdata('success', 'Information update successfully.');
             redirect('general_setting/group');
@@ -331,7 +384,7 @@ class General_setting extends Backend_Controller {
    }
 
    public function post_office(){
-     $this->data['results'] = $this->General_setting_model->get_post_office(); 
+     $this->data['results'] = $this->General_setting_model->get_post_office();
         // print_r($this->data['results']); exit;
         // Load page
      $this->data['meta_title'] = 'All Post Office';
@@ -375,7 +428,7 @@ class General_setting extends Backend_Controller {
        'district_name'      => $this->input->post('district_name'),
        'district_name_bn'   => $this->input->post('district_name_bn'),
        'district_geo'       => $this->input->post('district_geo')?$this->input->post('district_geo'):NULL
-       );           
+       );
 
             // print_r($form_data); exit;
       if($this->Common_model->save('district', $form_data)){
@@ -413,7 +466,7 @@ class General_setting extends Backend_Controller {
           'district_name_bn'   => $this->input->post('district_name_bn'),
           'district_geo'       => $this->input->post('district_geo')?$this->input->post('district_geo'):NULL,
           'status'             => $this->input->post('status'),
-          );           
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->edit('district',$id, 'id', $form_data)){
@@ -439,7 +492,7 @@ class General_setting extends Backend_Controller {
 
 
        public function division(){
-        $this->data['results'] = $this->General_setting_model->get_division(); 
+        $this->data['results'] = $this->General_setting_model->get_division();
         // print_r($this->data['results']); exit;
         // Load page
         $this->data['meta_title'] = 'All Division';
@@ -459,7 +512,7 @@ class General_setting extends Backend_Controller {
           'div_name'      => $this->input->post('div_name'),
           'div_name_bn'   => $this->input->post('div_name_bn'),
           'div_geo'       =>  $this->input->post('div_geo_code')?$this->input->post('div_geo_code'):NULL
-          );           
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->save('division', $form_data)){
@@ -493,7 +546,7 @@ class General_setting extends Backend_Controller {
           'div_name_bn'   => $this->input->post('div_name_bn'),
           'div_geo'       => $this->input->post('div_geo_code')?$this->input->post('div_geo_code'):NULL,
           'status'        => $this->input->post('status'),
-          );           
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->edit('division',$id, 'id', $form_data)){
@@ -538,7 +591,7 @@ class General_setting extends Backend_Controller {
           'slug' => $this->input->post('slug'),
           'short_desc' => $this->input->post('short_desc'),
           'meta_keys' => $this->input->post('meta_keys')?$this->input->post('meta_keys'):NULL
-          );           
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->edit('users', $id, 'id', $form_data)){
@@ -558,8 +611,8 @@ class General_setting extends Backend_Controller {
 
 
        public function unit_office_add(){
-        $this->form_validation->set_rules('title', 'course title', 'required|trim'); 
-        $this->form_validation->set_rules('slug', 'course slug', 'required|trim');          
+        $this->form_validation->set_rules('title', 'course title', 'required|trim');
+        $this->form_validation->set_rules('slug', 'course slug', 'required|trim');
         $this->form_validation->set_rules('short_desc', 'course short description', 'required|max_length[1000]|trim');
 
         if ($this->form_validation->run() == true){
@@ -568,16 +621,16 @@ class General_setting extends Backend_Controller {
           'title' => $this->input->post('title'),
           'slug' => $this->input->post('slug'),
           'short_desc' => $this->input->post('short_desc'),
-          'meta_keys' => $this->input->post('meta_keys')?$this->input->post('meta_keys'):NULL           
-          );          
+          'meta_keys' => $this->input->post('meta_keys')?$this->input->post('meta_keys'):NULL
+          );
 
             // print_r($form_data); exit;
 
-         if($this->Common_model->save('users', $form_data)){  
+         if($this->Common_model->save('users', $form_data)){
           /***********Activity Logs Start**********/
           $insert_id = $this->db->insert_id();
                 func_activity_log(1, 'scouts member insert ID :'.$insert_id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
-                /***********Activity Logs End**********/     
+                /***********Activity Logs End**********/
                 $this->session->set_flashdata('success', 'New scouts member insert successfully.');
                 redirect("all");
              }
@@ -604,7 +657,7 @@ class General_setting extends Backend_Controller {
           'up_th_name'         => $this->input->post('up_th_name'),
           'up_th_name_bn'      => $this->input->post('up_th_name_bn'),
           'up_th_geo'          => $this->input->post('up_th_geo')?$this->input->post('up_th_geo'):NULL
-          );           
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->save('upazila_thana', $form_data)){
@@ -642,7 +695,7 @@ class General_setting extends Backend_Controller {
           'up_th_name_bn'      => $this->input->post('up_th_name_bn'),
           'status'             => $this->input->post('status'),
           'up_th_geo'          => $this->input->post('up_th_geo')?$this->input->post('up_th_geo'):NULL
-          );           
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->edit('upazila_thana',$id, 'id', $form_data)){
@@ -666,7 +719,7 @@ class General_setting extends Backend_Controller {
        }
 
        public function occupation(){
-        $this->data['results'] = $this->General_setting_model->get_occupation(); 
+        $this->data['results'] = $this->General_setting_model->get_occupation();
         // print_r($this->data['results']); exit;
         // Load page
         $this->data['meta_title'] = 'All Occupation List';
@@ -684,7 +737,7 @@ class General_setting extends Backend_Controller {
          $form_data = array(
           'occupation_name'      => $this->input->post('occupation_name'),
           'occupation_name_bn'   => $this->input->post('occupation_name_bn'),
-          );           
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->save('occupation', $form_data)){
@@ -714,7 +767,7 @@ class General_setting extends Backend_Controller {
           'occupation_name'      => $this->input->post('occupation_name'),
           'occupation_name_bn'   => $this->input->post('occupation_name_bn'),
           'status'               => $this->input->post('status')
-          );           
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->edit('occupation', $id, 'id', $form_data)){
@@ -736,7 +789,7 @@ class General_setting extends Backend_Controller {
        }
 
        public function committee_type(){
-        $this->data['results'] = $this->General_setting_model->get_committee_type(); 
+        $this->data['results'] = $this->General_setting_model->get_committee_type();
         // print_r($this->data['results']); exit;
         // Load page
         $this->data['meta_title'] = 'All Committee Type';
@@ -754,7 +807,7 @@ class General_setting extends Backend_Controller {
          $form_data = array(
           'office_type_id'        => $this->input->post('office_type_id'),
           'committee_type_name'   => $this->input->post('committee_type_name')
-          );           
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->save('committee_type', $form_data)){
@@ -787,7 +840,7 @@ class General_setting extends Backend_Controller {
           'office_type_id'        => $this->input->post('office_type_id'),
           'committee_type_name'   => $this->input->post('committee_type_name'),
           'status'                => $this->input->post('status')
-          );           
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->edit('committee_type', $id, 'id', $form_data)){
@@ -811,7 +864,7 @@ class General_setting extends Backend_Controller {
        }
 
        public function committee_designation(){
-        $this->data['results'] = $this->General_setting_model->get_committee_designation(); 
+        $this->data['results'] = $this->General_setting_model->get_committee_designation();
         // print_r($this->data['results']); exit;
         // Load page
         $this->data['meta_title'] = 'All Committee Designation List';
@@ -827,7 +880,7 @@ class General_setting extends Backend_Controller {
          $form_data = array(
           'office_level'              => implode(',', $this->input->post('officeType')),
           'committee_designation_name'=> $this->input->post('committee_designation_name')
-          );           
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->save('committee_designation', $form_data)){
@@ -860,7 +913,7 @@ class General_setting extends Backend_Controller {
           'office_level'              => implode(',', $this->input->post('officeType')),
           'committee_designation_name'=> $this->input->post('committee_designation_name'),
           'status'                    => $this->input->post('status')
-          );           
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->edit('committee_designation', $id, 'id', $form_data)){
@@ -887,7 +940,7 @@ class General_setting extends Backend_Controller {
 
 
        public function badge_type(){
-        $this->data['results'] = $this->General_setting_model->get_badge_type(); 
+        $this->data['results'] = $this->General_setting_model->get_badge_type();
         $this->data['meta_title'] = 'All Badge Type List';
         $this->data['subview'] = 'badge_type';
         $this->load->view('backend/_layout_main', $this->data);
@@ -927,11 +980,11 @@ class General_setting extends Backend_Controller {
      $form_data = array(
        'badge_type_name_bn'      => $this->input->post('badge_type_name_bn'),
        'badge_type_name_en'      => $this->input->post('badge_type_name_en'),
-       ); 
+       );
 
      if($_FILES['badge_logo']['size'] > 0){
        $form_data['badge_logo'] = $uploadedFile;
-    }          
+    }
 
 
             // print_r($form_data); exit;
@@ -985,11 +1038,11 @@ class General_setting extends Backend_Controller {
      $form_data = array(
        'badge_type_name_bn'      => $this->input->post('badge_type_name_bn'),
        'badge_type_name_en'      => $this->input->post('badge_type_name_en'),
-       ); 
+       );
 
      if($_FILES['badge_logo']['size'] > 0){
        $form_data['badge_logo'] = $uploadedFile;
-    }          
+    }
 
 
             // print_r($form_data); exit;
@@ -1012,7 +1065,7 @@ class General_setting extends Backend_Controller {
        }
 
        public function role_type(){
-        $this->data['results'] = $this->General_setting_model->get_role_type(); 
+        $this->data['results'] = $this->General_setting_model->get_role_type();
         $this->data['meta_title'] = 'All Role Type List';
         $this->data['subview'] = 'role_type';
         $this->load->view('backend/_layout_main', $this->data);
@@ -1029,7 +1082,7 @@ class General_setting extends Backend_Controller {
          $form_data = array(
           'role_type_name_bn'      => $this->input->post('role_type_name_bn'),
           'role_type_name_en'      => $this->input->post('role_type_name_en'),
-          );         
+          );
 
 
             // print_r($form_data); exit;
@@ -1060,7 +1113,7 @@ class General_setting extends Backend_Controller {
          $form_data = array(
           'role_type_name_bn'      => $this->input->post('role_type_name_bn'),
           'role_type_name_en'      => $this->input->post('role_type_name_en'),
-          );         
+          );
 
 
             // print_r($form_data); exit;
@@ -1083,7 +1136,7 @@ class General_setting extends Backend_Controller {
        }
 
        public function scout_badge(){
-        $this->data['results'] = $this->General_setting_model->get_scout_badge(); 
+        $this->data['results'] = $this->General_setting_model->get_scout_badge();
         // print_r($this->data['results']); exit;
         // $this->data['section'] = $this->Common_model->set_scout_section_basic();
         // Load page
@@ -1128,11 +1181,11 @@ class General_setting extends Backend_Controller {
        'member_id'       => $this->input->post('member_id'),
        'section_id'      => $this->input->post('section_id'),
        'badge_type_id'   => $this->input->post('badge_type_id'),
-       ); 
+       );
 
      if($_FILES['badge_logo']['size'] > 0){
        $form_data['badge_logo'] = $uploadedFile;
-    }          
+    }
 
 
             // print_r($form_data); exit;
@@ -1194,11 +1247,11 @@ class General_setting extends Backend_Controller {
        'section_id'      => $this->input->post('section_id'),
        'badge_type_id'   => $this->input->post('badge_type_id'),
        'status'          => $this->input->post('status'),
-       ); 
+       );
 
      if($_FILES['badge_logo']['size'] > 0){
        $form_data['badge_logo'] = $uploadedFile;
-    }          
+    }
 
 
             // print_r($form_data); exit;
@@ -1225,7 +1278,7 @@ class General_setting extends Backend_Controller {
        }
 
        public function scout_role(){
-        $this->data['results'] = $this->General_setting_model->get_scout_role(); 
+        $this->data['results'] = $this->General_setting_model->get_scout_role();
         // print_r($this->data['results']); exit;
 
         // $this->data['section'] = $this->Common_model->set_scout_section_basic();
@@ -1246,7 +1299,7 @@ class General_setting extends Backend_Controller {
           'member_id'       => $this->input->post('member_id'),
           'section_id'      => $this->input->post('section_id'),
           'role_type_id'       => $this->input->post('role_type_id'),
-          ); 
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->save('scout_role', $form_data)){
@@ -1282,7 +1335,7 @@ class General_setting extends Backend_Controller {
           'section_id'      => $this->input->post('section_id'),
           'role_type_id'    => $this->input->post('role_type_id'),
           'status'          => $this->input->post('status'),
-          ); 
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->edit('scout_role', $id, 'id', $form_data)){
@@ -1295,7 +1348,7 @@ class General_setting extends Backend_Controller {
              }
           }
 
-          $this->data['section'] = $this->Common_model->set_scout_section();        
+          $this->data['section'] = $this->Common_model->set_scout_section();
           $this->data['member_type'] = $this->Common_model->get_member_type();
           $this->data['role_type'] = $this->Common_model->get_role_type();
 
@@ -1308,7 +1361,7 @@ class General_setting extends Backend_Controller {
        }
 
        public function scout_badge_question(){
-        $this->data['results'] = $this->General_setting_model->get_scout_badge_question(); 
+        $this->data['results'] = $this->General_setting_model->get_scout_badge_question();
         // print_r($this->data['results']); exit;
 
         // Load page
@@ -1327,7 +1380,7 @@ class General_setting extends Backend_Controller {
           'section_id'      => $this->input->post('section_id'),
           'badge_type_id'      => $this->input->post('badge_type_id'),
           'questions'     => $this->input->post('questions'),
-          ); 
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->save('scout_badge_question', $form_data)){
@@ -1359,7 +1412,7 @@ class General_setting extends Backend_Controller {
           'section_id'      => $this->input->post('section_id'),
           'badge_type_id'   => $this->input->post('badge_type_id'),
           'questions'       => $this->input->post('questions'),
-          ); 
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->edit('scout_badge_question', $id, 'id', $form_data)){
@@ -1387,7 +1440,7 @@ class General_setting extends Backend_Controller {
 //proficiency Group
 
        public function proficiency_badge(){
-        $this->data['results'] = $this->General_setting_model->proficiency_badge(); 
+        $this->data['results'] = $this->General_setting_model->proficiency_badge();
         // print_r($this->data['results']); exit;
 
         // Load page
@@ -1408,7 +1461,7 @@ class General_setting extends Backend_Controller {
           'prof_badge_id'     => $this->input->post('prof_badge_id'),
           'prof_badge_name'     => $this->input->post('prof_badge_name'),
 
-          ); 
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->save('scout_prof_badge', $form_data)){
@@ -1439,7 +1492,7 @@ class General_setting extends Backend_Controller {
     'prof_badge_id'            => $this->input->post('prof_badge_id'),
                 // 'badge_type_id'         => $this->input->post('badge_type_id'),
     'prof_badge_name'     => $this->input->post('prof_badge_name'),
-    ); 
+    );
 
             // print_r($form_data); exit;
    if($this->Common_model->edit('scout_prof_badge', $id, 'id', $form_data)){
@@ -1464,8 +1517,8 @@ $this->load->view('backend/_layout_main', $this->data);
 
 function proficiency_badge_delete($id) {
   $form_data = array(
-   'is_delete' => 1        
-   ); 
+   'is_delete' => 1
+   );
   $this->data['info'] = $this->Common_model->edit('scout_prof_badge',$id,'id',$form_data);
 
   $this->session->set_flashdata('success', 'Information delete successfully.');
@@ -1481,7 +1534,7 @@ function proficiency_badge_delete($id) {
 // Proficiency Badge Group
 
 public function proficiency_badge_group(){
-  $this->data['results'] = $this->General_setting_model->proficiency_badge_group(); 
+  $this->data['results'] = $this->General_setting_model->proficiency_badge_group();
         // print_r($this->data['results']); exit;
 
         // Load page
@@ -1499,7 +1552,7 @@ public function proficiency_badge_group_add(){
     'section_id'            => $this->input->post('section_id'),
                 // 'badge_type_id'         => $this->input->post('badge_type_id'),
     'prof_badge_group_name'     => $this->input->post('prof_badge_group_name'),
-    ); 
+    );
 
             // print_r($form_data); exit;
    if($this->Common_model->save('scout_prof_badge_group', $form_data)){
@@ -1529,7 +1582,7 @@ public function proficiency_badge_group_edit($id){
     'section_id'            => $this->input->post('section_id'),
                 // 'badge_type_id'         => $this->input->post('badge_type_id'),
     'prof_badge_group_name'     => $this->input->post('prof_badge_group_name'),
-    ); 
+    );
 
             // print_r($form_data); exit;
    if($this->Common_model->edit('scout_prof_badge_group', $id, 'id', $form_data)){
@@ -1552,8 +1605,8 @@ $this->load->view('backend/_layout_main', $this->data);
 
 function proficiency_badge_group_delete($id) {
   $form_data = array(
-   'is_delete' => 1        
-   ); 
+   'is_delete' => 1
+   );
   $this->data['info'] = $this->Common_model->edit('scout_prof_badge_group',$id,'id',$form_data);
   /***********Activity Logs Start**********/
         func_activity_log(3, 'scouts Expertness group delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -1568,7 +1621,7 @@ function proficiency_badge_group_delete($id) {
     // My Progress Course
 
      public function progress_course(){
-        $this->data['results'] = $this->General_setting_model->progress_course(); 
+        $this->data['results'] = $this->General_setting_model->progress_course();
         // print_r($this->data['results']); exit;
 
         // Load page
@@ -1588,7 +1641,7 @@ function proficiency_badge_group_delete($id) {
           'progress_id'            => $this->input->post('progress_id'),
                 // 'badge_type_id'         => $this->input->post('badge_type_id'),
           'course_name'     => $this->input->post('course_name'),
-          ); 
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->save('scout_progress_course', $form_data)){
@@ -1622,7 +1675,7 @@ function proficiency_badge_group_delete($id) {
     'progress_id'            => $this->input->post('progress_id'),
                 // 'badge_type_id'         => $this->input->post('badge_type_id'),
     'course_name'     => $this->input->post('course_name'),
-    ); 
+    );
 
             // print_r($form_data); exit;
    if($this->Common_model->edit('scout_progress_course', $id, 'id', $form_data)){
@@ -1646,8 +1699,8 @@ $this->load->view('backend/_layout_main', $this->data);
 
 function progress_course_delete($id) {
   $form_data = array(
-   'is_delete' => 1        
-   ); 
+   'is_delete' => 1
+   );
   $this->data['info'] = $this->Common_model->edit('scout_progress_course',$id,'id',$form_data);
   $this->session->set_flashdata('success', 'Information delete successfully.');
   redirect('general_setting/progress_course');
@@ -1658,7 +1711,7 @@ function progress_course_delete($id) {
 
 
 public function scout_expertness_group(){
-  $this->data['results'] = $this->General_setting_model->scout_expertness_group(); 
+  $this->data['results'] = $this->General_setting_model->scout_expertness_group();
         // print_r($this->data['results']); exit;
 
         // Load page
@@ -1676,7 +1729,7 @@ public function scout_expertness_group_add(){
     'section_id'            => $this->input->post('section_id'),
     'badge_type_id'         => $this->input->post('badge_type_id'),
     'expert_group_name'     => $this->input->post('expert_group_name'),
-    ); 
+    );
 
             // print_r($form_data); exit;
    if($this->Common_model->save('scout_expertness_group', $form_data)){
@@ -1707,7 +1760,7 @@ public function scout_expertness_group_add(){
           'section_id'            => $this->input->post('section_id'),
           'badge_type_id'         => $this->input->post('badge_type_id'),
           'expert_group_name'     => $this->input->post('expert_group_name'),
-          ); 
+          );
 
             // print_r($form_data); exit;
          if($this->Common_model->edit('scout_expertness_group', $id, 'id', $form_data)){
@@ -1747,8 +1800,8 @@ public function scout_expertness_group_add(){
        function division_delete($id) {
 
         $form_data = array(
-         'is_delete' => 1        
-         ); 
+         'is_delete' => 1
+         );
         $this->data['info'] = $this->Common_model->edit('division',$id,'id',$form_data);
         /***********Activity Logs Start**********/
         func_activity_log(3, 'division delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -1759,8 +1812,8 @@ public function scout_expertness_group_add(){
 
      function district_delete($id) {
         $form_data = array(
-         'is_delete' => 1        
-         ); 
+         'is_delete' => 1
+         );
         $this->data['info'] = $this->Common_model->edit('district',$id,'id',$form_data);
         /***********Activity Logs Start**********/
         func_activity_log(3, 'district delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -1772,8 +1825,8 @@ public function scout_expertness_group_add(){
 
      function upazila_thana_delete($id) {
         $form_data = array(
-         'is_delete' => 1        
-         ); 
+         'is_delete' => 1
+         );
         $this->data['info'] = $this->Common_model->edit('upazila_thana',$id,'id',$form_data);
         /***********Activity Logs Start**********/
         func_activity_log(3, 'upazila thana delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -1784,8 +1837,8 @@ public function scout_expertness_group_add(){
 
      function occupation_delete($id) {
         $form_data = array(
-         'is_delete' => 1        
-         ); 
+         'is_delete' => 1
+         );
         $this->data['info'] = $this->Common_model->edit('occupation',$id,'id',$form_data);
         /***********Activity Logs Start**********/
         func_activity_log(3, 'occupation delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -1796,8 +1849,8 @@ public function scout_expertness_group_add(){
 
      function committee_designation_delete($id) {
         $form_data = array(
-         'is_delete' => 1        
-         ); 
+         'is_delete' => 1
+         );
         $this->data['info'] = $this->Common_model->edit('committee_designation',$id,'id',$form_data);
         /***********Activity Logs Start**********/
         func_activity_log(3, 'committee designation delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -1808,8 +1861,8 @@ public function scout_expertness_group_add(){
 
      function scout_badge_delete($id) {
         $form_data = array(
-         'is_delete' => 1        
-         ); 
+         'is_delete' => 1
+         );
         $this->data['info'] = $this->Common_model->edit('scout_badge',$id,'id',$form_data);
         /***********Activity Logs Start**********/
         func_activity_log(3, 'scouts badge delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -1820,8 +1873,8 @@ public function scout_expertness_group_add(){
 
      function role_type_delete($id) {
         $form_data = array(
-         'is_delete' => 1        
-         ); 
+         'is_delete' => 1
+         );
         $this->data['info'] = $this->Common_model->edit('role_type',$id,'id',$form_data);
         /***********Activity Logs Start**********/
         func_activity_log(3, 'role type delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -1832,8 +1885,8 @@ public function scout_expertness_group_add(){
 
      function badge_type_delete($id) {
         $form_data = array(
-         'is_delete' => 1        
-         ); 
+         'is_delete' => 1
+         );
         $this->data['info'] = $this->Common_model->edit('badge_type',$id,'id',$form_data);
         /***********Activity Logs Start**********/
         func_activity_log(3, 'badge type delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -1844,8 +1897,8 @@ public function scout_expertness_group_add(){
 
      function department_delete($id) {
         $form_data = array(
-         'is_delete' => 1        
-         ); 
+         'is_delete' => 1
+         );
         $this->data['info'] = $this->Common_model->edit('department',$id,'id',$form_data);
         /***********Activity Logs Start**********/
         func_activity_log(3, 'department delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -1862,8 +1915,8 @@ public function scout_expertness_group_add(){
 
      function scout_badge_question_delete($id) {
         $form_data = array(
-         'is_delete' => 1        
-         ); 
+         'is_delete' => 1
+         );
         $this->data['info'] = $this->Common_model->edit('scout_badge_question',$id,'id',$form_data);
         /***********Activity Logs Start**********/
         func_activity_log(3, 'scouts badge questions delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -1873,8 +1926,8 @@ public function scout_expertness_group_add(){
      }
      function scout_expertness_group_delete($id) {
         $form_data = array(
-         'is_delete' => 1        
-         ); 
+         'is_delete' => 1
+         );
         $this->data['info'] = $this->Common_model->edit('scout_expertness_group',$id,'id',$form_data);
         /***********Activity Logs Start**********/
         func_activity_log(3, 'scouts Expertness group delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -1885,8 +1938,8 @@ public function scout_expertness_group_add(){
 
      function scout_role_delete($id) {
         $form_data = array(
-         'is_delete' => 1        
-         ); 
+         'is_delete' => 1
+         );
         $this->data['info'] = $this->Common_model->edit('scout_role',$id,'id',$form_data);
         /***********Activity Logs Start**********/
         func_activity_log(3, 'scout role delete ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
@@ -2005,7 +2058,7 @@ public function scout_expertness_group_add(){
         // print_r($results); exit;
 
         $this->data['institute'] = $results['rows'];
-        $this->data['total_rows'] = $results['num_rows'];        
+        $this->data['total_rows'] = $results['num_rows'];
 
         //pagination
         $this->data['pagination'] = create_pagination('general_setting/institute/', $this->data['total_rows'], $limit, 3, $full_tag_wrap = true);
@@ -2022,7 +2075,7 @@ public function scout_expertness_group_add(){
         $json = [];
         if(!empty($this->input->get("q"))){
          $this->db->or_like('name', $this->input->get("q"), 'after');
-         $this->db->or_like('eiin', $this->input->get("q"), 'after'); 
+         $this->db->or_like('eiin', $this->input->get("q"), 'after');
          $query = $this->db->select('id, CONCAT(name, " (", eiin, ")") AS text')
          ->limit(30)
          ->get("institute");
@@ -2036,7 +2089,7 @@ public function scout_expertness_group_add(){
      $json = [];
      if(!empty($this->input->get("q"))){
       $this->db->or_like('grp_name', $this->input->get("q"), 'after');
-      $this->db->or_like('grp_name_bn', $this->input->get("q"), 'after'); 
+      $this->db->or_like('grp_name_bn', $this->input->get("q"), 'after');
       $query = $this->db->select('id, CONCAT(grp_name, " (", grp_name_bn, ")") AS text')
       ->limit(30)
       ->get("office_groups");
@@ -2050,11 +2103,11 @@ public function file_check($str){
   $this->load->helper('file');
   $allowed_mime_type_arr = array('image/gif','image/jpeg','image/png','image/x-png');
   $mime = get_mime_by_extension($_FILES['badge_logo']['name']);
-  $file_size = 1050000; 
+  $file_size = 1050000;
   $size_kb = '1 MB';
 
   if(isset($_FILES['badge_logo']['name']) && $_FILES['badge_logo']['name']!=""){
-   if(!in_array($mime, $allowed_mime_type_arr)){                
+   if(!in_array($mime, $allowed_mime_type_arr)){
     $this->form_validation->set_message('file_check', 'Please select only jpg, jpeg, png, gif file.');
     return false;
  }elseif($_FILES["badge_logo"]["size"] > $file_size){

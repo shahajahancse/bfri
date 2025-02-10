@@ -21,7 +21,7 @@
     type="text/css" media="screen"/>
    <link href="<?=base_url();?>awedget/assets/plugins/select2/select2.css" rel="stylesheet" type="text/css" media="screen"/>
     <link href="<?=base_url();?>awedget/assets/plugins/dropzone/css/dropzone.css" rel="stylesheet" type="text/css"/>
- 
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.css" rel="stylesheet">
     <!-- Datepicker -->
     <link href="<?=base_url();?>awedget/assets/plugins/bootstrap-datepicker/css/datepicker.css" rel="stylesheet"
@@ -98,7 +98,7 @@
                     <a href="<?=base_url('dashboard')?>"> <img style="height: 60px;width: 251px;" src="<?=base_url('awedget/assets/img/logo.jpg')?>" alt=""></a>
                     <ul class="nav pull-right notifcation-center">
                         <li class="dropdown" id="header_task_bar">
-                          
+
                         </li>
                     </ul>
                 </div>
@@ -130,11 +130,11 @@
                             <?php
                             $this->load->model('Common_model');
                             $get_requisition = $this->Common_model->get_requisition($limit, $offset, '1');
-                            $get_purchase = $this->Common_model->get_purchase($limit, $offset, '1'); 
+                            $get_purchase = $this->Common_model->get_purchase($limit, $offset, '1');
                             $allcount=count($get_requisition) + count($get_purchase);
                             ?>
 
-                             <a id="notification" onclick="get_notification()" style="padding: 11px 19px;position: relative; display: inline-block; cursor: pointer;"> 
+                             <a id="notification" onclick="get_notification()" style="padding: 11px 19px;position: relative; display: inline-block; cursor: pointer;">
                                <span class="badge badge-danger" style="position: absolute;height: 15px;padding: 1px 6px;margin: -5px 9px;"><?=$allcount?></span>
                                 <i class="fa fa-bell" style="font-size: 22px; color: #8dc641 !important;"></i>
                              </a>
@@ -163,11 +163,11 @@
                                     padding-left: 12px;
                                 }
                              </style>
-                             <div id="notification_content" style="position: absolute;background: aliceblue;width: 264px;min-height: 198px;margin: 33px -87px;border-radius: 15px;height: fit-content;"> 
+                             <div id="notification_content" style="position: absolute;background: aliceblue;width: 264px;min-height: 198px;margin: 33px -87px;border-radius: 15px;height: fit-content;">
                                 <div class="col-md-12" style="height: fit-content;border-bottom: 1px solid;padding: 0;overflow: auto;max-height: 241px;">
                                     <span style="height: 31px;display: block;background: #8dc641;color: black;font-weight: bold;padding: 5px 9px;font-size: larger;position: fixed;width: 264px;">Requisition <span class="badge badge-danger"><?=count($get_requisition)?></span></span>
                                     <ul style="margin-top: 36px;padding: 0;">
-                                    <?php 
+                                    <?php
                                         if(count($get_requisition) > 0){
                                             foreach ($get_requisition as $key => $value) {
                                                 ?>
@@ -208,10 +208,10 @@
                                                <?php }}else{?>
                                                     <span>No Purchase</span>
                                                 <?php }?>
-                                       
+
                                     </ul>
                                 </div>
-                                
+
                              </div>
                              <script>
                              function get_notification(){
@@ -223,7 +223,7 @@
                             //        $("#notification_content").toggle();
                             //      }
                             //    }
-                               
+
                              </script>
                             <?php
                                 $path = base_url().'profile_img/';
@@ -305,7 +305,7 @@
                                         <li> <a href="<?=base_url('requisition/delivered_list');?>"> Requisition Delivered List </a> </li>
                                     </ul>
                                 </li>
-                                <?php 
+                                <?php
                                  if(in_array('6', $this->ion_auth->get_permission())){?>
                                 <li class="start <?=backend_activate_menu_class('purchase')?>"> <a href="javascript:;">
                                         <i class="fa fa-tags"></i> <span class="title">Purchase</span> <span
@@ -319,7 +319,7 @@
                                         <li> <a href="<?=base_url('purchase/purchase_received');?>"> Purchase Received </a> </li>
                                     </ul>
                                 </li>
-                            
+
                                 <li class="start <?=activate_menu_method('index')?>"><a
                                         href="<?=base_url('reports/index')?>"> <i class="fa fa-th"></i>
                                         <span class="title">Reports</span> </a>
@@ -349,6 +349,7 @@
                                         <li> <a href="<?=base_url('general_setting/item_unit');?>"> Item Unit</a></li>
                                         <li> <a href="<?=base_url('general_setting/department');?>"> Department</a></li>
                                         <li> <a href="<?=base_url('general_setting/designation');?>"> Designation</a>
+                                        <li> <a href="<?=base_url('general_setting/units');?>"> Branch</a>
                                         <li> <a href="<?=base_url('general_setting/group');?>"> Group</a>
                                         </li>
                                     </ul>
@@ -414,12 +415,12 @@
                             <!-- <img src="<?php echo base_url('fwedget/assets/images/logo_ict.png')?>" height="10"> </a> </span> -->
                         </div>
                         <div class="copyrights pull-right" style="width: 50%">
-                            <!-- <span style=" float: right;"> <span style="vertical-align: bottom; font-size: 11px;">Developed By |</span> <a href="http://www.mysoftheaven.com/" target="_blank"> 
+                            <!-- <span style=" float: right;"> <span style="vertical-align: bottom; font-size: 11px;">Developed By |</span> <a href="http://www.mysoftheaven.com/" target="_blank">
                   <img src="<?php echo base_url('awedget/assets/img/mysoft-logo.png')?>" height="18"></a> </span> -->
                         </div>
 
                         <?php /*
-               <!-- <div class="lock">    
+               <!-- <div class="lock">
                   <a href="<?=base_url('login/logout')?>"><i class="fa fa-power-off"></i></a>
                     </div> -->
                     */ ?>

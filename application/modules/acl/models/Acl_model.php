@@ -19,20 +19,21 @@ class Acl_model extends CI_Model {
 
     public function get_users($limit = 1000, $offset = 0) {
         // result query
-        $this->db->select('u.id, u.username, u.first_name, u.phone, u.email, u.created_on, u.last_login, u.active, dp.dept_name, dg.desig_name');
+        $this->db->select('u.id, u.username, u.first_name, u.phone, u.email, u.created_on, u.last_login, u.active, dp.dept_name, dg.desig_name, un.name_en');
         $this->db->from('users u');
+        $this->db->join('units un', 'un.id = u.unit_id', 'LEFT');
         $this->db->join('department dp', 'dp.id = u.dept_id', 'LEFT');
         $this->db->join('designation dg', 'dg.id = u.desig_id', 'LEFT');
         $this->db->limit($limit);
-        $this->db->offset($offset);        
+        $this->db->offset($offset);
         $this->db->order_by('u.id', 'DESC');
         if($this->input->get('name') != NULL){
             $this->db->like('u.first_name', $this->input->get('name'));
         }
         if($this->input->get('username') != NULL){
-            $this->db->where('u.email', $this->input->get('username')); 
+            $this->db->where('u.email', $this->input->get('username'));
         }
-        // $this->db->where('id !=', 3); 
+        // $this->db->where('id !=', 3);
         // echo $this->db->last_query(); exit;
         $result['rows'] = $this->db->get()->result();
 
@@ -43,9 +44,9 @@ class Acl_model extends CI_Model {
             $this->db->like('first_name', $this->input->get('name'));
         }
         if($this->input->get('username') != NULL){
-            $this->db->where('email', $this->input->get('username')); 
+            $this->db->where('email', $this->input->get('username'));
         }
-        // $this->db->where('id !=', 3); 
+        // $this->db->where('id !=', 3);
         $tmp = $this->db->get()->result();
         $result['num_rows'] = $tmp[0]->count;
 
@@ -205,11 +206,11 @@ class Acl_model extends CI_Model {
 
         return $data;
     }
-    
-    public function user_destroy($id) {        
+
+    public function user_destroy($id) {
         $query = $this->db->delete('users', array('id' => $id));
         return $query;
-    } 
+    }
 
     // public function get_members_count() {
     //     // count query

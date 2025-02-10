@@ -17,39 +17,76 @@
                         </div>
                     </div>
                     <div class="grid-body">
-                        <?php echo form_open("acl/create_user", array('id' => 'jsvalidate'));?>
-
-                        <?php if($this->session->flashdata('success')):?>
-                        <div class="alert alert-success">
-                            <?php echo $this->session->flashdata('success');?>
-                        </div>
-                        <?php endif; ?>
-
+                        <?php echo form_open("acl/create_user", array('id' => 'js_validate'));?>
                         <div class="row form-row">
                             <div class="col-md-6">
-                                <label class="form-label">Full Name</label>
+                                <label class="form-label">Full Name <span style="color:red">*</span></label>
                                 <?php echo form_error('full_name'); ?>
                                 <?php echo form_input($full_name);?>
                             </div>
+                            <?php $units = $this->db->get('units')->result(); ?>
                             <div class="col-md-6">
-                                <?php if($identity_column!=='email') { ?>
-                                <label class="form-label">Username or Email</label>
-                                <?php echo form_error('identity'); ?>
-                                <?php echo form_input($identity);?>
-                                <?php } ?>
+                                <label class="form-label">Branch <span style="color:red">*</span></label>
+                                <?php echo form_error('unit_id'); ?>
+                                <select name="unit_id" id="unit_id" class="form-control input-sm select2">
+                                    <option value="">Select Branch</option>
+                                    <?php foreach($units as $unit):?>
+                                    <option value="<?=$unit->id?>" <?=set_select('unit_id', $unit->id)?>><?=$unit->name_en?></option>
+                                    <?php endforeach;?>
+                                </select>
                             </div>
                         </div>
-
                         <div class="row form-row">
+                            <div class="col-md-6">
+                                <label class="form-label">NID <span style="color:red">*</span> <small>(Username)</small></label>
+                                <?php echo form_error('identity'); ?>
+                                <?php echo form_input($identity);?>
+                            </div>
                             <div class="col-md-6">
                                 <label class="form-label"><?php echo lang('create_user_phone_label', 'phone');?></label>
                                 <?php echo form_error('phone'); ?>
                                 <?php echo form_input($phone);?>
                             </div>
+                        </div>
+
+                        <div class="row form-row">
+                            <?php $departments = $this->db->get('department')->result(); ?>
+                            <div class="col-md-6">
+                                <label class="form-label">Department <span style="color:red">*</span></label>
+                                <?php echo form_error('dept_id'); ?>
+                                <select name="dept_id" id="dept_id" class="form-control input-sm select2">
+                                    <option value="">Select Department</option>
+                                    <?php foreach($departments as $d):?>
+                                    <option value="<?=$d->id?>" <?=set_select('dept_id', $d->id)?>><?=$d->dept_name?></option>
+                                    <?php endforeach;?>
+                                </select>
+                            </div>
+                            <?php $designations = $this->db->get('designation')->result(); ?>
+                            <div class="col-md-6">
+                                <label class="form-label">Designation <span style="color:red">*</span></label>
+                                <?php echo form_error('desig_id'); ?>
+                                <select name="desig_id" id="desig_id" class="form-control input-sm select2">
+                                    <option value="">Select Designation</option>
+                                    <?php foreach($designations as $des):?>
+                                    <option value="<?=$des->id?>" <?=set_select('desig_id', $des->id)?>><?=$des->desig_name?></option>
+                                    <?php endforeach;?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row form-row">
                             <div class="col-md-6">
                                 <label class="form-label"><?php echo lang('create_user_email_label', 'email');?></label>
                                 <?php echo form_error('email'); ?>
                                 <?php echo form_input($email);?>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Status <span style="color:red">*</span></label>
+                                <select name="status" id="status" class="form-control input-sm select2">
+                                    <option value="">Select one</option>
+                                    <option value="1">Active</option>
+                                    <option value="2">Inactive</option>
+                                </select>
                             </div>
                         </div>
 
@@ -78,67 +115,84 @@
                     </div> <!-- END GRID BODY -->
                 </div> <!-- END GRID -->
             </div>
-
         </div> <!-- END ROW -->
-
     </div>
 </div>
 
 <script type="text/javascript">
-$(document).ready(function() {
+    $(document).ready(function() {
+        // JS Validation
+        $('#js_validate').validate({
+            // focusInvalid: false,
+            ignore: "",
+            rules: {
+                full_name: {
+                    required: true
+                },
+                phone: {
+                    required: true,
+                    number: true,
+                    minlength: 11,
+                    maxlength: 11
+                },
+                unit_id: {
+                    required: true
+                },
+                identity:{
+                    required: true,
+                    number: true,
+                    minlength: 3,
+                    remote: {
+                        url: hostname +"common/ajax_exists_nid/",
+                        type: "post",
+                        data: {
+                            inputData: function() {
+                                return $( "#identity" ).val();
+                            },
+                        }
+                    }
+                },
+                dept_id: {
+                    required: true
+                },
+                designation_id: {
+                    required: true
+                },
+                email: {
+                    required: true
+                },
+            },
+            messages: {
+                identity: {
+                    remote: jQuery.format("Already used!")
+                },
+            },
+            invalidHandler: function(event, validator) {
+                //display error alert on form submit
+            },
 
-    // JS Validation
-    $('#jsvalidate').validate({
-        // focusInvalid: false, 
-        ignore: "",
-        rules: {
-            full_name: {
-                required: true
+            errorPlacement: function(label, element) { // render error placement for each input type
+                $('<span class="error"></span>').insertAfter(element).append(label)
+                var parent = $(element).parent('.input-with-icon');
+                parent.removeClass('success-control').addClass('error-control');
             },
-            phone: {
-                required: true,
-                number: true,
-                minlength: 11,
-                maxlength: 11
+
+            highlight: function(element) { // highlight error inputs
+                var parent = $(element).parent();
+                parent.removeClass('success-control').addClass('error-control');
             },
-            date: {
-                required: true
+
+            unhighlight: function(element) { // revert the change done by highlight
             },
-            date_end: {
-                required: true
+
+            success: function(label, element) {
+                var parent = $(element).parent('.input-with-icon');
+                parent.removeClass('error-control').addClass('success-control');
             },
-            venue: {
-                required: true
+
+            submitHandler: function(form) {
+                form.submit();
             }
-        },
-
-        invalidHandler: function(event, validator) {
-            //display error alert on form submit    
-        },
-
-        errorPlacement: function(label, element) { // render error placement for each input type   
-            $('<span class="error"></span>').insertAfter(element).append(label)
-            var parent = $(element).parent('.input-with-icon');
-            parent.removeClass('success-control').addClass('error-control');
-        },
-
-        highlight: function(element) { // hightlight error inputs
-            var parent = $(element).parent();
-            parent.removeClass('success-control').addClass('error-control');
-        },
-
-        unhighlight: function(element) { // revert the change done by hightlight
-
-        },
-
-        success: function(label, element) {
-            var parent = $(element).parent('.input-with-icon');
-            parent.removeClass('error-control').addClass('success-control');
-        },
-
-        submitHandler: function(form) {
-            form.submit();
-        }
+        });
     });
-});
 </script>

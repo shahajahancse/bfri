@@ -927,36 +927,38 @@ class Ion_auth_model extends CI_Model
 	 * @return bool
 	 * @author Mathew
 	 **/
-	public function register($identity, $password, $email, $additional_data = array(), $groups = array())
+	public function register($identity, $password, $email, $ad_data = array(), $groups = array())
 	{
-		// dd($identity, $password, $email, $additional_data, $groups);
-
+		// dd($identity, $password, $email, $ad_data, $groups);
 		// capture default group details
-
 		// IP Address
 		$ip_address = $this->_prepare_ip($this->input->ip_address());
 		$salt       = $this->store_salt ? $this->salt() : FALSE;
 		$password   = $this->hash_password($password, $salt);
-		$first_name=$additional_data['first_name'];
-		$phone=$additional_data['phone'];
+		$first_name=$ad_data['first_name'];
+		$unit_id=$ad_data['unit_id'];
+		$username=$ad_data['username'];
+		$phone=$ad_data['phone'];
+		$dept_id=$ad_data['dept_id'];
+		$desig_id=$ad_data['desig_id'];
+		$status=$ad_data['status'];
 
 
 		$data = array(
-		    'username'   => $identity,
-		    'password'   => $password,
-		    'email'      => $email,
-		    'ip_address' => $ip_address,
-		    'created_on' => time(),
-		    'active'     => ($manual_activation === false ? 1 : 0),
-			'first_name' => $first_name,
-			'phone' => $phone
+			'first_name'	=> $first_name,
+		    'unit_id'   	=> $unit_id,
+		    'username'   	=> $username,
+		    'phone'      	=> $phone,
+		    'dept_id'      	=> $dept_id,
+		    'desig_id'     	=> $desig_id,
+		    'email'      	=> $email,
+		    'status'      	=> $status,
+		    'ip_address' 	=> $ip_address,
+		    'created_on'	=> time(),
+		    'active'     	=> 1,
 		);
-
 		$this->db->insert($this->tables['users'], $data);
-
 		$id = $this->db->insert_id();
-
-
 		return (isset($id)) ? $id : FALSE;
 	}
 
@@ -969,7 +971,6 @@ class Ion_auth_model extends CI_Model
 	public function login($identity, $password, $remember=FALSE)
 	{
 		$this->trigger_events('pre_login');
-
 		if (empty($identity) || empty($password))
 		{
 			$this->set_error('login_unsuccessful');
@@ -978,27 +979,22 @@ class Ion_auth_model extends CI_Model
 
 		$this->trigger_events('extra_where');
 
-		$query = $this->db->select($this->identity_column . ', email, id, active, last_login, first_name, last_name, created_on')
+		$query = $this->db->select($this->identity_column . ', email, id, active, last_login, first_name, last_name, created_on, unit_id')
 		                  ->where($this->identity_column, $identity)
-		                  ->limit(1)
-		    			  		->order_by('id', 'desc')
+		                  ->limit(1)->order_by('id', 'desc')
 		                  ->get($this->tables['users']);
 
 		if($this->is_time_locked_out($identity))
 		{
-			// Hash something anyway, just to take up time
 			$this->hash_password($password);
-
 			$this->trigger_events('post_login_unsuccessful');
 			$this->set_error('login_timeout');
-
 			return FALSE;
 		}
 
 		if ($query->num_rows() === 1)
 		{
 			$user = $query->row();
-
 			$password = $this->hash_password_db($user->id, $password);
 
 			if ($password === TRUE)
@@ -1007,14 +1003,11 @@ class Ion_auth_model extends CI_Model
 				{
 					$this->trigger_events('post_login_unsuccessful');
 					$this->set_error('login_unsuccessful_not_active');
-
 					return FALSE;
 				}
 
 				$this->set_session($user);
-
 				$this->update_last_login($user->id);
-
 				$this->clear_login_attempts($identity);
 
 				if ($remember && $this->config->item('remember_users', 'ion_auth'))
@@ -1024,19 +1017,15 @@ class Ion_auth_model extends CI_Model
 
 				$this->trigger_events(array('post_login', 'post_login_successful'));
 				$this->set_message('login_successful');
-
 				return TRUE;
 			}
 		}
 
 		// Hash something anyway, just to take up time
 		$this->hash_password($password);
-
 		$this->increase_login_attempts($identity);
-
 		$this->trigger_events('post_login_unsuccessful');
 		$this->set_error('login_unsuccessful');
-
 		return FALSE;
 	}
 
