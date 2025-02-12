@@ -6,6 +6,19 @@ class Common_model extends CI_Model {
       parent::__construct();
    }
 
+   public function count_low_stock() {
+      $unit_id = $this->session->userdata('unit_id');
+      $this->db->distinct();
+      $this->db->select("SUM(CASE WHEN order_level > balance THEN 1 ELSE 0 END) as count");
+      $this->db->from('item_stocks s');
+      $this->db->where('order_level > balance');
+      if (!empty($unit_id)) {
+         $this->db->where('unit_id', $unit_id);
+      }
+      $query = $this->db->get()->row()->count;
+      return $query;
+   }
+
    public function get_current_fiscal_year() {
       $this->db->select('*');
       $this->db->from('fiscal_year');

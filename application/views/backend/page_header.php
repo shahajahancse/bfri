@@ -284,14 +284,14 @@
                                             class="title">Dashboard</span></a>
                                 </li>
 
+                                <!-- Requisition section -->
                                 <li class="start <?=backend_activate_menu_class('requisition')?>"> <a href="javascript:;">
                                         <i class="fa fa-tags"></i> <span class="title">Requisition</span> <span
                                             class="selected"></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
                                     <?php
                                         $permission=$this->ion_auth->get_permission();
-                                        if(in_array(1,$permission)){
-                                            ?>
+                                        if(in_array(1,$permission)){ ?>
                                        <li> <a href="<?=base_url('my_requisition/create');?>"> Create Requisition </a> </li>
                                         <?php } ?>
                                         <li> <a href="<?=base_url('requisition');?>"> Requisition List </a> </li>
@@ -301,6 +301,8 @@
                                         <li> <a href="<?=base_url('requisition/delivered_list');?>"> Requisition Delivered List </a> </li>
                                     </ul>
                                 </li>
+
+                                <!-- Purchase section -->
                                 <?php if(in_array('6', $this->ion_auth->get_permission())){ ?>
                                 <li class="start <?=backend_activate_menu_class('purchase')?>"> <a href="javascript:;">
                                         <i class="fa fa-tags"></i> <span class="title">Purchase</span> <span
@@ -314,25 +316,35 @@
                                         <li> <a href="<?=base_url('purchase/purchase_received');?>"> Purchase Received </a> </li>
                                     </ul>
                                 </li>
+                                <?php } ?>
 
+                                <!-- Report section -->
+                                <?php if($this->ion_auth->in_group(array('admin','badmin','sm'))){ ?>
                                 <li class="start <?=activate_menu_method('index')?>"><a
                                         href="<?=base_url('reports/index')?>"> <i class="fa fa-th"></i><span class="title">Reports</span> </a>
                                 </li>
                                 <li class="start <?=activate_menu_method('dynamic_report')?>"><a
                                         href="<?=base_url('reports/dynamic_report')?>"> <i class="fa fa-th"></i><span class="title">Dynamic Report</span> </a>
                                 </li>
+                                <?php } ?>
 
+                                <?php $low = 0; if($this->ion_auth->in_group(array('admin','badmin','sm'))){
+                                    $low = $this->Common_model->count_low_stock();
+                                } ?>
+                                <!-- Item Setup section -->
+                                <?php if($this->ion_auth->in_group(array('admin','badmin','sm'))){ ?>
                                 <li class="start <?=backend_activate_menu_class('items')?>">
-                                    <a href="javascript:;"> <i class="fa fa-tags"></i><span class="title">Item Setup</span> <span class="selected"></span> <span class="arrow"></span> </a>
+                                    <a href="javascript:;"> <i class="fa fa-tags"></i><span class="title">Item Setup <span class="badge badge-danger"><?=$low?></span></span> <span class="selected"></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
                                         <li> <a href="<?=base_url('items');?>"> Item List </a> </li>
                                         <li> <a href="<?=base_url('items/stock');?>"> Stock List </a> </li>
-                                        <li> <a href="<?=base_url('items/low_stock');?>"> Low Stock </a> </li>
+                                        <li> <a href="<?=base_url('items/low_stock');?>"> Low Stock <span class="badge badge-danger"><?=$low?></span></a> </li>
                                     </ul>
                                 </li>
                                 <?php } ?>
 
-                                <?php if($this->ion_auth->in_group(array('admin','badmin'))){ ?>
+                                <!-- General Setting  -->
+                                <?php if($this->ion_auth->in_group(array('admin','badmin','sm'))){ ?>
                                 <li class="start <?=backend_activate_menu_class('general_setting')?>"> <a
                                         href="javascript:;"> <i class="fa fa-cogs"></i> <span class="title">General
                                             Setting</span> <span class="selected"></span> <span class="arrow"></span>
@@ -353,6 +365,7 @@
                                 </li>
                                 <?php } ?>
 
+                                <!-- User ACL -->
                                 <?php if($this->ion_auth->is_admin()){ ?>
                                 <li class="start <?=backend_activate_menu_class('acl')?>"> <a href="javascript:;"> <i
                                             class="fa fa-key"></i> <span class="title">Access Control</span> <span
@@ -362,10 +375,6 @@
                                     </ul>
                                 </li>
                                 <?php } ?>
-
-
-
-
                                 <li class="start"><a href="<?=base_url('logout')?>">
                                         <i class="fa fa-power-off"></i>
                                         <span class="title">Log Out</span> </a>
@@ -374,52 +383,14 @@
                             <div class="clearfix"></div>
                             <!-- END SIDEBAR MENU -->
                         </div>
-
-                        <?php if($this->router->fetch_class('my_message') == 'my_message'){ ?>
-                        <div class="inner-menu nav-collapse" style="float: right;">
-                            <div class="inner-wrapper" style="margin-bottom: 10px;">
-                                <a href="javascript:void();" class="btn btn-block btn-primary"><span
-                                        class="bold">COMPOSE</span></a>
-                            </div>
-                            <ul class="big-items">
-                                <li class="active"><span class="badge badge-important">2</span><a
-                                        href="javascript:void();"> Inbox</a></li>
-                                <li><a href="javascript:void();">Sent</a></li>
-                                <li><a href="javascript:void();">Draft</a></li>
-                                <li><a href="javascript:void();">Trash</a></li>
-                            </ul>
-                            <ul class="small-items" style="margin-bottom: 0px;">
-                                <li class=""><a href="#"> Home</a></li>
-                                <li><span class="badge badge-important">2</span><a href="#"> Work</a></li>
-                            </ul>
-                            <div class="inner-wrapper" style="margin-top: 5px;">
-                                <p class="menu-title">QUICK VIEW</p>
-                            </div>
-                            <ul class="small-items" style="margin-bottom: 0px;">
-                                <li class=""><a href="#"> Documents</a></li>
-                                <li class=""><span class=" badge badge-disable ">203</span><a href="#"> Images</a></li>
-                            </ul>
-                        </div>
-                        <?php } ?>
-
                     </div>
 
                     <a href="#" class="scrollup">Scroll</a>
 
                     <div class="footer-widget">
                         <div class="copyrights pull-left" style="width: 50%">
-                            <!-- <span> <span style="vertical-align: bottom; font-size: 10px;">কারিগরি সহায়তায় |</span>  <a href="http://a2i.pmo.gov.bd/" target="_blank">  -->
-                            <!-- <img src="<?php echo base_url('fwedget/assets/images/logo_ict.png')?>" height="10"> </a> </span> -->
                         </div>
                         <div class="copyrights pull-right" style="width: 50%">
-                            <!-- <span style=" float: right;"> <span style="vertical-align: bottom; font-size: 11px;">Developed By |</span> <a href="http://www.mysoftheaven.com/" target="_blank">
-                  <img src="<?php echo base_url('awedget/assets/img/mysoft-logo.png')?>" height="18"></a> </span> -->
                         </div>
-
-                        <?php /*
-               <!-- <div class="lock">
-                  <a href="<?=base_url('login/logout')?>"><i class="fa fa-power-off"></i></a>
-                    </div> -->
-                    */ ?>
-                </div>
+                    </div>
                 <!-- END SIDEBAR -->

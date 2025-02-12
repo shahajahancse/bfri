@@ -43,7 +43,30 @@ class Items extends Backend_Controller {
          );
 
          if($this->Common_model->save('items', $form_data)){
-            $this->session->set_flashdata('success', 'Item create successfully.');
+            $insert_id = $this->db->insert_id();
+            if ($this->ion_auth->in_group(array('admin', 'sm'))) {
+               $data = array(
+                  'unit_id'        => $this->session->userdata('unit_id'),
+                  'item_id'        => $insert_id,
+                  'cat_id'         => $this->input->post('cat_id'),
+                  'sub_cate_id'    => $this->input->post('sub_cate_id'),
+                  'order_level'    => $this->input->post('order_level'),
+               );
+               $this->Common_model->save('item_stocks', $data);
+            } else {
+               $units = $this->db->get('units')->result();
+               foreach ($units as $key => $v) {
+                  $data = array(
+                     'unit_id'        => $v->id,
+                     'item_id'        => $insert_id,
+                     'cat_id'         => $this->input->post('cat_id'),
+                     'sub_cate_id'    => $this->input->post('sub_cate_id'),
+                     'order_level'    => $this->input->post('order_level'),
+                  );
+                  $this->Common_model->save('item_stocks', $data);
+               }
+            }
+            $this->session->set_flashdata('success', 'Item created successfully.');
             redirect('items');
          }
       }
@@ -195,9 +218,7 @@ class Items extends Backend_Controller {
    public function stock_adjust(){
       $unit_id = $this->session->userdata('unit_id');
       $this->data['results'] = $this->Items_model->get_item_stocks($unit_id);
-      if (empty($this->data['results'])) {
-         $this->data['results'] = $this->Items_model->get_items();
-      }
+
       // Load page
       $this->data['meta_title'] = 'Stock Adjust';
       $this->data['subview'] = 'stock_adjust';
@@ -303,10 +324,25 @@ class Items extends Backend_Controller {
    // ================== Stock Items end ==================
 
    public function low_stock(){
-      $this->data['results'] = $this->Items_model->get_items();
+      $unit_id = $this->session->userdata('unit_id');
+      $this->db->select('i.*, c.category_name, sc.sub_cate_name, u.unit_name, s.balance, b.name_en');
+      $this->db->from('items i');
+      $this->db->join('item_categories c', 'c.id=i.cat_id', 'LEFT');
+      $this->db->join('item_sub_categories sc', 'sc.id=i.sub_cate_id', 'LEFT');
+      $this->db->join('item_unit u', 'u.id=i.unit_id', 'LEFT');
+      $this->db->join('item_stocks s', 's.item_id=i.id', 'LEFT');
+      $this->db->join('units b', 'b.id=s.unit_id', 'LEFT');
+      $this->db->where('i.order_level > s.balance');
+      if (!empty($unit_id)) {
+         $this->db->where('s.unit_id', $unit_id);
+      }
+      $this->db->order_by('i.id', 'ASC');
+      $query = $this->db->get()->result();
+      $this->data['results'] = $query;
+
       // Load page
-      $this->data['meta_title'] = 'All Items';
-      $this->data['subview'] = 'index';
+      $this->data['meta_title'] = 'Low Items List';
+      $this->data['subview'] = 'low_stock';
       $this->load->view('backend/_layout_main', $this->data);
    }
 

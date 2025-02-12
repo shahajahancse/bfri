@@ -11,11 +11,6 @@
             <div class="grid simple ">
                <div class="grid-title">
                   <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
-                  <?php if($this->ion_auth->in_group(array('badmin', 'sm'))): ?>
-                  <div class="pull-right">
-                     <a href="<?=base_url('items/stock_adjust')?>" class="btn btn-blueviolet btn-xs btn-mini"> Stock Adjust</a>
-                  </div>
-                  <?php endif; ?>
                </div>
 
                <div class="grid-body ">
@@ -30,44 +25,28 @@
                      <thead>
                         <tr>
                            <th style="width:2%"> SL </th>
-                           <?php if($this->ion_auth->in_group(array('admin'))): ?>
-                              <th style="width:12%">Branch</th>
-                           <?php else: ?>
-                              <th style="width:12%">Category</th>
-                           <?php endif; ?>
+                           <th style="width:12%">Category</th>
                            <th style="width:12%">Sub Category</th>
                            <th style="width:20%">Item Name</th>
+                           <th style="width:8%">Unit</th>
                            <th style="width:8%">Quantity</th>
                            <th style="width:10%">Order Level</th>
-                           <th style="width:8%">Status</th>
-                           <th style="width:12%" class="text-center">Action</th>
+                           <th style="width:10%">Branch</th>
                         </tr>
                      </thead>
                      <tbody>
                         <?php
                         $i=0;
-                        foreach ($results as $row) {
-                           if($row->status == 1){
-                              $status = 'Active';
-                           }else{
-                              $status = 'Inactive';
-                           }
-                           ?>
+                        foreach ($results as $row) { ?>
                            <tr>
                               <td class="v-align-middle"><?=++$i?>.</td>
-                              <?php if($this->ion_auth->in_group(array('admin'))): ?>
-                                 <td class="v-align-middle"><?=$row->branch_name?></td>
-                              <?php else: ?>
                               <td class="v-align-middle"><?=$row->category_name?></td>
-                              <?php endif; ?>
                               <td class="v-align-middle"><?=$row->sub_cate_name?></td>
                               <td class="v-align-middle"><strong><?=$row->item_name?></strong></td>
-                              <td class="v-align-middle"><?=($row->balance)? $row->balance:0?></td>
+                              <td class="v-align-middle"><?=$row->unit_name?></td>
+                              <td class="v-align-middle"><strong><?=$row->balance?></strong></td>
                               <td class="v-align-middle"><?=$row->order_level?></td>
-                              <td class="v-align-middle"><?=$status?></td>
-                              <td class="text-center">
-                                 <a href="<?=base_url('items/edit/'.encrypt_url($row->id));?>" class="btn btn-primary btn-xs btn-mini">Edit</a>
-                              </td>
+                              <td class="v-align-middle"><?=$row->name_en?></td>
                            </tr>
                            <?php } ?>
                         </tbody>
