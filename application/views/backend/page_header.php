@@ -243,17 +243,13 @@
                                     href="javascript:;" id="user-options"> <i class="fa fa-cog"
                                         style="font-size: 22px; color: #8dc641 !important;"></i> </a>
                                 <ul class="dropdown-menu  pull-right" role="menu" aria-labelledby="user-options">
-                                    <!-- <li><a href="<?=base_url('my_office')?>"> <i class="fa fa-user"></i>  My Office</a> </li> -->
                                     <li class="divider"></li>
-                                    <li><a href="<?=base_url('logout')?>"><i class="fa fa-power-off"></i> Log Out</a>
-                                    </li>
-                                    <li><a href="<?=base_url('acl/edit_user').'/'.$userDetails['user_info']->id?>"><i class="fa fa-user"></i> Profile</a>
-                                    </li>
+                                    <li><a href="<?=base_url('acl/edit_user').'/'.$userDetails['user_info']->id?>"><i class="fa fa-user"></i> Profile</a></li>
+                                    <li><a href="<?=base_url('logout')?>"><i class="fa fa-power-off"></i> Log Out</a></li>
                                 </ul>
                             </li>
                         </ul>
                     </div> <!-- END CHAT TOGGLER -->
-
                 </div> <!-- END TOP NAVIGATION MENU -->
             </div> <!-- END TOP NAVIGATION BAR -->
         </div> <!-- END HEADER -->
@@ -305,8 +301,7 @@
                                         <li> <a href="<?=base_url('requisition/delivered_list');?>"> Requisition Delivered List </a> </li>
                                     </ul>
                                 </li>
-                                <?php
-                                 if(in_array('6', $this->ion_auth->get_permission())){?>
+                                <?php if(in_array('6', $this->ion_auth->get_permission())){ ?>
                                 <li class="start <?=backend_activate_menu_class('purchase')?>"> <a href="javascript:;">
                                         <i class="fa fa-tags"></i> <span class="title">Purchase</span> <span
                                             class="selected"></span> <span class="arrow"></span> </a>
@@ -321,30 +316,32 @@
                                 </li>
 
                                 <li class="start <?=activate_menu_method('index')?>"><a
-                                        href="<?=base_url('reports/index')?>"> <i class="fa fa-th"></i>
-                                        <span class="title">Reports</span> </a>
+                                        href="<?=base_url('reports/index')?>"> <i class="fa fa-th"></i><span class="title">Reports</span> </a>
                                 </li>
                                 <li class="start <?=activate_menu_method('dynamic_report')?>"><a
-                                        href="<?=base_url('reports/dynamic_report')?>"> <i class="fa fa-th"></i>
-                                        <span class="title">Dynamic Report</span> </a>
+                                        href="<?=base_url('reports/dynamic_report')?>"> <i class="fa fa-th"></i><span class="title">Dynamic Report</span> </a>
                                 </li>
 
-                                <li class="start <?=backend_activate_menu_class('items')?>"> <a href="javascript:;"> <i
-                                            class="fa fa-tags"></i> <span class="title">Item Setup</span> <span
-                                            class="selected"></span> <span class="arrow"></span> </a>
+                                <li class="start <?=backend_activate_menu_class('items')?>">
+                                    <a href="javascript:;"> <i class="fa fa-tags"></i><span class="title">Item Setup</span> <span class="selected"></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
                                         <li> <a href="<?=base_url('items');?>"> Item List </a> </li>
+                                        <li> <a href="<?=base_url('items/stock');?>"> Stock List </a> </li>
+                                        <li> <a href="<?=base_url('items/low_stock');?>"> Low Stock </a> </li>
                                     </ul>
                                 </li>
                                 <?php } ?>
-                                <?php if($this->ion_auth->is_admin()){ ?>
+
+                                <?php if($this->ion_auth->in_group(array('admin','badmin'))){ ?>
                                 <li class="start <?=backend_activate_menu_class('general_setting')?>"> <a
                                         href="javascript:;"> <i class="fa fa-cogs"></i> <span class="title">General
                                             Setting</span> <span class="selected"></span> <span class="arrow"></span>
                                     </a>
                                     <ul class="sub-menu">
-                                        <li> <a href="<?=base_url('general_setting/sub_categories');?>"> Sub
-                                                Categories</a></li>
+                                        <li> <a href="<?=base_url('general_setting/item_locker');?>">Item Locker</a></li>
+                                        <li> <a href="<?=base_url('general_setting/locker_setup');?>">Locker Setup</a></li>
+                                        <li> <a href="<?=base_url('general_setting/room_setup');?>">Room Setup</a></li>
+                                        <li> <a href="<?=base_url('general_setting/sub_categories');?>">Sub Categories</a></li>
                                         <li> <a href="<?=base_url('general_setting/categories');?>"> Categories</a></li>
                                         <li> <a href="<?=base_url('general_setting/item_unit');?>"> Item Unit</a></li>
                                         <li> <a href="<?=base_url('general_setting/department');?>"> Department</a></li>

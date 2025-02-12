@@ -64,6 +64,24 @@ class Items extends Backend_Controller {
       echo json_encode($sub_category);
    }
 
+   public function get_item_by_sub_category($id){
+      $dataID = $id;
+      $this->db->where('sub_cate_id', $dataID);
+      $query = $this->db->get('items');
+      $sub_category = $query->result();
+      echo json_encode($sub_category);
+   }
+
+   public function get_locker_by_room_id($id){
+      $unit_id = $this->session->userdata('unit_id');
+      $dataID = $id;
+      $this->db->where('unit_id', $unit_id);
+      $this->db->where('room_id', $dataID);
+      $query = $this->db->get('item_lockers');
+      $sub_category = $query->result();
+      echo json_encode($sub_category);
+   }
+
    public function edit($id){
       $dataID = (int) decrypt_url($id); //exit;
       if (!$this->Common_model->exists('items', 'id', $dataID)) {
@@ -165,5 +183,131 @@ class Items extends Backend_Controller {
    }
    /*************details_pdf function pdf End**************/
 
+   // ================== Stock Items ==================
+   public function stock(){
+      $unit_id = $this->session->userdata('unit_id');
+      $this->data['results'] = $this->Items_model->get_item_stocks($unit_id);
+      // Load page
+      $this->data['meta_title'] = 'Stock Items';
+      $this->data['subview'] = 'stock';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+   public function stock_adjust(){
+      $unit_id = $this->session->userdata('unit_id');
+      $this->data['results'] = $this->Items_model->get_item_stocks($unit_id);
+      if (empty($this->data['results'])) {
+         $this->data['results'] = $this->Items_model->get_items();
+      }
+      // Load page
+      $this->data['meta_title'] = 'Stock Adjust';
+      $this->data['subview'] = 'stock_adjust';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+   function ajax_all_adjust() {
+      $unit_id = $this->session->userdata('unit_id');
+      $ids = $this->input->post('ids');
+      // Start transaction
+      $this->db->trans_start();
+      // Insert new data
+      foreach ($ids as $id) {
+         $qty = ($this->input->post('stock'.$id)) ? $this->input->post('stock'.$id) : 0;
+         $data = array(
+            'unit_id' => $unit_id,
+            'item_id' => $id,
+            'cat_id' => $this->input->post('cat'.$id),
+            'sub_cate_id' => $this->input->post('sub_cat'.$id),
+            'qty' => $qty,
+            'status' => 1, // item adjusted
+            'updated_by' => $this->session->userdata('user_id'),
+         );
+         $this->db->insert('item_stocks_details', $data);
+
+         $check = $this->db->where('unit_id', $unit_id)->where('item_id', $id)->get('item_stocks')->row();
+         if (!empty($check)) { // update
+            $data1 = array(
+               'stock_in' => $check->stock_in + ($qty),
+               'balance' => $check->balance + ($qty),
+               'updated_by' => $this->session->userdata('user_id'),
+               'updated_at' => date('Y-m-d H:i:s'),
+            );
+            $this->db->where('unit_id', $unit_id)->where('item_id', $id)->update('item_stocks', $data1);
+         } else { // insert
+            $data2 = array(
+               'unit_id' => $unit_id,
+               'item_id' => $id,
+               'cat_id' => $this->input->post('cat'.$id),
+               'sub_cate_id' => $this->input->post('sub_cat'.$id),
+               'stock_in' => $check->stock_in + ($qty),
+               'balance' => $check->balance + ($qty),
+               'updated_by' => $this->session->userdata('user_id'),
+            );
+            $this->db->insert('item_stocks', $data2);
+         }
+      }
+      // Complete transaction (automatically commits or rolls back)
+      $this->db->trans_complete();
+      if ($this->db->trans_status() === FALSE) {
+         echo 'error';
+      } else {
+         echo 'success';
+      }
+   }
+
+   function ajax_single_adjust() {
+      $unit_id = $this->session->userdata('unit_id');
+      $id = $this->input->post('id');
+      $cat = $this->input->post('cat');
+      $sub_cat = $this->input->post('sub_cat');
+      $qty = $this->input->post('stock');
+      $this->db->trans_start();
+      $data = array(
+         'unit_id' => $unit_id,
+         'item_id' => $id,
+         'cat_id' => $cat,
+         'sub_cate_id' => $sub_cat,
+         'qty' => $qty,
+         'status' => 1, // item adjusted
+         'updated_by' => $this->session->userdata('user_id'),
+      );
+      $this->db->insert('item_stocks_details', $data);
+
+      $check = $this->db->where('unit_id', $unit_id)->where('item_id', $id)->get('item_stocks')->row();
+      if (!empty($check)) { // update
+         $data1 = array(
+            'stock_in' => $check->stock_in + ($qty),
+            'balance' => $check->balance + ($qty),
+            'updated_by' => $this->session->userdata('user_id'),
+            'updated_at' => date('Y-m-d H:i:s'),
+         );
+         $this->db->where('unit_id', $unit_id)->where('item_id', $id)->update('item_stocks', $data1);
+      } else { // insert
+         $data2 = array(
+            'unit_id' => $unit_id,
+            'item_id' => $id,
+            'cat_id' => $cat,
+            'sub_cate_id' => $sub_cat,
+            'stock_in' => $check->stock_in + ($qty),
+            'balance' => $check->balance + ($qty),
+            'updated_by' => $this->session->userdata('user_id'),
+         );
+         $this->db->insert('item_stocks', $data2);
+      }
+
+      $this->db->trans_complete();
+      if ($this->db->trans_status() === FALSE) {
+         echo 'error';
+      } else {
+         echo 'success';
+      }
+   }
+   // ================== Stock Items end ==================
+
+   public function low_stock(){
+      $this->data['results'] = $this->Items_model->get_items();
+      // Load page
+      $this->data['meta_title'] = 'All Items';
+      $this->data['subview'] = 'index';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
 
 }

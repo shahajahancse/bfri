@@ -11,9 +11,11 @@
             <div class="grid simple ">
                <div class="grid-title">
                   <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
+                  <?php if($this->ion_auth->in_group(array('badmin'))): ?>
                   <div class="pull-right">
-                     <a href="<?=base_url('items/create')?>" class="btn btn-blueviolet btn-xs btn-mini"> Add Item</a>
+                     <a href="<?=base_url('items/stock_adjust')?>" class="btn btn-blueviolet btn-xs btn-mini"> Stock Adjust</a>
                   </div>
+                  <?php endif; ?>
                </div>
 
                <div class="grid-body ">
@@ -28,10 +30,14 @@
                      <thead>
                         <tr>
                            <th style="width:2%"> SL </th>
-                           <th style="width:12%">Category</th>
+                           <?php if($this->ion_auth->in_group(array('admin'))): ?>
+                              <th style="width:12%">Branch</th>
+                           <?php else: ?>
+                              <th style="width:12%">Category</th>
+                           <?php endif; ?>
                            <th style="width:12%">Sub Category</th>
                            <th style="width:20%">Item Name</th>
-                           <th style="width:8%">Unit</th>
+                           <th style="width:8%">Quantity</th>
                            <th style="width:10%">Order Level</th>
                            <th style="width:8%">Status</th>
                            <th style="width:12%" class="text-center">Action</th>
@@ -49,11 +55,14 @@
                            ?>
                            <tr>
                               <td class="v-align-middle"><?=++$i?>.</td>
+                              <?php if($this->ion_auth->in_group(array('admin'))): ?>
+                                 <td class="v-align-middle"><?=$row->branch_name?></td>
+                              <?php else: ?>
                               <td class="v-align-middle"><?=$row->category_name?></td>
+                              <?php endif; ?>
                               <td class="v-align-middle"><?=$row->sub_cate_name?></td>
                               <td class="v-align-middle"><strong><?=$row->item_name?></strong></td>
-                              <td class="v-align-middle"><?=$row->unit_name?></td>
-                              <!-- <td class="v-align-middle"><strong><?=$row->quantity?></strong></td> -->
+                              <td class="v-align-middle"><?=($row->balance)? $row->balance:0?></td>
                               <td class="v-align-middle"><?=$row->order_level?></td>
                               <td class="v-align-middle"><?=$status?></td>
                               <td class="text-center">

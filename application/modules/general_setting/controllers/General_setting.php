@@ -15,6 +15,197 @@ class General_setting extends Backend_Controller {
       $this->img_path = realpath(APPPATH . '../scout_badge_img');
    }
 
+   public function item_locker(){
+      $unit_id = $this->session->userdata('unit_id');
+      $this->db->select('il.*, i.item_name, lo.name_en, ir.name_en as room, u.name_en as unit');
+      $this->db->from('item_locker_location as il');
+      $this->db->join('items as i', 'i.id = il.item_id', 'left');
+      $this->db->join('item_lockers as lo', 'lo.id = il.locker_no', 'left');
+      $this->db->join('item_rooms as ir', 'ir.id = il.room_no', 'left');
+      $this->db->join('units as u', 'u.id = il.unit_id', 'left');
+      if (!empty($unit_id)) {
+         $this->db->where('il.unit_id', $unit_id);
+      }
+      $this->data['results'] =  $this->db->get()->result();
+
+      $this->data['meta_title'] = 'Item Locker';
+      $this->data['subview'] = 'item_locker';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+   public function item_locker_add(){
+      $this->form_validation->set_rules('cat_id', 'Category', 'required|trim');
+      $this->form_validation->set_rules('sub_cat', 'Sub Category', 'required|trim');
+      $this->form_validation->set_rules('item_id', 'Item Name', 'required|trim');
+      $this->form_validation->set_rules('room_no', 'Room No', 'required|trim');
+      $this->form_validation->set_rules('locker_no', 'Locker No', 'required|trim');
+      if ($this->form_validation->run() == true){
+         $unit_id = $this->session->userdata('unit_id');
+         $form_data = array(
+            'unit_id'      => $unit_id,
+            'item_id'      => $this->input->post('item_id'),
+            'cat_id'       => $this->input->post('cat_id'),
+            'sub_cat_id'   => $this->input->post('sub_cat'),
+            'room_no'      => $this->input->post('room_no'),
+            'locker_no'    => $this->input->post('locker_no'),
+            'status'       => $this->input->post('status'),
+         );
+
+         if($this->Common_model->save('item_locker_location', $form_data)){
+            $this->session->set_flashdata('success', 'Branch create successfully.');
+            redirect('general_setting/item_locker');
+         }
+      }
+
+      // Load page
+      $this->data['meta_title'] = 'Item Locker Setup';
+      $this->data['subview'] = 'item_locker_add';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+   public function item_locker_edit($id){
+      $this->form_validation->set_rules('cat_id', 'Category', 'required|trim');
+      $this->form_validation->set_rules('sub_cat', 'Sub Category', 'required|trim');
+      $this->form_validation->set_rules('item_id', 'Item Name', 'required|trim');
+      $this->form_validation->set_rules('room_no', 'Room No', 'required|trim');
+      $this->form_validation->set_rules('locker_no', 'Locker No', 'required|trim');
+
+      if ($this->form_validation->run() == true){
+         $form_data = array(
+            'item_id'      => $this->input->post('item_id'),
+            'cat_id'       => $this->input->post('cat_id'),
+            'sub_cat_id'   => $this->input->post('sub_cat'),
+            'room_no'      => $this->input->post('room_no'),
+            'locker_no'    => $this->input->post('locker_no'),
+            'status'       => $this->input->post('status'),
+         );
+
+         if($this->Common_model->edit('item_locker_location', $id, 'id', $form_data)){
+            $this->session->set_flashdata('success', 'Information update successfully.');
+            redirect('general_setting/item_locker');
+         }
+      }
+      $this->data['info'] = $this->General_setting_model->get_info('item_locker_location',$id);
+
+      // Load page
+      $this->data['meta_title'] = 'Update Item Locker';
+      $this->data['subview'] = 'item_locker_edit';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+
+   public function locker_setup(){
+      $unit_id = $this->session->userdata('unit_id');
+      $this->db->select('il.*, ir.name_en as room, u.name_en as unit');
+      $this->db->from('item_lockers as il');
+      $this->db->join('item_rooms as ir', 'ir.id = il.room_id', 'left');
+      $this->db->join('units as u', 'u.id = il.unit_id', 'left');
+      if (!empty($unit_id)) {
+         $this->db->where('il.unit_id', $unit_id);
+      }
+      $this->data['results'] =  $this->db->get()->result();
+
+      $this->data['meta_title'] = 'Locker List';
+      $this->data['subview'] = 'locker_setup';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+   public function locker_setup_add(){
+      $this->form_validation->set_rules('name_bn', 'Name Bangla', 'required|trim');
+      $this->form_validation->set_rules('name_en', 'Name English', 'required|trim');
+
+      if ($this->form_validation->run() == true){
+         $unit_id = $this->session->userdata('unit_id');
+         $form_data = array(
+            'unit_id'      => $unit_id,
+            'room_id'      => $this->input->post('room_id'),
+            'name_bn'      => $this->input->post('name_bn'),
+            'name_en'      => $this->input->post('name_en'),
+            'status'       => $this->input->post('status'),
+         );
+         if($this->Common_model->save('item_lockers', $form_data)){
+            $this->session->set_flashdata('success', 'Record Insert successfully.');
+            redirect('general_setting/locker_setup');
+         }
+      }
+
+      // Load page
+      $this->data['meta_title'] = 'Locker Setup';
+      $this->data['subview'] = 'locker_setup_add';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+   public function locker_setup_edit($id){
+      $this->form_validation->set_rules('name_bn', 'Name Bangla', 'required|trim');
+      $this->form_validation->set_rules('name_en', 'Name English', 'required|trim');
+
+      if ($this->form_validation->run() == true){
+         $form_data = array(
+            'room_id'      => $this->input->post('room_id'),
+            'name_bn'      => $this->input->post('name_bn'),
+            'name_en'      => $this->input->post('name_en'),
+            'status'       => $this->input->post('status'),
+         );
+
+         if($this->Common_model->edit('item_lockers', $id, 'id', $form_data)){
+            $this->session->set_flashdata('success', 'Information update successfully.');
+            redirect('general_setting/locker_setup');
+         }
+      }
+      $this->data['info'] = $this->General_setting_model->get_info('item_lockers',$id);
+
+      // Load page
+      $this->data['meta_title'] = 'Update Locker';
+      $this->data['subview'] = 'locker_setup_edit';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+
+   public function room_setup(){
+      $this->data['results'] = $this->db->get('item_rooms')->result();
+      $this->data['meta_title'] = 'Room List';
+      $this->data['subview'] = 'room_setup';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+   public function room_setup_add(){
+      $this->form_validation->set_rules('name_bn', 'Name Bangla', 'required|trim');
+      $this->form_validation->set_rules('name_en', 'Name English', 'required|trim');
+
+      if ($this->form_validation->run() == true){
+         $form_data = array(
+            'name_bn'      => $this->input->post('name_bn'),
+            'name_en'      => $this->input->post('name_en'),
+            'status'       => $this->input->post('status'),
+         );
+         if($this->Common_model->save('item_rooms', $form_data)){
+            $this->session->set_flashdata('success', 'Record Insert successfully.');
+            redirect('general_setting/room_setup');
+         }
+      }
+
+      // Load page
+      $this->data['meta_title'] = 'Room Setup';
+      $this->data['subview'] = 'room_setup_add';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+   public function room_setup_edit($id){
+      $this->form_validation->set_rules('name_bn', 'Name Bangla', 'required|trim');
+      $this->form_validation->set_rules('name_en', 'Name English', 'required|trim');
+
+      if ($this->form_validation->run() == true){
+         $form_data = array(
+            'name_bn'       => $this->input->post('name_bn'),
+            'name_en'       => $this->input->post('name_en'),
+            'status'       => $this->input->post('status'),
+         );
+
+         if($this->Common_model->edit('item_rooms', $id, 'id', $form_data)){
+            $this->session->set_flashdata('success', 'Information update successfully.');
+            redirect('general_setting/room_setup');
+         }
+      }
+      $this->data['info'] = $this->General_setting_model->get_info('item_rooms',$id);
+
+      // Load page
+      $this->data['meta_title'] = 'Update Room';
+      $this->data['subview'] = 'room_setup_edit';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+
    public function units(){
       $this->data['results'] = $this->db->get('units')->result();
       $this->data['meta_title'] = 'All Branch List';
