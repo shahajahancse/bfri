@@ -18,7 +18,15 @@ class Purchase extends Backend_Controller {
    public function index($offset=0){
       $limit = 25;
       //Results
-      $results = $this->Purchase_model->get_purchase($limit, $offset); 
+      $status = array();
+      if($this->ion_auth->in_group(array('dg'))){
+         $status = array(3,4,5,6,7,8,9);
+      } else if ($this->ion_auth->in_group(array('jd'))) {
+         $status = array(2,3,4,5,6,7,8,9);
+      } else {
+         $status = array(1,2,3,4,5,6,7,8,9);
+      }
+      $results = $this->Purchase_model->get_purchase($limit, $offset, $status);
       $this->data['results'] = $results['rows'];
       $this->data['total_rows'] = $results['num_rows'];
 
@@ -32,31 +40,40 @@ class Purchase extends Backend_Controller {
    }
    public function purchase_pending($offset=0){
       $limit = 25;
-      $results = $this->Purchase_model->get_purchase($limit, $offset, '1');         
-      $this->data['roleid']=$this->ion_auth->get_group_id();
-
+      $status = array();
+      if($this->ion_auth->in_group(array('dg'))){
+         $status = array(5);
+      } else if ($this->ion_auth->in_group(array('jd'))) {
+         $status = array(2,6);
+      } else {
+         $status = array(1,3,4);
+      }
+      $results = $this->Purchase_model->get_purchase($limit, $offset, $status);
       $this->data['results'] = $results['rows'];
       $this->data['total_rows'] = $results['num_rows'];
-      $this->data['pagination'] = create_pagination('purchase/index/', $this->data['total_rows'], $limit, 3, $full_tag_wrap = true);
+
+      $this->data['pagination'] = create_pagination('purchase/purchase_pending/', $this->data['total_rows'], $limit, 3, $full_tag_wrap = true);
       $this->data['meta_title'] = 'Purchase List';
       $this->data['subview'] = 'index';
       $this->load->view('backend/_layout_main', $this->data);
    }
    public function purchase_approved($offset=0){
       $limit = 25;
-      $results = $this->Purchase_model->get_purchase($limit, $offset , '2'); 
+      $results = $this->Purchase_model->get_purchase($limit, $offset, 7);
       $this->data['results'] = $results['rows'];
       $this->data['total_rows'] = $results['num_rows'];
-      $this->data['pagination'] = create_pagination('purchase/index/', $this->data['total_rows'], $limit, 3, $full_tag_wrap = true);
+
+      $this->data['pagination'] = create_pagination('purchase/purchase_approved/', $this->data['total_rows'], $limit, 3, $full_tag_wrap = true);
       $this->data['meta_title'] = 'Purchase List';
       $this->data['subview'] = 'index';
       $this->load->view('backend/_layout_main', $this->data);
    }
    public function purchase_rejected($offset=0){
       $limit = 25;
-      $results = $this->Purchase_model->get_purchase($limit, $offset , '3'); 
+      $results = $this->Purchase_model->get_purchase($limit, $offset, 8);
       $this->data['results'] = $results['rows'];
       $this->data['total_rows'] = $results['num_rows'];
+
       $this->data['pagination'] = create_pagination('purchase/index/', $this->data['total_rows'], $limit, 3, $full_tag_wrap = true);
       $this->data['meta_title'] = 'Purchase List';
       $this->data['subview'] = 'index';
@@ -64,35 +81,17 @@ class Purchase extends Backend_Controller {
    }
    public function purchase_received($offset=0){
       $limit = 25;
-      $results = $this->Purchase_model->get_purchase($limit, $offset , '4'); 
+      $results = $this->Purchase_model->get_purchase($limit, $offset , 9);
       $this->data['results'] = $results['rows'];
       $this->data['total_rows'] = $results['num_rows'];
-      $this->data['pagination'] = create_pagination('purchase/index/', $this->data['total_rows'], $limit, 3, $full_tag_wrap = true);
+
+      $this->data['pagination'] = create_pagination('purchase/purchase_received/', $this->data['total_rows'], $limit, 3, $full_tag_wrap = true);
       $this->data['meta_title'] = 'Purchase List';
       $this->data['subview'] = 'index';
       $this->load->view('backend/_layout_main', $this->data);
    }
 
-   // public function fiscal_year($f_year){
-   //    $limit = 25;
-   //    $offset=0;
-
-   //    //Results
-   //    $results = $this->Purchase_model->get_purchase($limit, $offset, $f_year); 
-   //    $this->data['results'] = $results['rows'];
-   //    $this->data['total_rows'] = $results['num_rows'];
-
-   //    //pagination
-   //    $this->data['pagination'] = create_pagination('purchase/fiscal_year/', $this->data['total_rows'], $limit, 3, $full_tag_wrap = true);
-
-   //    $f_year_name = $this->Common_model->get_fiscal_year($f_year)->fiscal_year_name;
-
-   //    // Load view
-   //    $this->data['meta_title'] = $f_year_name .' Fiscal Year Purchase List';
-   //    $this->data['subview'] = 'index';
-   //    $this->load->view('backend/_layout_main', $this->data);
-   // }
-
+   // item purchase create here
    public function create(){
       $fiscal_year = $this->Common_model->get_current_fiscal_year();
       $this->data['fiscal_year'] = $fiscal_year->fiscal_year_name;
@@ -101,78 +100,64 @@ class Purchase extends Backend_Controller {
       //Validate and input data
       if ($this->form_validation->run() == true){
          $user = $this->ion_auth->user()->row();
-         $approved_id=[];
-         $finalappr=[];
 
-         $aar=json_encode($approved_id);
-         $finalappr=json_encode($finalappr);
          $attachmentname='';
          if ($_FILES['attachment']) {
             $config['upload_path'] = './attachment/';
             $config['allowed_types'] = 'jpg|png|jpeg|pdf';
             $config['max_size'] = 10240000;
-        
+
             $this->load->library('upload', $config);
-        
+
             if ($this->upload->do_upload('attachment')) {
                 $data = $this->upload->data();
                 $originalFileName = $data['file_name'];
-        
+
                 // Generate a unique file name
                 $uniqueFileName = uniqid() . '.' . pathinfo($originalFileName, PATHINFO_EXTENSION);
-        
+
                 // Move the uploaded file to the destination with the unique file name
                 $destination = base_url('attachment/') . $uniqueFileName;
                 rename($config['upload_path'] . $originalFileName, $config['upload_path'] . $uniqueFileName);
-        
                 $attachmentname=$uniqueFileName;
             }
-        }
+         }
+
          $form_data = array(
-            'user_id'         => $user->id,            
+            'unit_id'         => $user->unit_id,
             'supplier_name'   => $this->input->post('title'),
+            'amount'          => 0,
             'f_year_id'       => $fiscal_year->id,
-            'approved_id'     => $aar,
-            'finalappr'     => $finalappr,
+            'desk_id'         => 1,
             'status'          => 1,
-            'desk_id'         => $this->ion_auth->in_group('Store Keeper')?1:0,
-            'is_received'     => 0,
-            'attachment'      => $attachmentname,
-            'created'         => date('Y-m-d H:i:s')
-            );
-         if($this->Common_model->save('purchase', $form_data)){     
+            'is_received'     => 1,
+            'created_by'      => $user->id,
+            'create_at'       => date('Y-m-d H:i:s'),
+            'attachment'      => $attachmentname
+         );
+
+         if($this->Common_model->save('item_purchases', $form_data)){
             $insert_id = $this->db->insert_id();
-
-            //dd($_POST);
-
-            for ($i=0; $i<sizeof($_POST['item_id']); $i++) { 
+            for ($i=0; $i<sizeof($_POST['item_id']); $i++) {
                $form_data2 = array(
+                  'unit_id'            => $user->unit_id,
                   'purchase_id'        => $insert_id,
                   'pur_item_id'        => $_POST['item_id'][$i],
-                  'pur_quantity'       => $_POST['qty_request'][$i], 
-                  'pur_approve'     => 0,                            
+                  'pur_quantity'       => $_POST['qty_request'][$i],
+                  'pur_approve'        => 0,
                   'pur_fiscal_year_id' => $fiscal_year->id,
                   'pur_remark'         => $_POST['remark'][$i]
-                  );
-               //dd($form_data2);
-               $this->Common_model->save('purchase_item', $form_data2);
-
-               // $pur_item = $_POST['pur_item_id'][$i];
-               // $pur_quantity = $_POST['pur_quantity'][$i];
-               // $this->db->query("UPDATE items SET quantity = quantity + $pur_quantity where id = $pur_item");
+               );
+               $this->Common_model->save('item_purchase_details', $form_data2);
             }
-
             $this->session->set_flashdata('success', 'Create Requisition successfully.');
             redirect("purchase");
          }
       }
 
       //Dropdown
-      // $this->data['items'] = $this->Common_model->get_items();
       $this->data['categories'] = $this->Common_model->get_categories();
       $this->data['info'] = $this->Common_model->get_user_details();
-
-      // print_r($this->data['info']['user_info']); exit;
 
       //Load view
       $this->data['meta_title'] = 'Purchase Entry Form';
@@ -182,66 +167,34 @@ class Purchase extends Backend_Controller {
    public function edit($id){
       $this->data['categories'] = $this->Common_model->get_categories();
       $this->db->where('id', $id);
-      $this->data['info']=$this->db->get('purchase')->row();
-      $this->db->select('ri.*, i.item_name, i.quantity, iu.unit_name, c.category_name, sc.sub_cate_name');
-      $this->db->from('purchase_item ri');
+      $this->data['info']=$this->db->get('item_purchases')->row();
+      $this->db->select('ri.*, i.item_name, iu.unit_name, c.category_name, sc.sub_cate_name');
+      $this->db->from('item_purchase_details ri');
       $this->db->join('items i', 'i.id = ri.pur_item_id');
       $this->db->join('item_unit iu', 'iu.id = i.unit_id');
       $this->db->join('categories c', 'c.id = i.cat_id');
-      $this->db->join('sub_categories sc', 'sc.id = i.sub_cate_id');
+      $this->db->join('sub_categories sc', 'sc.id = i.sub_cat_id');
       $this->db->where('purchase_id', $id);
       $this->data['purchase_item_data'] = $this->db->get()->result();
-      $this->data['meta_title'] = 'Purchase edit Form';
-     
-         $this->data['subview'] = 'edit';
-      
-      $this->load->view('backend/_layout_main', $this->data);
-   }
-   public function edite($id){
-      $this->data['categories'] = $this->Common_model->get_categories();
 
-      $this->db->where('id', $id);
-      $this->data['info']=$this->db->get('purchase')->row();
-      $this->db->select('ri.*, i.item_name, i.quantity, iu.unit_name, c.category_name, sc.sub_cate_name');
-      $this->db->from('purchase_item ri');
-      $this->db->join('items i', 'i.id = ri.pur_item_id');
-      $this->db->join('item_unit iu', 'iu.id = i.unit_id');
-      $this->db->join('categories c', 'c.id = i.cat_id');
-      $this->db->join('sub_categories sc', 'sc.id = i.sub_cate_id');
-      $this->db->where('purchase_id', $id);
-      $this->data['purchase_item_data'] = $this->db->get()->result();
       $this->data['meta_title'] = 'Purchase edit Form';
-      if($this->data['info']->user_id==$this->ion_auth->user()->row()->id){
-         if($this->data['info']->status==1){
-            $this->data['subview'] = 'edited';
-         }else{
-            $this->data['subview'] = 'edit';
-         }
-      }else{
-         $this->data['subview'] = 'edit';
-      }
+      $this->data['subview'] = 'edit';
       $this->load->view('backend/_layout_main', $this->data);
    }
-   public function edited_update(){
-      $user = $this->ion_auth->user()->row();
-      $form_data = array( 
-         'supplier_name'   => $this->input->post('title'),
-         'desk_id'         => 0,
-         );
-         $this->db->where('id', $this->input->post('id'));
-         if ($this->db->update('purchase', $form_data)) {
-            $this->db->where('purchase_id', $this->input->post('id'));
-            $this->db->delete('purchase_item');
-            for ($i=0; $i<sizeof($_POST['pur_item_id']); $i++) { 
-               $form_data2 = array(
-                  'purchase_id'        => $this->input->post('id'),
-                  'pur_item_id'        => $_POST['pur_item_id'][$i],
-                  'pur_quantity'       => $_POST['pur_quantity'][$i], 
-                  'pur_approve'     => 0,                            
-                  'pur_fiscal_year_id' =>'null',
-                  'pur_remark'         => $_POST['pur_remark'][$i]
-                  );
-               $this->Common_model->save('purchase_item', $form_data2);
+   public function update($id){
+      $form_data = array(
+         'desk_id'      => $_POST['status'] == 2 ? 2:1,
+         'status'       => $_POST['status'],
+         'remark'       => $_POST['remark'],
+      );
+      $this->db->where('id', $id);
+      if ($this->db->update('item_purchases', $form_data)) {
+         for ($i=0; $i < sizeof($_POST['hide_id']); $i++) {
+            $form_data2 = array(
+               'pur_quantity'       => $_POST['pur_quantity'][$i],
+            );
+            $this->db->where('id', $_POST['hide_id'][$i]);
+            $this->db->update('item_purchase_details', $form_data2);
          }
       }else{
          $this->session->set_flashdata('error', 'Update Requisition failed.');
@@ -249,96 +202,123 @@ class Purchase extends Backend_Controller {
       $this->session->set_flashdata('success', 'Update Requisition successfully.');
       redirect("purchase");
    }
-   public function change_status($id){
-         $user = $this->ion_auth->user()->row();
-         $this->db->where('id', $id);
-         $purchase_data=$this->db->get('purchase')->row();
-         $approved_id=json_decode($purchase_data->approved_id);
-         $finalappr=json_decode($purchase_data->finalappr);
-
-      
-         $status=$this->input->post('status');
-         if ($status == 2) {
-
-            $remark=[
-               'id' => $user->id,
-               'role'=>$this->ion_auth->get_group_id(),
-               'remark' => $this->input->post('remark')
-            ];
-   
-            array_push($finalappr, $remark);
-            $finalappr=json_encode($approved_id);
-            $form_data = array(
-               'finalappr'     => $finalappr,
-               'status'          => 2,
-               'desk_id'         => 0
-               );
-         }else{
-            $remark=[
-               'id' => $user->id,
-               'role'=>$this->ion_auth->get_group_id(),
-               'remark' => $this->input->post('remark')
-            ];
-   
-            array_push($approved_id, $remark);
-            $app_id=json_encode($approved_id);
-            
-            $form_data = array(
-               'approved_id'     => $app_id,
-               'status'          => $this->input->post('status'),
-               'desk_id'         => $this->input->post('desk_id'),
-               );
-         }
-         $this->db->where('id', $id);
-         if($this->db->update('purchase' , $form_data)){   
-            for ($i=0; $i<sizeof($_POST['hide_id']); $i++) { 
-               $form_data2 = array(
-                  'pur_approve'       => $_POST['pur_approve'][$i]                            
-                  );
-                  $this->db->where('purchase_id', $id);
-                  $this->db->where('id', $_POST['hide_id'][$i]);
-                  $this->db->update('purchase_item', $form_data2);
-            }
-
-            $this->session->set_flashdata('success', 'Update Purchase successfully.');
-            redirect("purchase");
-         }
-   }
-   public function received($id){
-      $form_data = array(
-         'is_received'         => 1,
-         );
-      $this->db->where('id', $id);
-      if ($this->db->update('purchase', $form_data)) {
-         $this->db->where('purchase_id', $id);
-         $purchase_data=$this->db->get('purchase_item')->result();
-         foreach($purchase_data as $purchase){
-            $this->db->query("UPDATE items SET quantity = quantity + $purchase->pur_approve where id = $purchase->pur_item_id");
-         }
-         $this->session->set_flashdata('success', 'Update Purchase successfully.');
-         redirect("purchase");
-      };
-   }
-
    public function details($id){
-      $dataID = (int) decrypt_url($id); //exit;
-      if (!$this->Common_model->exists('purchase', 'id', $dataID)) { 
+      if (!$this->Common_model->exists('item_purchases', 'id', $id)) {
          show_404('Purchase - details - exitsts', TRUE);
-      }      
+      }
 
       //Results
-      $this->data['info'] = $this->Purchase_model->get_info($dataID);
-      // echo '<pre>';
-      // print_r($this->data['info']->title); exit;
-      $this->data['items'] = $this->Purchase_model->get_items($dataID); 
-      // if($this->data['info']->schedule_type == 'Appointment'){
-      //    $this->data['persons'] = $this->Purchase_model->get_appointment_persons($this->data['info']->id); 
-      // }
+      $this->db->where('id', $id);
+      $this->data['info']=$this->db->get('item_purchases')->row();
+      $this->db->select('ri.*, i.item_name, iu.unit_name, c.category_name, sc.sub_cate_name');
+      $this->db->from('item_purchase_details ri');
+      $this->db->join('items i', 'i.id = ri.pur_item_id');
+      $this->db->join('item_unit iu', 'iu.id = i.unit_id');
+      $this->db->join('categories c', 'c.id = i.cat_id');
+      $this->db->join('sub_categories sc', 'sc.id = i.sub_cat_id');
+      $this->db->where('purchase_id', $id);
+      $this->data['purchase_item_data'] = $this->db->get()->result();
 
       // Load page
       $this->data['meta_title'] = 'Purchase Details';
       $this->data['subview'] = 'details';
       $this->load->view('backend/_layout_main', $this->data);
    }
+   // item purchase create end
 
+   // item purchase approve process here
+   public function ap_status($id){
+      $this->data['categories'] = $this->Common_model->get_categories();
+      $this->data['info'] = $this->db->where('id', $id)->get('item_purchases')->row();
+
+      $this->db->select('ri.*, i.item_name, iu.unit_name, c.category_name, sc.sub_cate_name');
+      $this->db->from('item_purchase_details ri');
+      $this->db->join('items i', 'i.id = ri.pur_item_id');
+      $this->db->join('item_unit iu', 'iu.id = i.unit_id');
+      $this->db->join('categories c', 'c.id = i.cat_id');
+      $this->db->join('sub_categories sc', 'sc.id = i.sub_cat_id');
+      $this->db->where('purchase_id', $id);
+      $this->data['purchase_item_data'] = $this->db->get()->result();
+      $this->data['meta_title'] = 'Purchase edit Form';
+      $this->data['subview'] = 'edited';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+   public function change_status($id){
+      $user = $this->ion_auth->user()->row();
+      $desk_id = 1;
+      if($this->ion_auth->in_group(array('jd')) && $_POST['status'] == 5){
+         $desk_id = 3;
+      } else if ($this->ion_auth->in_group(array('dg')) && $_POST['status'] == 7) {
+        $desk_id = 4;
+      } else if ($this->ion_auth->in_group(array('dg')) && $_POST['status'] == 6) {
+         $desk_id = 2;
+      }
+
+      $form_data = array(
+         'desk_id'      => $desk_id,
+         'status'       => $_POST['status'],
+         'remark'       => $_POST['remark'],
+         'updated_at'   => date('Y-m-d H:i:s'),
+      );
+      if ($this->ion_auth->in_group(array('jd'))) {
+         $form_data['asst_id'] = $user->user_id;
+      } else {
+         $form_data['director_id'] = $user->user_id;
+      }
+
+      $this->db->where('id', $id);
+      if($this->db->update('item_purchases' , $form_data)){
+         for ($i=0; $i<sizeof($_POST['hide_id']); $i++) {
+            $form_data2 = array(
+               'pur_approve'       => $_POST['pur_approve'][$i]
+            );
+            $this->db->where('id', $_POST['hide_id'][$i]);
+            $this->db->update('item_purchase_details', $form_data2);
+         }
+         $this->session->set_flashdata('success', 'Update Purchase successfully.');
+         redirect("purchase");
+      }
+   }
+   public function received($id){
+      $user = $this->session->userdata();
+
+      $form_data = array(
+         'is_received'  => 2,
+         'status'       => 9,
+         'updated_at'   => date('Y-m-d H:i:s'),
+      );
+      $this->db->where('id', $id);
+      if ($this->db->update('item_purchases', $form_data)) {
+
+         $this->db->where('purchase_id', $id);
+         $purchase_data = $this->db->get('item_purchase_details')->result();
+
+         foreach($purchase_data as $p){
+            $items = $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->pur_item_id)->get('item_stocks')->row();
+            $aa = array(
+               'stock_in'   => $items->stock_in + $p->pur_approve,
+               'balance'    => $items->stock_in + $p->pur_approve,
+               'updated_by' => $user['user_id'],
+               'updated_at' => date('Y-m-d H:i:s'),
+            );
+            $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->pur_item_id);
+            $this->db->update('item_stocks',$aa);
+            $dd = array(
+               'unit_id'      => $user['unit_id'],
+               'item_id'      => $items->item_id,
+               'cat_id'       => $items->cat_id,
+               'sub_cat_id'   => $items->sub_cat_id,
+               'qty'          => $p->pur_approve,
+               'status'       => 2,
+               'updated_by'   => $user['user_id'],
+               'updated_at'   => date('Y-m-d H:i:s'),
+            );
+
+            $this->db->insert('item_stocks_details', $dd);
+         }
+         $this->session->set_flashdata('success', 'Update Purchase successfully.');
+         redirect("purchase");
+      };
+   }
+   // item purchase approve process end
 }

@@ -34,13 +34,13 @@
                   <?php
                      echo validation_errors();
                      $attributes = array('id' => 'jsvalidate');
-                     echo form_open_multipart('purchase/change_status/'.$info->id, $attributes);
+                     echo form_open_multipart('requisition/change_status/'.$info->id, $attributes);
                   ?>
                   <!-- purchase title info -->
                   <div class="row">
                      <div class="col-md-12">
                         <fieldset >
-                           <legend>Purchase Title</legend>
+                           <legend>Requisition Information</legend>
                            <?php
                               $status = '<span class="label label-secondary">Pending</span>';
                               if ($info->status == 2) {
@@ -64,17 +64,18 @@
                               <div class="col-md-12">
                                  <table class="tg" width="100%">
                                     <tr>
-                                       <th class="tg-khup"> Title Name</th>
-                                       <td class="tg-ywa9"><?=$info->supplier_name?></td>
-                                       <th class="tg-khup"> Status </th>
+                                       <th class="tg-khup">Title </th>
+                                       <td class="tg-ywa9"><?=$info->title?></td>
+                                       <th class="tg-khup">Status</th>
                                        <td class="tg-ywa9"><?=$status?></td>
+                                       <th class="tg-khup">Date</th>
+                                       <td class="tg-ywa9"><?= date('d-m-Y', strtotime($info->created_at)); ?></td>
                                     </tr>
-
                                     <tr>
-                                       <th class="tg-khup"> Created </th>
-                                       <td class="tg-ywa9"><?=date('d-m-Y', strtotime($info->create_at)); ?></td>
-                                       <th class="tg-khup"> Updated </th>
-                                       <td class="tg-ywa9"><?=date('d-m-Y', strtotime($info->updated_at)); ?></td>
+                                       <th class="tg-khup"> Applicant</th>
+                                       <td colspan='2' class="tg-ywa9"><?=$userDetails['user_info']->first_name?></td>
+                                       <th class="tg-khup"> Designation </th>
+                                       <td colspan='2' class="tg-ywa9"><?=$userDetails['user_info']->desig_name?></td>
                                     </tr>
                                  </table>
                               </div>
@@ -86,12 +87,21 @@
 
                   <!-- change purchase status (app, reject)-->
                   <div class="row form-row">
+                     <?php if($this->ion_auth->in_group(array('sm'))) { ?>
+                     <div class="col-md-6" style="margin-bottom: 20px;: ">
+                        <label class="form-label">Status Type <span class='required'>*</span></label>
+                        <input type="radio" name="status" value="3" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Forward To Join Director</strong></span>
+                        <input type="radio" name="status" value="9" <?=$info->status=='3'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
+                        <div id="typeerror"></div>
+                     </div>
+                     <?php } ?>
+
                      <?php if($this->ion_auth->in_group(array('jd'))) { ?>
                      <div class="col-md-6" style="margin-bottom: 20px;: ">
                         <label class="form-label">Status Type <span class='required'>*</span></label>
-                        <input type="radio" name="status" value="3" <?=$info->status=='3'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Back To SM</strong></span>
-                        <input type="radio" name="status" value="5" checked> <span style="color: black; font-size: 14px;"><strong>Forward To DG</strong></span>
-                        <input type="radio" name="status" value="8" <?=$info->status=='6'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
+                        <input type="radio" name="status" value="4" <?=$info->status=='3'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Back To User</strong></span>
+                        <input type="radio" name="status" value="6" checked> <span style="color: black; font-size: 14px;"><strong>Forward To DG</strong></span>
+                        <input type="radio" name="status" value="9" <?=$info->status=='6'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
                         <div id="typeerror"></div>
                      </div>
                      <?php } ?>
@@ -99,10 +109,9 @@
                      <?php if($this->ion_auth->in_group(array('dg'))) { ?>
                      <div class="col-md-6" style="margin-bottom: 20px;: ">
                         <label class="form-label">Status Type <span class='required'>*</span></label>
-                        <input type="radio" name="status" value="4" <?=$info->status=='5'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Back To SM</strong></span>
-                        <input type="radio" name="status" value="6" <?=$info->status=='6'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Back To JD</strong></span>
-                        <input type="radio" name="status" value="7" checked> <span style="color: black; font-size: 14px;"><strong>Approved</strong></span>
-                        <input type="radio" name="status" value="8" <?=$info->status=='8'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
+                        <input type="radio" name="status" value="7" <?=$info->status=='6'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Back To JD</strong></span>
+                        <input type="radio" name="status" value="8" checked> <span style="color: black; font-size: 14px;"><strong>Approved</strong></span>
+                        <input type="radio" name="status" value="9" <?=$info->status=='8'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
                         <div id="typeerror"></div>
                      </div>
                      <?php } ?>
@@ -113,10 +122,10 @@
                      <div class="col-md-12">
                         <style type="text/css">td{color: black; font-size: 15px;}</style>
                         <fieldset>
-                           <legend>Purchase List</legend>
+                           <legend>Requisition List</legend>
                            <style type="text/css">
                               #appRowDiv td{padding: 5px; border-color: #ccc;}
-                              #appRowDiv th{padding: 5px;text-align:center;border-color: #ccc; color: black;}
+                              #appRowDiv th{padding: 5px;text-align:left;border-color: #ccc; color: black;}
                            </style>
                            <div id="msgPerson"> </div>
                            <table width="100%" border="1" id="appRowDiv">
@@ -131,10 +140,10 @@
                               <?php foreach($purchase_item_data as $item){ ?>
                               <tr>
                                  <td><?=$item->item_name?></td>
-                                 <td><?=$item->pur_quantity?>  <?=$item->unit_name?></td>
-                                 <td><input name="pur_approve[]"  value="<?=$item->pur_approve?>" class="form-control input-sm"></td>
+                                 <td><?=$item->qty_request?>  <?=$item->unit_name?></td>
+                                 <td><input name="qty_approve[]"  value="<?=$item->qty_approve?>" class="form-control input-sm"></td>
                                  <td><?=$item->unit_name?></td>
-                                 <td><?=$item->pur_remark?></td>
+                                 <td><?=$item->remark?></td>
                                  <input type="hidden" name="hide_id[]" value="<?=$item->id?>">
                               </tr>
                               <?php } ?>
@@ -151,7 +160,6 @@
                         </div>
                      </div>
                   </div>
-
                   <?php echo form_close();?>
                </div>  <!-- END GRID BODY -->
             </div> <!-- END GRID -->
@@ -162,11 +170,6 @@
 </div>
 
 <?php
-// $item_data = '';
-// foreach ($items as $key => $value) {
-//    $item_data .= '<option value="'.$key.'">'.$value.'</option>';
-// }
-
 $category_data = '';
 foreach ($categories as $key => $value) {
    $category_data .= '<option value="'.$key.'">'.$value.'</option>';
@@ -216,13 +219,6 @@ foreach ($categories as $key => $value) {
       });
    });
 
-
-   // 'name[]': { required: true },
-   // event_title: { required: "#officeOther:selected" },
-   // event_date: { required: true },
-   // event_name_chair: { required: true }
-
-
    // Hide/Show Function
    $('.invitationDiv').hide();
    $('#schedule_type').change(function(){
@@ -236,7 +232,6 @@ foreach ($categories as $key => $value) {
          $('.appointmentDiv').show();
       }
    });
-
 
    // Add multiple person
    $("#addRow").click(function(e) {
@@ -314,5 +309,4 @@ foreach ($categories as $key => $value) {
          });
       });
    }
-
 </script>

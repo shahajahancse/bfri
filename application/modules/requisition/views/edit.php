@@ -22,7 +22,7 @@
                         </div>
                         <?php endif; ?>
 
-                        <?php 
+                        <?php
                   $attributes = array('id' => 'jsvalidate');
                   echo form_open_multipart("requisition/edit",$attributes);
                   echo validation_errors();
@@ -53,29 +53,35 @@
                                                 class="form-control input-sm" placeholder="">
                                         </div>
                                         <style>
-                                          <?php if($info->attachment!= ''){?>
-                                        .resizable {
-                                            background: white;
-                                            width: fit-content;
-                                            height: fit-content;
-                                            position: sticky;
-                                            top: 100px;
-                                            left: 100px;
-                                            display: block;
-                                        }
-                                        <?php } else{?>
-                                          .resizable {
-                                            background: white;
-                                            width: fit-content;
-                                            height: fit-content;
-                                            position: sticky;
-                                            top: 100px;
-                                            left: 100px;
-                                            display: none;
-                                        }
-                                        <?php }?>
+                                        <?php if($info->attachment !='') {
+                                            ?>.resizable {
+                                                background: white;
+                                                width: fit-content;
+                                                height: fit-content;
+                                                position: sticky;
+                                                top: 100px;
+                                                left: 100px;
+                                                display: block;
+                                            }
 
-                                        .resizable .resizers {
+                                            <?php
+                                        }
+
+                                        else {
+                                            ?>.resizable {
+                                                background: white;
+                                                width: fit-content;
+                                                height: fit-content;
+                                                position: sticky;
+                                                top: 100px;
+                                                left: 100px;
+                                                display: none;
+                                            }
+
+                                            <?php
+                                        }
+
+                                        ?>.resizable .resizers {
                                             width: 100%;
                                             height: 100%;
                                             border: 3px solid #4286f4;
@@ -125,8 +131,11 @@
                                                 <div class='resizers'>
                                                     <div id="preview-container"
                                                         style="position: sticky;height: -webkit-fill-available;display: flex;">
-                                                        <a  href=<?=base_url('attachment/').$info->attachment?> style='cursor:pointer' target="_blank"></a>
-                                                        <iframe id="preview" src=<?=base_url('attachment/').$info->attachment?> frameborder="0" scrolling="auto"></iframe>
+                                                        <a href=<?=base_url('attachment/').$info->attachment?>
+                                                            style='cursor:pointer' target="_blank"></a>
+                                                        <iframe id="preview"
+                                                            src=<?=base_url('attachment/').$info->attachment?>
+                                                            frameborder="0" scrolling="auto"></iframe>
                                                     </div>
                                                     <div class='resizer top-left'></div>
                                                     <div class='resizer top-right'></div>
@@ -264,7 +273,7 @@
                                                       $this->db->where('id',$value->role);
                                                       $query2 = $this->db->get('groups')->row();
                                                       echo '<tr><td>'.$query->first_name.'</td><td>'.$query2->name.'</td><td>'.$value->Remark.'</td></tr>';
-                     
+
                                                    }
                                                    ?>
                                                 </tbody>
@@ -335,8 +344,8 @@
                                                                 name="item_cate_id[]" value="<?= $val->item_cate_id?>">
                                                         </td>
                                                         <td> <span><?=$val->sub_cate_name?></span> <input type="hidden"
-                                                                name="item_sub_cate_id[]"
-                                                                value="<?= $val->item_sub_cate_id?>"></td>
+                                                                name="item_sub_cat_id[]"
+                                                                value="<?= $val->item_sub_cat_id?>"></td>
                                                         <td> <span><?=$val->item_name?></span> <input type="hidden"
                                                                 name="item_id[]" value="<?= $val->item_id?>"></td>
                                                         <td><input name="qty_request[]" type="text"
@@ -361,9 +370,11 @@
                         </div>
                         <div class="form-actions">
                             <div class="pull-right">
-                            <button type="submit" class="btn btn-info btn-cons" name="submit_type" value="save"><i class="icon-ok"></i>
+                                <button type="submit" class="btn btn-info btn-cons" name="submit_type" value="save"><i
+                                        class="icon-ok"></i>
                                     Save</button>
-                                <button type="submit" class="btn btn-primary btn-cons" name="submit_type" value="send"><i class="icon-ok"></i>
+                                <button type="submit" class="btn btn-primary btn-cons" name="submit_type"
+                                    value="send"><i class="icon-ok"></i>
                                     Send</button>
                             </div>
                         </div>
@@ -397,7 +408,7 @@ $(document).ready(function() {
 
     // JS Validation
     $('#jsvalidate').validate({
-        // focusInvalid: false, 
+        // focusInvalid: false,
         ignore: "",
         rules: {
             title: {
@@ -418,10 +429,10 @@ $(document).ready(function() {
         },
 
         invalidHandler: function(event, validator) {
-            //display error alert on form submit    
+            //display error alert on form submit
         },
 
-        errorPlacement: function(label, element) { // render error placement for each input type   
+        errorPlacement: function(label, element) { // render error placement for each input type
             $('<span class="error"></span>').insertAfter(element).append(label)
             var parent = $(element).parent('.input-with-icon');
             parent.removeClass('success-control').addClass('error-control');
@@ -480,11 +491,11 @@ function removeRow(id) {
 //add row function
 function addNewRow() {
     var sl = $('#count').val();
-    var items = '';  
+    var items = '';
     items += '<tr>';
     items += '<td><select name="item_cate_id[]" class="form-control input-sm" id="category_' + sl +
         '" ><?php echo $category_data;?></select></td>';
-    items += '<td><select name="item_sub_cate_id[]"  id="subcategory_' + sl + '" class="sub_category_val_' + sl +
+    items += '<td><select name="item_sub_cat_id[]"  id="subcategory_' + sl + '" class="sub_category_val_' + sl +
         ' form-control input-sm"><option value="">-- Select One --</option></select></td>';
     items += '<td><select name="item_id[]" class="item_val_' + sl +
         ' form-control input-sm"><option value="">-- Select One --</option></select></td>';

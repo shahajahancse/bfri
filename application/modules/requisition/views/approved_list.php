@@ -1,5 +1,5 @@
-<div class="page-content">     
-   <div class="content">  
+<div class="page-content">
+   <div class="content">
       <ul class="breadcrumb" style="margin-bottom: 20px;">
          <li> <a href="<?=base_url('dashboard')?>" class="active"> Dashboard </a> </li>
          <li> <a href="javascript:void()" class="active"> <?=$module_name?> </a></li>
@@ -15,7 +15,7 @@
                      <?php //if($this->ion_auth->is_admin()){ ?>
                      <a href="<?=base_url('appointment/create')?>" class="btn btn-blueviolet btn-xs btn-mini"> Create Appointment</a>
                      <?php //} ?>
-                  </div>            
+                  </div>
                </div>
 
                <div class="grid-body ">
@@ -24,7 +24,6 @@
                         <?=$this->session->flashdata('success');?>
                      </div>
                   <?php endif; ?>
-                  <!-- <a href="<?=base_url('Committee/national_pdf')?>" class="btn btn-primary btn-xs btn-mini" style="float: right;">PDF Download</a> -->
                   <table class="table table-hover table-condensed dataTable" border="0">
                      <thead>
                         <tr>
@@ -40,7 +39,7 @@
                         </tr>
                      </thead>
                      <tbody>
-                        <?php 
+                        <?php
                         $sl=$pagination['current_page'];
                         foreach ($results as $row):
                            $sl++;
@@ -59,8 +58,8 @@
                            $status = '<span class="label label-important">Pending</span>';
                         }
                         ?>
-                        <?php 
-                        $create_at=date('Y-m-d', strtotime($row->created)); 
+                        <?php
+                        $create_at=date('Y-m-d', strtotime($row->created));
                         $today_date = date('Y-m-d');
                         $day_diff=abs(strtotime($today_date) - strtotime($create_at));
                         $number_of_days=floor($day_diff/(60*60*24));
@@ -74,7 +73,7 @@
                            $colorb = 'white';
                         }
 
-                        
+
                         ?>
                         <tr style="background-color:<?=$colorb?>;">
                            <td class="v-align-middle"><?=$sl.'.'?></td>
@@ -99,7 +98,7 @@
                               </div>
                            </td>
                         </tr>
-                     <?php endforeach;?>                      
+                     <?php endforeach;?>
                   </tbody>
                </table>
 

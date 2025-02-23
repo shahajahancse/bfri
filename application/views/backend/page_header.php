@@ -280,35 +280,33 @@
                             <!-- BEGIN SIDEBAR MENU -->
                             <ul class="pull-left">
                                 <li class="start <?=backend_activate_menu_class('dashboard')?>">
-                                    <a href="<?=base_url('dashboard');?>"> <i class="icon-custom-home"></i> <span
-                                            class="title">Dashboard</span></a>
+                                    <a href="<?=base_url('dashboard');?>"> <i class="icon-custom-home"></i> <span class="title">Dashboard</span></a>
                                 </li>
 
                                 <!-- Requisition section -->
-                                <li class="start <?=backend_activate_menu_class('requisition')?>"> <a href="javascript:;">
-                                        <i class="fa fa-tags"></i> <span class="title">Requisition</span> <span
-                                            class="selected"></span> <span class="arrow"></span> </a>
+                                <li class="start <?=backend_activate_menu_class('my_requisition')?>">
+                                    <a href="<?=base_url('my_requisition');?>"> <i class="fa fa-tag"></i> <span class="title">My Requisition</span></a>
+                                </li>
+
+                                <?php if($this->ion_auth->in_group(array('admin','badmin','sm','jd','dg'))){ ?>
+                                <li class="start <?=backend_activate_menu_class('requisition')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Requisition</span> <span class="selected"></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
-                                    <?php
-                                        $permission=$this->ion_auth->get_permission();
-                                        if(in_array(1,$permission)){ ?>
-                                       <li> <a href="<?=base_url('my_requisition/create');?>"> Create Requisition </a> </li>
-                                        <?php } ?>
-                                        <li> <a href="<?=base_url('requisition');?>"> Requisition List </a> </li>
+                                        <!-- <li> <a href="<?=base_url('requisition');?>"> Requisition List </a> </li> -->
                                         <li> <a href="<?=base_url('requisition/request_list');?>"> Requisition Pending  List </a> </li>
                                         <li> <a href="<?=base_url('requisition/approve_list');?>"> Requisition Approved List </a> </li>
                                         <li> <a href="<?=base_url('requisition/rejected_list');?>"> Requisition Rejected List </a> </li>
                                         <li> <a href="<?=base_url('requisition/delivered_list');?>"> Requisition Delivered List </a> </li>
                                     </ul>
                                 </li>
+                                <?php } ?>
 
                                 <!-- Purchase section -->
-                                <?php if(in_array('6', $this->ion_auth->get_permission())){ ?>
-                                <li class="start <?=backend_activate_menu_class('purchase')?>"> <a href="javascript:;">
-                                        <i class="fa fa-tags"></i> <span class="title">Purchase</span> <span
-                                            class="selected"></span> <span class="arrow"></span> </a>
+                                <?php if($this->ion_auth->in_group(array('admin','badmin','sm','jd','dg'))){ ?>
+                                <li class="start <?=backend_activate_menu_class('purchase')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Purchase</span> <span class="selected"></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
+                                        <?php if($this->ion_auth->in_group(array('badmin','sm'))){ ?>
                                         <li> <a href="<?=base_url('purchase/create');?>"> Create Purchase  </a> </li>
+                                        <?php } ?>
                                         <li> <a href="<?=base_url('purchase');?>"> Purchase List </a> </li>
                                         <li> <a href="<?=base_url('purchase/purchase_pending');?>"> Purchase Pending </a> </li>
                                         <li> <a href="<?=base_url('purchase/purchase_approved');?>"> Purchase Approved </a> </li>
@@ -366,7 +364,7 @@
                                 <?php } ?>
 
                                 <!-- User ACL -->
-                                <?php if($this->ion_auth->is_admin()){ ?>
+                                <?php if($this->ion_auth->in_group(array('admin','badmin'))){ ?>
                                 <li class="start <?=backend_activate_menu_class('acl')?>"> <a href="javascript:;"> <i
                                             class="fa fa-key"></i> <span class="title">Access Control</span> <span
                                             class="selected"></span> <span class="arrow"></span> </a>

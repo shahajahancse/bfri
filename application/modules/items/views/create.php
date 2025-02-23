@@ -52,8 +52,8 @@
                      </div>
                      <div class="col-md-4">
                         <label class="form-label">Select Sub Category <span class="required">*</span></label>
-                        <?php echo form_error('sub_cate_id'); ?>
-                        <select name="sub_cate_id" class="sub_category_val form-control input-sm" id="sub_category" required>
+                        <?php echo form_error('sub_cat_id'); ?>
+                        <select name="sub_cat_id" class="sub_category_val form-control input-sm" id="sub_category" required>
                            <option value="">-- Select One --</option>
                         </select>
                      </div>
@@ -126,7 +126,7 @@
       ignore: "",
       rules: {
          cat_id: { required: true },
-         sub_cate_id: { required: true },
+         sub_cat_id: { required: true },
          item_name: { required: true },
          unit_id: { required: true },
          order_level: { order_level: true },

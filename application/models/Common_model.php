@@ -43,13 +43,18 @@ class Common_model extends CI_Model {
       $data['0'] = '-Select Item-';
       $this->db->select('id, item_name');
       $this->db->from('items');
-      $this->db->where('sub_cate_id', $id);
-      $query = $this->db->get();
+      $this->db->where('sub_cat_id', $id);
+      $query = $this->db->get()->result();
 
-      foreach ($query->result_array() AS $rows) {
-         $data[$rows['id']] = $rows['item_name'];
+      foreach ($query AS $rows) {
+         $data[$rows->id] = $rows->item_name;
       }
-      return $data;
+
+      if (!empty($this->input->post('type'))) {
+         return $query;
+      } else {
+         return $data;
+      }
    }
 
    public function get_sub_category_by_cate_id($id){
@@ -57,13 +62,15 @@ class Common_model extends CI_Model {
       $this->db->select('id, sub_cate_name');
       $this->db->from('sub_categories');
       $this->db->where('cate_id', $id);
-      $query = $this->db->get();
-      // echo $this->db->last_query(); exit;
-
-      foreach ($query->result_array() AS $rows) {
-         $data[$rows['id']] = $rows['sub_cate_name'];
+      $query = $this->db->get()->result();
+      foreach ($query AS $rows) {
+         $data[$rows->id] = $rows->sub_cate_name;
       }
-      return $data;
+      if (!empty($this->input->post('type'))) {
+         return $query;
+      } else {
+         return $data;
+      }
    }
 
    public function get_count_pass_request(){

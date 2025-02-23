@@ -6,29 +6,23 @@ class Purchase_model extends CI_Model {
       parent::__construct();
    }
 
-   public function get_purchase($limit=1000, $offset=0, $status=null) {
-      $desk_arr=[];
-      $desk_arr[]=$this->ion_auth->get_group_id();
-      if(in_array('6', $this->ion_auth->get_permission())){
-         $ta=1;
-     }
-      $this->db->select('p.*, f.fiscal_year_name');
-      $this->db->from('purchase p');
-      $this->db->join('fiscal_year f', 'f.id = p.f_year_id', 'LEFT');
-      if($status != null && $status != 4) {
-         $this->db->where('p.status', $status);
-      }elseif($status == 4) {
-         $this->db->where('p.is_received =', 1);
+   public function get_purchase($limit=1000, $offset=0, $status=array()) {
+      $this->db->select('p.*, u.first_name');
+      $this->db->from('item_purchases p');
+      $this->db->join('users u', 'u.id = p.created_by', 'LEFT');
+      if (!empty($status)) {
+         $this->db->where_in('p.status', $status);
       }
-      if($ta!=1){
-         $this->db->where_in('p.desk_id', $desk_arr);
-     }
       $this->db->order_by('p.id', 'DESC');
-      $query = $this->db->get()->result();
-      $result['rows'] = $query;
+      $query = $this->db->get();
+      $result['rows'] = $query->result();
+
         // count query
-      $q = $this->db->select('COUNT(*) as count');
-      $this->db->from('purchase'); 
+      $this->db->select('COUNT(*) as count');
+      $this->db->from('item_purchases');
+      if (!empty($status)) {
+         $this->db->where_in('status', $status);
+      }
       $query = $this->db->get()->result();
       $tmp = $query;
       $result['num_rows'] = $tmp[0]->count;
@@ -74,7 +68,7 @@ class Purchase_model extends CI_Model {
 
    public function appointment_destroy($id) {
       // Delete row
-      if($this->db->delete('appointment', array('id' => $id))){            
+      if($this->db->delete('appointment', array('id' => $id))){
          return TRUE;
       }else{
          return FALSE;

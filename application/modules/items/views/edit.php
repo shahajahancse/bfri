@@ -37,9 +37,9 @@
                      </div>
                      <div class="col-md-4">
                         <label class="form-label">Select Sub Category <span class="required">*</span></label>
-                        <?php echo form_error('sub_cate_id');
+                        <?php echo form_error('sub_cat_id');
                         $more_attr = 'class="sub_category_val form-control input-sm" id="sub_category" required';
-                        echo form_dropdown('sub_cate_id', $sub_categories, set_value('sub_cate_id', $info->sub_cate_id), $more_attr);
+                        echo form_dropdown('sub_cat_id', $sub_categories, set_value('sub_cat_id', $info->sub_cat_id), $more_attr);
                         ?>
                      </div>
                      <div class="col-md-4">
@@ -112,7 +112,7 @@
       ignore: "",
       rules: {
          cat_id: { required: true },
-         sub_cate_id: { required: true },
+         sub_cat_id: { required: true },
          item_name: { required: true },
          unit_id: { required: true },
          status: {required: true}

@@ -2,7 +2,6 @@
 
 class My_requisition extends Backend_Controller {
    var $userID;
-
    public function __construct(){
       parent::__construct();
 
@@ -12,18 +11,17 @@ class My_requisition extends Backend_Controller {
 
       $this->data['module_name'] = 'My Requisition';
       $this->load->model('My_requisition_model');
-      $this->userSessID = $this->session->userdata('user_id');
+      $this->userId = $this->session->userdata('user_id');
    }
 
    public function index($offset=0){
       $limit = 25;
-      $results = $this->My_requisition_model->get_my_requisition($limit, $offset); 
+      $results = $this->My_requisition_model->get_my_requisition($limit, $offset);
       $this->data['results'] = $results['rows'];
       $this->data['total_rows'] = $results['num_rows'];
 
       //pagination
       $this->data['pagination'] = create_pagination('my_requisition/index/', $this->data['total_rows'], $limit, 3, $full_tag_wrap = true);
-
       // Load view
       $this->data['meta_title'] = 'My Requisition List';
       $this->data['subview'] = 'index';
@@ -33,12 +31,11 @@ class My_requisition extends Backend_Controller {
    public function create(){
       $fiscal_year = $this->Common_model->get_current_fiscal_year();
       $this->data['fiscal_year'] = $fiscal_year->fiscal_year_name;
-      
+
       //Validation
       $this->form_validation->set_rules('title', 'title','required|trim|max_length[255]');
       //Validate and input data
       if ($this->form_validation->run() == true){
-
          $user = $this->ion_auth->user()->row();
          $approve_reject_user= [];
          $final_appruver= [];
@@ -47,88 +44,75 @@ class My_requisition extends Backend_Controller {
             $config['upload_path'] = './attachment/';
             $config['allowed_types'] = 'jpg|png|jpeg|pdf';
             $config['max_size'] = 10240000;
-        
             $this->load->library('upload', $config);
             if ($this->upload->do_upload('attachment')) {
-                $data = $this->upload->data();
-                $originalFileName = $data['file_name'];
-        
-                // Generate a unique file name
-                $uniqueFileName = uniqid() . '.' . pathinfo($originalFileName, PATHINFO_EXTENSION);
-        
-                // Move the uploaded file to the destination with the unique file name
-                $destination = base_url('attachment/') . $uniqueFileName;
-                rename($config['upload_path'] . $originalFileName, $config['upload_path'] . $uniqueFileName);
-        
-                $attachmentname=$uniqueFileName;
+               $data = $this->upload->data();
+               $originalFileName = $data['file_name'];
+               // Generate a unique file name
+               $uniqueFileName = uniqid() . '.' . pathinfo($originalFileName, PATHINFO_EXTENSION);
+               // Move the uploaded file to the destination with the unique file name
+               $destination = base_url('attachment/') . $uniqueFileName;
+               rename($config['upload_path'] . $originalFileName, $config['upload_path'] . $uniqueFileName);
+               $attachmentname=$uniqueFileName;
             }
-        }
+         }
 
-        if ($_POST['submit_type']=='save'){ 
-            $is_save = 1;
-        }else{
-            $is_save = 0;
-        }
-        if ($_POST['urgent_status']){ 
+         if ($_POST['submit_type']=='save'){
+            $status = 1;
+            $desk_id = 1;
+         }else{
+            $status = 2;
+            $desk_id = 2;
+         }
+         if ($_POST['urgent_status']){
+            $urgent_status = 2;
+         }else{
             $urgent_status = 1;
-        }else{
-            $urgent_status = 0;
-        }
+         }
+
          $form_data = array(
-            'user_id'   => $user->id,
-            'department_id' => ($user->dept_id)?$user->dept_id:'',
-            'f_year_id'   => $fiscal_year->id,
-            'approve_reject_user'   =>json_encode($approve_reject_user),
-            'final_appruver'   =>json_encode($final_appruver),
-            'title'     => $this->input->post('title'),
-            'desk_id'         => $this->ion_auth->in_group('Store Keeper')?1:0,
-            'pin_code'   => mt_rand(1000, 9999),  
-            'attachment'   => $attachmentname,  
-            'created'   => date('Y-m-d H:i:s'),
-            'updated'   => date('Y-m-d H:i:s'),
-            'is_save' => $is_save,
+            'unit_id'       => $user->unit_id,
+            'user_id'       => $user->id,
+            'department_id' => ($user->dept_id)? $user->dept_id:'',
+            'title'         => $this->input->post('title'),
+            'status'        => $status,
+            'desk_id'       => $desk_id,
+            'pin_code'      => mt_rand(1000, 9999),
+            'f_year_id'     => $fiscal_year->id,
+            'created_at'    => date('Y-m-d H:i:s'),
+            'updated_at'    => date('Y-m-d H:i:s'),
+            'is_delivered'  => 1,
             'urgent_status' => $urgent_status,
-            );
-         // print_r($form_data); exit;
-         if($this->Common_model->save('requisitions', $form_data)){     
-            // Send Message
-            // $mobile = '+88'.$user->phone;
-            // $message = 'Your appointment request send admin successfully. Please wait for confirmation sms. Thank You!';
-            // $this->send_sms($mobile, $message);
+            'attachment'    => $attachmentname,
+            'remark'        => $this->input->post('remark'),
+         );
 
-            // Send Mail
-            // $this->send_mail(); 
-
-            // Schedule Type Appointment
+         if($this->Common_model->save('item_requisitions', $form_data)){
             $insert_id = $this->db->insert_id();
-               // Insert Scout Unit under a group
-
-            for ($i=0; $i<sizeof($_POST['item_id']); $i++) { 
-               $form_data2 = array(
-                  'requisition_id'     => $insert_id,
-                  'item_cate_id'       => $_POST['item_cate_id'][$i],
-                  'item_sub_cate_id'   => $_POST['item_sub_cate_id'][$i],
-                  'item_id'            => $_POST['item_id'][$i],
-                  'dept_id'            => ($user->dept_id)?$user->dept_id:'',
-                  'fiscal_year_id'     => $fiscal_year->id,
-                  'qty_request'        => $_POST['qty_request'][$i],           
-                  'remark'             => $_POST['remark'][$i]
+            for ($i=0; $i<sizeof($_POST['item_id']); $i++) {
+               if (!empty($_POST['item_id'][$i]) && !empty($_POST['qty_request'][$i])) {
+                  $form_data2 = array(
+                     'unit_id'            => $user->unit_id,
+                     'requisition_id'     => $insert_id,
+                     'item_id'            => $_POST['item_id'][$i],
+                     'cat_id'             => $_POST['cat_id'][$i],
+                     'sub_cat_id'         => $_POST['sub_cat_id'][$i],
+                     'dept_id'            => ($user->dept_id)?$user->dept_id:'',
+                     'fiscal_year_id'     => $fiscal_year->id,
+                     'qty_request'        => $_POST['qty_request'][$i],
+                     'remark'             => $_POST['remark'][$i]
                   );
-               $this->Common_model->save('requisition_item', $form_data2);
+                  $this->Common_model->save('item_requisition_details', $form_data2);
+               }
             }
-
             $this->session->set_flashdata('success', 'Create Requisition successfully.');
             redirect("my_requisition");
          }
       }
 
       //Dropdown
-      // $this->data['type_dd'] = $this->Common_model->get_schedule_type(); 
-      // $this->data['items'] = $this->Common_model->get_items();
       $this->data['categories'] = $this->Common_model->get_categories();
       $this->data['info'] = $this->Common_model->get_user_details();
-
-      // print_r($this->data['info']['user_info']); exit;
 
       //Load view
       $this->data['meta_title'] = 'Requisition Entry Form';
@@ -136,32 +120,85 @@ class My_requisition extends Backend_Controller {
       $this->load->view('backend/_layout_main', $this->data);
    }
 
-   public function details($id){
-      // if(!$this->ion_auth->is_member()){
-      //    redirect('dashboard');
-      // }
+   public function edit($id)
+   {
+      $fiscal_year = $this->Common_model->get_current_fiscal_year();
+      $this->data['fiscal_year'] = $fiscal_year->fiscal_year_name;
 
-      $dataID = (int) decrypt_url($id); //exit;
-      if (!$this->Common_model->exists('requisitions', 'id', $dataID)) { 
-         show_404('My_requisition - details - exitsts', TRUE);
+      if (!$this->Common_model->exists('requisitions', 'id', $id)) {
+         show_404('requisition - update - exitsts', true);
       }
 
-      
+      //Validation
+      $this->form_validation->set_rules('status', ' status', 'required|trim');
+      if ($this->form_validation->run() == true){
+         $user = $this->ion_auth->user()->row();
+         $form_data = array(
+            'status'  => $this->input->post('status'),
+            'remark'  => $this->input->post('remark'),
+            'desk_id' => ($this->input->post('status') == 1)? 1:2,
+            'updated_at' => date('Y-m-d H:i:s'),
+         );
+
+         $this->db->where('id', $id);
+         if ($this->db->update('item_requisitions', $form_data)) {
+            for ($i = 0; $i < sizeof($_POST['hide_id']); $i++) {
+               if (!empty($_POST['hide_id'][$i])) {
+                  $form_data2 = array(
+                     'qty_request' => $_POST['qty_request'][$i],
+                  );
+                  $this->db->where('id', $_POST['hide_id'][$i]);
+                  $this->db->update('item_requisition_details', $form_data2);
+               } else {
+                  $form_data2 = array(
+                     'unit_id'            => $user->unit_id,
+                     'requisition_id'     => $id,
+                     'item_id'            => $_POST['item_id'][$i],
+                     'cat_id'             => $_POST['cat_id'][$i],
+                     'sub_cat_id'         => $_POST['sub_cat_id'][$i],
+                     'dept_id'            => ($user->dept_id)?$user->dept_id:'',
+                     'fiscal_year_id'     => $fiscal_year->id,
+                     'qty_request'        => $_POST['qty_request'][$i],
+                     'remark'             => $_POST['des'][$i]
+                  );
+                  $this->Common_model->save('item_requisition_details', $form_data2);
+               }
+            }
+            $this->session->set_flashdata('success', 'Update information successfully.');
+            redirect("my_requisition");
+         } else {
+            $this->session->set_flashdata('error', 'Update information failed.');
+            redirect("my_requisition");
+         }
+      }
 
       //Results
-      $this->data['info'] = $this->My_requisition_model->get_info($dataID);
-      // echo '<pre>';
-      // print_r($this->data['info']->title); exit;
-      $this->data['items'] = $this->My_requisition_model->get_req_items($dataID); 
-      // if($this->data['info']->schedule_type == 'Appointment'){
-      //    $this->data['persons'] = $this->My_requisition_model->get_appointment_persons($this->data['info']->id); 
-      // }
+      $this->data['categories'] = $this->Common_model->get_categories();
+      $this->data['info'] = $this->My_requisition_model->get_info($id);
+      $this->data['items'] = $this->My_requisition_model->get_req_items($id);
+      // dd($this->data['items']);
+      $this->data['meta_title'] = 'Update Requisition';
+      $this->data['subview'] = 'edit';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+
+   public function details($id){
+
+      if (!$this->Common_model->exists('requisitions', 'id', $id)) {
+         show_404('My_requisition - details - exitsts', TRUE);
+      }
+      //Results
+      $this->data['info'] = $this->My_requisition_model->get_info($id);
+      $this->data['items'] = $this->My_requisition_model->get_req_items($id);
 
       // Load page
       $this->data['meta_title'] = 'Requisition Details';
       $this->data['subview'] = 'details';
       $this->load->view('backend/_layout_main', $this->data);
    }
+   /************************************ Old **********************************/
+
+
 
 
    public function update($id){
@@ -171,7 +208,7 @@ class My_requisition extends Backend_Controller {
 
       // $dataID = $id; //exit;
       $dataID = (int) decrypt_url($id); //exit;
-      if (!$this->Common_model->exists('appointment', 'id', $dataID)) { 
+      if (!$this->Common_model->exists('appointment', 'id', $dataID)) {
          show_404('appointment - update - exitsts', TRUE);
       }
 
@@ -202,18 +239,17 @@ class My_requisition extends Backend_Controller {
       }
 
       //Dropdown
-      $this->data['type_dd'] = $this->Common_model->get_schedule_type(); 
+      $this->data['type_dd'] = $this->Common_model->get_schedule_type();
 
       //Results
-      $this->data['info'] = $this->My_requisition_model->get_info($dataID); 
-      
+      $this->data['info'] = $this->My_requisition_model->get_info($dataID);
+
       //Load view
       $this->data['meta_title'] = 'Update Appointment';
       $this->data['subview'] = 'update';
       $this->load->view('backend/_layout_main', $this->data);
    }
 
-   /************************************ PASS **********************************/
 
    public function my_pass($offset=0){
       $limit = 25;
@@ -222,7 +258,7 @@ class My_requisition extends Backend_Controller {
       }
 
       //Results
-      $results = $this->My_requisition_model->get_my_pass($limit, $offset, $this->userSessID); 
+      $results = $this->My_requisition_model->get_my_pass($limit, $offset, $this->userId);
       $this->data['results'] = $results['rows'];
       $this->data['total_rows'] = $results['num_rows'];
 
@@ -242,7 +278,7 @@ class My_requisition extends Backend_Controller {
 
       if ($this->form_validation->run() == true){
          $form_data = array(
-            'user_id'   => $this->userSessID,
+            'user_id'   => $this->userId,
             'host_id'   => $this->input->post('host_id'),
             'reason'    => $this->input->post('reason'),
             'created'   => date('Y-m-d H:i:s')
@@ -267,12 +303,12 @@ class My_requisition extends Backend_Controller {
       // Load View
       $this->data['meta_title'] = 'Create Pass';
       $this->data['subview'] = 'create_pass';
-      $this->load->view('backend/_layout_main', $this->data);        
+      $this->load->view('backend/_layout_main', $this->data);
    }
 
    public function cancelpass($id){
       $dataID = (int) decrypt_url($id); //exit;
-      if (!$this->Common_model->exists('pass', 'id', $dataID)) { 
+      if (!$this->Common_model->exists('pass', 'id', $dataID)) {
          show_404('pass - cancelpass - exitsts', TRUE);
       }
 
@@ -285,27 +321,27 @@ class My_requisition extends Backend_Controller {
 
 
 
-   
 
-   public function delete($id){  
+
+   public function delete($id){
       //Check Authentication
       if(!($this->ion_auth->is_admin() || $this->ion_auth->is_sec_admin() || $this->ion_auth->is_ps_admin())){
          redirect('dashboard');
       }
 
       $dataID = (int) decrypt_url($id); //exit;
-      if (!$this->Common_model->exists('appointment', 'id', $dataID)) { 
+      if (!$this->Common_model->exists('appointment', 'id', $dataID)) {
          show_404('appointment - delete - exitsts', TRUE);
       }
 
       //Delete data
       if($this->My_requisition_model->appointment_destroy($dataID)){
-         // Delete Scouts Region from database         
+         // Delete Scouts Region from database
          $this->session->set_flashdata('success', 'Appointmetn delete successfully.');
-         redirect("appointment");   
+         redirect("appointment");
       }else{
          $this->session->set_flashdata('warning', 'Something is wrong.');
-         redirect("appointment");   
+         redirect("appointment");
       }
    }
 
@@ -329,7 +365,7 @@ class My_requisition extends Backend_Controller {
       }catch(Exception $ex){
          $output = "-100";
       }
-      return $output; 
+      return $output;
    }
 
    public function send_mail(){
@@ -350,15 +386,15 @@ class My_requisition extends Backend_Controller {
       $config['charset']      = 'utf-8';
       $config['newline']      = "\r\n";
       $config['mailtype']     = 'text'; // or html
-      $config['validation']   = TRUE; // bool whether to validate email or not      
+      $config['validation']   = TRUE; // bool whether to validate email or not
 
       $this->email->initialize($config);
 
       $this->email->from('testingemail9400@gmail.com', 'Digital Schedule');
-      $this->email->to('mostafa.csit@gmail.com'); 
+      $this->email->to('mostafa.csit@gmail.com');
 
       $this->email->subject('Account Activation - Digiatal Schedule');
-      $this->email->message($mailBody);  
+      $this->email->message($mailBody);
 
       // Send Mail
       if($this->email->send()){

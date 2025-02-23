@@ -24,7 +24,7 @@ class Items extends Backend_Controller {
    public function create(){
       //Validation
       $this->form_validation->set_rules('cat_id', 'select category', 'required|trim');
-      $this->form_validation->set_rules('sub_cate_id', 'select sub category', 'required|trim');
+      $this->form_validation->set_rules('sub_cat_id', 'select sub category', 'required|trim');
       $this->form_validation->set_rules('item_name', 'item name', 'required|trim');
       $this->form_validation->set_rules('unit_id', 'select unit', 'required|trim');
       $this->form_validation->set_rules('order_level', 'order level', 'required|trim');
@@ -33,7 +33,7 @@ class Items extends Backend_Controller {
       if ($this->form_validation->run() == true){
          $form_data = array(
             'cat_id'        => $this->input->post('cat_id'),
-            'sub_cate_id'   => $this->input->post('sub_cate_id'),
+            'sub_cat_id'    => $this->input->post('sub_cat_id'),
             'item_name'     => $this->input->post('item_name'),
             'unit_id'       => $this->input->post('unit_id'),
             'type'          => $this->input->post('type'),
@@ -49,7 +49,7 @@ class Items extends Backend_Controller {
                   'unit_id'        => $this->session->userdata('unit_id'),
                   'item_id'        => $insert_id,
                   'cat_id'         => $this->input->post('cat_id'),
-                  'sub_cate_id'    => $this->input->post('sub_cate_id'),
+                  'sub_cat_id'     => $this->input->post('sub_cat_id'),
                   'order_level'    => $this->input->post('order_level'),
                );
                $this->Common_model->save('item_stocks', $data);
@@ -60,7 +60,7 @@ class Items extends Backend_Controller {
                      'unit_id'        => $v->id,
                      'item_id'        => $insert_id,
                      'cat_id'         => $this->input->post('cat_id'),
-                     'sub_cate_id'    => $this->input->post('sub_cate_id'),
+                     'sub_cat_id'     => $this->input->post('sub_cat_id'),
                      'order_level'    => $this->input->post('order_level'),
                   );
                   $this->Common_model->save('item_stocks', $data);
@@ -89,7 +89,7 @@ class Items extends Backend_Controller {
 
    public function get_item_by_sub_category($id){
       $dataID = $id;
-      $this->db->where('sub_cate_id', $dataID);
+      $this->db->where('sub_cat_id', $dataID);
       $query = $this->db->get('items');
       $sub_category = $query->result();
       echo json_encode($sub_category);
@@ -113,7 +113,7 @@ class Items extends Backend_Controller {
 
       //Validation
       $this->form_validation->set_rules('cat_id', 'select category', 'required|trim');
-      $this->form_validation->set_rules('sub_cate_id', 'select sub category', 'required|trim');
+      $this->form_validation->set_rules('sub_cat_id', 'select sub category', 'required|trim');
       $this->form_validation->set_rules('item_name', 'item name', 'required|trim');
       $this->form_validation->set_rules('unit_id', 'select unit', 'required|trim');
       $this->form_validation->set_rules('order_level', 'order level', 'required|trim');
@@ -121,7 +121,7 @@ class Items extends Backend_Controller {
       if ($this->form_validation->run() == true){
          $form_data = array(
             'cat_id'        => $this->input->post('cat_id'),
-            'sub_cate_id'   => $this->input->post('sub_cate_id'),
+            'sub_cat_id'    => $this->input->post('sub_cat_id'),
             'item_name'     => $this->input->post('item_name'),
             'unit_id'       => $this->input->post('unit_id'),
             'type'          => $this->input->post('type'),
@@ -236,7 +236,7 @@ class Items extends Backend_Controller {
             'unit_id' => $unit_id,
             'item_id' => $id,
             'cat_id' => $this->input->post('cat'.$id),
-            'sub_cate_id' => $this->input->post('sub_cat'.$id),
+            'sub_cat_id' => $this->input->post('sub_cat'.$id),
             'qty' => $qty,
             'status' => 1, // item adjusted
             'updated_by' => $this->session->userdata('user_id'),
@@ -257,7 +257,7 @@ class Items extends Backend_Controller {
                'unit_id' => $unit_id,
                'item_id' => $id,
                'cat_id' => $this->input->post('cat'.$id),
-               'sub_cate_id' => $this->input->post('sub_cat'.$id),
+               'sub_cat_id' => $this->input->post('sub_cat'.$id),
                'stock_in' => $check->stock_in + ($qty),
                'balance' => $check->balance + ($qty),
                'updated_by' => $this->session->userdata('user_id'),
@@ -285,7 +285,7 @@ class Items extends Backend_Controller {
          'unit_id' => $unit_id,
          'item_id' => $id,
          'cat_id' => $cat,
-         'sub_cate_id' => $sub_cat,
+         'sub_cat_id' => $sub_cat,
          'qty' => $qty,
          'status' => 1, // item adjusted
          'updated_by' => $this->session->userdata('user_id'),
@@ -306,7 +306,7 @@ class Items extends Backend_Controller {
             'unit_id' => $unit_id,
             'item_id' => $id,
             'cat_id' => $cat,
-            'sub_cate_id' => $sub_cat,
+            'sub_cat_id' => $sub_cat,
             'stock_in' => $check->stock_in + ($qty),
             'balance' => $check->balance + ($qty),
             'updated_by' => $this->session->userdata('user_id'),
@@ -328,7 +328,7 @@ class Items extends Backend_Controller {
       $this->db->select('i.*, c.category_name, sc.sub_cate_name, u.unit_name, s.balance, b.name_en');
       $this->db->from('items i');
       $this->db->join('item_categories c', 'c.id=i.cat_id', 'LEFT');
-      $this->db->join('item_sub_categories sc', 'sc.id=i.sub_cate_id', 'LEFT');
+      $this->db->join('item_sub_categories sc', 'sc.id=i.sub_cat_id', 'LEFT');
       $this->db->join('item_unit u', 'u.id=i.unit_id', 'LEFT');
       $this->db->join('item_stocks s', 's.item_id=i.id', 'LEFT');
       $this->db->join('units b', 'b.id=s.unit_id', 'LEFT');

@@ -55,7 +55,7 @@
                               <td class="v-align-middle"><?=$status?></td>
                               <input type="hidden" name="ids[]" value="<?=$row->id?>">
                               <input type="hidden" id="cat<?=$row->id?>" name="cat<?=$row->id?>" value="<?=$row->cat_id?>">
-                              <input type="hidden" id="sub_cat<?=$row->id?>" name="sub_cat<?=$row->id?>" value="<?=$row->sub_cate_id?>">
+                              <input type="hidden" id="sub_cat<?=$row->id?>" name="sub_cat<?=$row->id?>" value="<?=$row->sub_cat_id?>">
                               <td class="v-align-middle"><input name="stock<?=$row->id?>" class="form-control input-sm" id="stock<?=$row->id?>"></td>
                               <td class="text-center">
                                  <a class="btn btn-primary btn-xs btn-mini" onclick="ajax_single_adjust(<?=$row->id?>)">Submit</a>
