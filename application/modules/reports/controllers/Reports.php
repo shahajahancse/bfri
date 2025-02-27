@@ -11,9 +11,7 @@ class Reports extends Backend_Controller {
     endif;
     $pr=$this->ion_auth->get_permission();
     if (!in_array('5', $pr)) {
-
       redirect('dashboard');
-
     }
     $this->load->model('Reports_model');
   }
@@ -54,6 +52,18 @@ class Reports extends Backend_Controller {
         $mpdf->WriteHtml($html);
         $mpdf->output();
         exit();
+      }
+      if ($btn_submit == 'item_excel') {
+        $this->data['results'] = $this->Reports_model->get_items();
+        // Generate PDF
+        $this->data['headding'] = 'Item Report';
+        $this->load->view('item_excel', $this->data, true);
+      }
+      if ($btn_submit == 'low_excel') {
+        $this->data['results'] = $this->Reports_model->get_items();
+        // Generate PDF
+        $this->data['headding'] = 'Low Item Report';
+        $this->load->view('low_excel', $this->data, true);
       }
 
       // requisition report
@@ -109,6 +119,45 @@ class Reports extends Backend_Controller {
         $mpdf->WriteHtml($html);
         $mpdf->output();
         exit();
+      }
+
+      // Requisition Excel
+      if ($btn_submit == 'request_requisition_excel') {
+        $this->data['date_from'] = $this->input->post('from_date');
+        $this->data['date_to'] = $this->input->post('to_date');
+        // Results
+        $arr = array(2,3,4,5,6,7);
+        $this->data['results'] = $this->Reports_model->get_requisition($arr);
+        // Generate PDF
+        $this->data['headding'] = 'Request Requisition';
+        $this->load->view('excel_rard', $this->data);
+      } else if ($btn_submit == 'approve_requisition_excel') {
+        $this->data['date_from'] = $this->input->post('from_date');
+        $this->data['date_to'] = $this->input->post('to_date');
+        // Results
+        $arr = array(8);
+        $this->data['results'] = $this->Reports_model->get_requisition($arr);
+        // Generate PDF
+        $this->data['headding'] = 'Approve Requisition';
+        $this->load->view('excel_rard', $this->data, true);
+      } else if ($btn_submit == 'rejected_requisition_excel') {
+        $this->data['date_from'] = $this->input->post('from_date');
+        $this->data['date_to'] = $this->input->post('to_date');
+        // Results
+        $arr = array(9);
+        $this->data['results'] = $this->Reports_model->get_requisition($arr);
+        // Generate PDF
+        $this->data['headding'] = 'Rejected Requisition';
+        $this->load->view('excel_rard', $this->data, true);
+      } else if ($btn_submit == 'delivered_requisition_excel') {
+        $this->data['date_from'] = $this->input->post('from_date');
+        $this->data['date_to'] = $this->input->post('to_date');
+        // Results
+        $arr = array(10);
+        $this->data['results'] = $this->Reports_model->get_requisition($arr);
+        // Generate PDF
+        $this->data['headding'] = 'Delivered Requisition';
+        $this->load->view('excel_rard', $this->data, true);
       }
 
       // purchase report
@@ -167,6 +216,46 @@ class Reports extends Backend_Controller {
         exit();
       }
 
+      // purchase Excel
+      if( $btn_submit == 'request_purchase_excel') {
+        $this->data['date_from'] = $this->input->post('from_date');
+        $this->data['date_to'] = $this->input->post('to_date');
+        // Results
+        $arr = array(2,3,4,5,6);
+        $this->data['results'] = $this->Reports_model->get_purchase($arr);
+        // Generate PDF
+        $this->data['headding'] = 'Request Purchase';
+        $this->load->view('excel_prard', $this->data, true);
+      }else if( $btn_submit == 'approve_purchase_axcel') {
+        $this->data['date_from'] = $this->input->post('from_date');
+        $this->data['date_to'] = $this->input->post('to_date');
+        // Results
+        $arr = array(7);
+        $this->data['results'] = $this->Reports_model->get_purchase($arr);
+        // Generate PDF
+        $this->data['headding'] = 'Approve Purchase';
+        $this->load->view('excel_prard', $this->data, true);
+      }else if( $btn_submit == 'rejected_purchase_axcel') {
+        $this->data['date_from'] = $this->input->post('from_date');
+        $this->data['date_to'] = $this->input->post('to_date');
+        // Results
+        $arr = array(8);
+        $this->data['results'] = $this->Reports_model->get_purchase($arr);
+        // Generate PDF
+        $this->data['headding'] = 'Rejected Purchase';
+        $this->load->view('excel_prard', $this->data, true);
+      }else if( $btn_submit == 'recceived_purchase_axcel') {
+        $this->data['date_from'] = $this->input->post('from_date');
+        $this->data['date_to'] = $this->input->post('to_date');
+        $this->data['type'] = 4;
+        // Results
+        $arr = array(9);
+        $this->data['results'] = $this->Reports_model->get_purchase($arr);
+        // Generate PDF
+        $this->data['headding'] = 'Purchase Received';
+        $this->load->view('excel_prard', $this->data);
+      }
+
       // user report
       if( $btn_submit == 'user_request_requisition') {
         $this->data['date_from'] = $this->input->post('from_date');
@@ -220,6 +309,45 @@ class Reports extends Backend_Controller {
         $mpdf->WriteHtml($html);
         $mpdf->output();
         exit();
+      }
+
+      // user excel
+      if( $btn_submit == 'user_request_excel') {
+        $this->data['date_from'] = $this->input->post('from_date');
+        $this->data['date_to'] = $this->input->post('to_date');
+        // Results
+        $arr = array(2,3,4,5,6,7);
+        $this->data['results'] = $this->Reports_model->get_user_report($arr);
+        // Generate PDF
+        $this->data['headding'] = 'Request Requisition';
+        $html = $this->load->view('excel_ruard', $this->data, true);
+      }else if( $btn_submit == 'user_approve_excel') {
+        $this->data['date_from'] = $this->input->post('from_date');
+        $this->data['date_to'] = $this->input->post('to_date');
+        // Results
+        $arr = array(9);
+        $this->data['results'] = $this->Reports_model->get_user_report($arr);
+        // Generate PDF
+        $this->data['headding'] = 'Approve Requisition';
+        $html = $this->load->view('excel_ruard', $this->data, true);
+      }else if( $btn_submit == 'user_rejected_excel') {
+        $this->data['date_from'] = $this->input->post('from_date');
+        $this->data['date_to'] = $this->input->post('to_date');
+        // Results
+        $arr = array(8);
+        $this->data['results'] = $this->Reports_model->get_user_report($arr);
+        // Generate PDF
+        $this->data['headding'] = 'Rejected Requisition';
+        $html = $this->load->view('excel_ruard', $this->data, true);
+      }else if( $btn_submit == 'user_delivered_excel') {
+        $this->data['date_from'] = $this->input->post('from_date');
+        $this->data['date_to'] = $this->input->post('to_date');
+        // Results
+        $arr = array(10);
+        $this->data['results'] = $this->Reports_model->get_user_report($arr);
+        // Generate PDF
+        $this->data['headding'] = 'Delivered Requisition';
+        $html = $this->load->view('excel_ruard', $this->data, true);
       }
     }
 

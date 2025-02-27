@@ -50,8 +50,8 @@
 </head>
 <body>
   <div class="priview-body">
-    <div class="priview-header">
-      <p class="text-center">
+      <div class="priview-header">
+         <p class="text-center">
             <span style="font-size:20px;font-weight: bold;">BFRI Inventory Management System</span>
             <br> <span style="font-size: 14px;">Address </span>
          </p>
