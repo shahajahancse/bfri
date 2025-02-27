@@ -59,9 +59,9 @@
                         }
                         ?>
                         <?php
-                        $create_at=date('Y-m-d', strtotime($row->created));
+                        $created_at=date('Y-m-d', strtotime($row->created));
                         $today_date = date('Y-m-d');
-                        $day_diff=abs(strtotime($today_date) - strtotime($create_at));
+                        $day_diff=abs(strtotime($today_date) - strtotime($created_at));
                         $number_of_days=floor($day_diff/(60*60*24));
                         if($number_of_days > 7) {
                            $colorb = '#ff8686';

@@ -6,9 +6,62 @@ class Dashboard_model extends CI_Model {
     public function __construct() {
         parent::__construct();
     }
+    public function count_data($tf = NULL, $from_date = NULL, $to_date = NULL, $unit_id = NULL) {
+        $this->db->select("
+            COUNT(CASE WHEN r.status = 10 THEN 1 END) AS apv,
+            COUNT(CASE WHEN r.status = 9 THEN 1 END) AS rej,
+            COUNT(CASE WHEN r.status = 8 THEN 1 END) AS apv1,
+            COUNT(CASE WHEN r.status = 7 THEN 1 END) AS pen,
+            COUNT(CASE WHEN r.status = 6 THEN 1 END) AS pen1,
+            COUNT(CASE WHEN r.status = 5 THEN 1 END) AS pen2,
+            COUNT(CASE WHEN r.status = 4 THEN 1 END) AS pen3,
+            COUNT(CASE WHEN r.status = 3 THEN 1 END) AS pen4,
+            COUNT(CASE WHEN r.status = 2 THEN 1 END) AS pen5,
+        ");
+        if ($tf) {
+            $this->db->where('r.unit_id', $this->session->userdata('unit_id'));
+        }
+        if (!empty($unit_id)) {
+            $this->db->where('r.unit_id', $unit_id);
+        }
+        if (!empty($from_date) && !empty($to_date)) {
+            $this->db->where('DATE(r.created_at) BETWEEN "'. $from_date. '" AND "'. $to_date.'"');
+        }
+        $row = $this->db->get('item_requisitions r')->row();
+        return $row;
+    }
+    public function count_data_parches($tf = NULL, $from_date = NULL, $to_date = NULL, $unit_id = NULL) {
+        $this->db->select("
+            COUNT(CASE WHEN r.status = 9 THEN 1 END) AS apv,
+            COUNT(CASE WHEN r.status = 8 THEN 1 END) AS rej,
+            COUNT(CASE WHEN r.status = 7 THEN 1 END) AS apv1,
+            COUNT(CASE WHEN r.status = 6 THEN 1 END) AS pen,
+            COUNT(CASE WHEN r.status = 5 THEN 1 END) AS pen1,
+            COUNT(CASE WHEN r.status = 4 THEN 1 END) AS pen2,
+            COUNT(CASE WHEN r.status = 3 THEN 1 END) AS pen3,
+            COUNT(CASE WHEN r.status = 2 THEN 1 END) AS pen4,
+        ");
+        if ($tf) {
+            $this->db->where('r.unit_id', $this->session->userdata('unit_id'));
+        }
+        if (!empty($unit_id)) {
+            $this->db->where('r.unit_id', $unit_id);
+        }
+        if (!empty($from_date) && !empty($to_date)) {
+            $this->db->where('DATE(r.created_at) BETWEEN "'. $from_date. '" AND "'. $to_date.'"');
+        }
+        $row = $this->db->get('item_purchases r')->row();
+        return $row;
+    }
+
+
+
+
+
+
 
     public function get_count_data($status = 'all') {
-        $results = $this->get_requisition($limit, $offset, $status); 
+        $results = $this->get_requisition($limit, $offset, $status);
         $own_req= $this->get_own_request($this->userSessID , $status);
         $d = array_merge($results['rows'], $own_req);
         $d = array_map("unserialize", array_unique(array_map("serialize", $d)));
@@ -20,8 +73,6 @@ class Dashboard_model extends CI_Model {
         if(in_array('6', $this->ion_auth->get_permission())){
             $ta=1;
         }
-       
-  
         $this->db->select('r.*, u.first_name, dp.dept_name, f.fiscal_year_name');
         $this->db->from('requisitions as r');
         $this->db->join('users u', 'u.id = r.user_id', 'LEFT');
@@ -34,13 +85,13 @@ class Dashboard_model extends CI_Model {
             $this->db->where_in('r.desk_id', $desk_arr);
         }
         $this->db->where('r.is_save', 0);
-        
-      
+
+
         $this->db->order_by('r.id', 'DESC');
         $query = $this->db->get()->result();
-  
+
         $result['rows'] = $query;
-        $this->db->from('requisitions'); 
+        $this->db->from('requisitions');
         if($status){
            $this->db->where('status', $status);
         }
@@ -67,7 +118,7 @@ class Dashboard_model extends CI_Model {
 
 
     public function get_count_data_parches($status = 'all') {
-        $results = $this->get_parches($status); 
+        $results = $this->get_parches($status);
         $own_req= $this->get_own_request_parches($this->userSessID , $status);
         $d = array_merge($results['rows'], $own_req);
         $d = array_map("unserialize", array_unique(array_map("serialize", $d)));
@@ -88,12 +139,12 @@ class Dashboard_model extends CI_Model {
         if($ta!=1){
             $this->db->where_in('r.desk_id', $desk_arr);
         }
-      
+
         $this->db->order_by('r.id', 'DESC');
         $query = $this->db->get()->result();
-  
+
         $result['rows'] = $query;
-        $this->db->from('purchase'); 
+        $this->db->from('purchase');
         if($status){
            $this->db->where('status', $status);
         }
@@ -123,7 +174,7 @@ class Dashboard_model extends CI_Model {
     public function get_members_count() {
         // count query
         $this->db->select('COUNT(*) as count');
-        $this->db->from('users');        
+        $this->db->from('users');
         $q = $this->db->get()->result();
 
         $tmp = $q;
@@ -132,35 +183,35 @@ class Dashboard_model extends CI_Model {
         return $ret;
     }
 
-    public function get_count_online_register($region_id=NULL, $sc_district_id=NULL, $sc_upa_tha_id=NULL, $sc_group_id=NULL) {        
+    public function get_count_online_register($region_id=NULL, $sc_district_id=NULL, $sc_upa_tha_id=NULL, $sc_group_id=NULL) {
         $this->db->select('COUNT(*) as count');
         $this->db->where('member_id !=', 0);
         if($region_id != NULL){
-            $this->db->where('sc_region_id', $region_id); 
+            $this->db->where('sc_region_id', $region_id);
         }
         if($sc_district_id != NULL){
-            $this->db->where('sc_district_id', $sc_district_id);     
+            $this->db->where('sc_district_id', $sc_district_id);
         }
         if($sc_upa_tha_id != NULL){
-            $this->db->where('sc_upa_tha_id', $sc_upa_tha_id);     
+            $this->db->where('sc_upa_tha_id', $sc_upa_tha_id);
         }
         if($sc_group_id != NULL){
-            $this->db->where('sc_group_id', $sc_group_id);     
+            $this->db->where('sc_group_id', $sc_group_id);
         }
         $tmp = $this->db->get('users')->result();
-        // echo $this->db->last_query(); exit;        
+        // echo $this->db->last_query(); exit;
         $ret['count'] = $tmp[0]->count;
         return $ret;
     }
-    // public function get_count_online_register_today() {        
+    // public function get_count_online_register_today() {
     //     $tmp = $this->db->select('COUNT(*) as count')->where('member_id !=', 0)->where('created_on', strtotime(date('Y-m-d')))->get('users')->result();
-    //     // echo $this->db->last_query(); exit;        
+    //     // echo $this->db->last_query(); exit;
     //     $ret['count'] = $tmp[0]->count;
     //     return $ret;
-    // }    
-    // public function get_count_online_register_this_month() {        
+    // }
+    // public function get_count_online_register_this_month() {
     //     $tmp = $this->db->select('COUNT(*) as count')->where('member_id !=', 0)->where('STR_TO_DATE(created_on, "%m")', date('m'))->get('users')->result();
-    //     echo $this->db->last_query(); exit;        
+    //     echo $this->db->last_query(); exit;
     //     $ret['count'] = $tmp[0]->count;
     //     return $ret;
     // }
@@ -175,18 +226,18 @@ class Dashboard_model extends CI_Model {
         $this->db->join('office_upazila ou', 'ou.id = u.sc_upa_tha_id', 'LEFT');
         $this->db->join('office_groups og', 'og.id = u.sc_group_id', 'LEFT');
         if($region_id != NULL){
-            $this->db->where('u.sc_region_id', $region_id); 
-            $this->db->group_by('u.sc_district_id'); 
+            $this->db->where('u.sc_region_id', $region_id);
+            $this->db->group_by('u.sc_district_id');
             // $this->db->having('u.sc_district_id > 0');
         }
         if($sc_district_id != NULL){
-            $this->db->where('u.sc_district_id', $sc_district_id);     
-            $this->db->group_by('u.sc_upa_tha_id'); 
+            $this->db->where('u.sc_district_id', $sc_district_id);
+            $this->db->group_by('u.sc_upa_tha_id');
             // $this->db->having('u.sc_upa_tha_id > 0');
         }
         if($sc_upa_tha_id != NULL){
-            $this->db->where('u.sc_upa_tha_id', $sc_upa_tha_id);     
-            $this->db->group_by('u.sc_group_id'); 
+            $this->db->where('u.sc_upa_tha_id', $sc_upa_tha_id);
+            $this->db->group_by('u.sc_group_id');
         }
         // echo $this->db->last_query(); exit;
         // $this->db->where("HAVING COUNT(u.id) > 0");
@@ -248,7 +299,7 @@ class Dashboard_model extends CI_Model {
         }
 
         $tmp = $this->db->get('users')->result();
-        // echo $this->db->last_query(); exit;        
+        // echo $this->db->last_query(); exit;
         $ret['count'] = $tmp[0]->count;
         return $ret;
     }
@@ -263,19 +314,19 @@ class Dashboard_model extends CI_Model {
         $this->db->join('office_upazila ou', 'ou.id = u.sc_upa_tha_id', 'LEFT');
         $this->db->join('office_groups og', 'og.id = u.sc_group_id', 'LEFT');
         if($region_id != NULL){
-            $this->db->where('u.sc_region_id', $region_id); 
-            $this->db->group_by('u.sc_district_id'); 
+            $this->db->where('u.sc_region_id', $region_id);
+            $this->db->group_by('u.sc_district_id');
             // $this->db->having('u.sc_district_id > 0');
         }
         if($sc_district_id != NULL){
-            $this->db->where('u.sc_district_id', $sc_district_id);     
-            $this->db->group_by('u.sc_upa_tha_id'); 
+            $this->db->where('u.sc_district_id', $sc_district_id);
+            $this->db->group_by('u.sc_upa_tha_id');
             // $this->db->having('u.sc_upa_tha_id > 0');
         }
         if($sc_upa_tha_id != NULL){
-            $this->db->where('u.sc_upa_tha_id', $sc_upa_tha_id);     
-            $this->db->group_by('u.sc_group_id'); 
-            //$this->db->group_by('og.grp_name'); 
+            $this->db->where('u.sc_upa_tha_id', $sc_upa_tha_id);
+            $this->db->group_by('u.sc_group_id');
+            //$this->db->group_by('og.grp_name');
             // $this->db->where("HAVING COUNT(u.sc_group_id) > 0");
         }
         // echo $this->db->last_query(); exit;
@@ -296,16 +347,16 @@ class Dashboard_model extends CI_Model {
         // $this->db->where('status', 1);
         $this->db->where('gender != ', NULL);
         if($region_id != NULL){
-            $this->db->where('sc_region_id', $region_id); 
+            $this->db->where('sc_region_id', $region_id);
         }
         if($sc_district_id != NULL){
-            $this->db->where('sc_district_id', $sc_district_id);     
+            $this->db->where('sc_district_id', $sc_district_id);
         }
         if($sc_upa_tha_id != NULL){
-            $this->db->where('sc_upa_tha_id', $sc_upa_tha_id);     
+            $this->db->where('sc_upa_tha_id', $sc_upa_tha_id);
         }
         if($sc_group_id != NULL){
-            $this->db->where('sc_group_id', $sc_group_id);     
+            $this->db->where('sc_group_id', $sc_group_id);
         }
         $q = $this->db->get('users')->result();
         // echo $this->db->last_query(); exit;
@@ -339,13 +390,13 @@ class Dashboard_model extends CI_Model {
         // count query
         $this->db->select('COUNT(*) as count');
         $this->db->from('users');
-        $this->db->where('member_id', $memberType); 
+        $this->db->where('member_id', $memberType);
         $this->db->where('scout_id IS NOT NULL', NULL);
         $q = $this->db->get()->result();
 
         $result = $q;
         $result['count'] = $result[0]->count;
-          
+
         return $result;
     }
 
@@ -378,19 +429,19 @@ class Dashboard_model extends CI_Model {
         $this->db->select('COUNT(*) as count, gender');
         $this->db->where('scout_id IS NOT NULL', NULL);
         $this->db->where('member_id', $member_id);
-        $this->db->where('sc_section_id', $sc_section_id); 
-        $this->db->where('gender', $gender); 
+        $this->db->where('sc_section_id', $sc_section_id);
+        $this->db->where('gender', $gender);
         if($region_id != NULL){
-            $this->db->where('sc_region_id', $region_id); 
+            $this->db->where('sc_region_id', $region_id);
         }
         if($sc_district_id != NULL){
-            $this->db->where('sc_district_id', $sc_district_id);     
+            $this->db->where('sc_district_id', $sc_district_id);
         }
         if($sc_upa_tha_id != NULL){
-            $this->db->where('sc_upa_tha_id', $sc_upa_tha_id);     
+            $this->db->where('sc_upa_tha_id', $sc_upa_tha_id);
         }
         if($sc_group_id != NULL){
-            $this->db->where('sc_group_id', $sc_group_id);     
+            $this->db->where('sc_group_id', $sc_group_id);
         }
         $q = $this->db->get('users')->result();
         //echo $this->db->last_query(); //exit;
@@ -404,18 +455,18 @@ class Dashboard_model extends CI_Model {
         $this->db->select('COUNT(*) as count,gender');
         $this->db->where('scout_id IS NOT NULL', NULL);
         $this->db->where('member_id', $member_id);
-        $this->db->where('gender', $gender); 
+        $this->db->where('gender', $gender);
         if($region_id != NULL){
-            $this->db->where('sc_region_id', $region_id); 
+            $this->db->where('sc_region_id', $region_id);
         }
         if($sc_district_id != NULL){
-            $this->db->where('sc_district_id', $sc_district_id);     
+            $this->db->where('sc_district_id', $sc_district_id);
         }
         if($sc_upa_tha_id != NULL){
-            $this->db->where('sc_upa_tha_id', $sc_upa_tha_id);     
+            $this->db->where('sc_upa_tha_id', $sc_upa_tha_id);
         }
         if($sc_group_id != NULL){
-            $this->db->where('sc_group_id', $sc_group_id);     
+            $this->db->where('sc_group_id', $sc_group_id);
         }
         $q = $this->db->get('users')->result();
         $result = $q;
@@ -429,10 +480,10 @@ class Dashboard_model extends CI_Model {
         $this->db->from('users');
        // $this->db->group_by('gender');
 
-        $this->db->where('sc_section_id', $sc_section_id); 
+        $this->db->where('sc_section_id', $sc_section_id);
         $this->db->where('scout_id IS NOT NULL', NULL);
-        $this->db->where('gender', $gender); 
-        //$this->db->where('YEAR(join_date)',$year); 
+        $this->db->where('gender', $gender);
+        //$this->db->where('YEAR(join_date)',$year);
         $q = $this->db->get()->result();
 
         $result = array();
@@ -442,7 +493,7 @@ class Dashboard_model extends CI_Model {
          // exit;
      //  $result['gender'] = $result['gender'];
         $result['count'] = $result[0]->count;
-          
+
         return $result;
     }
      public function get_members_count_by_member_type($member_type,$gender) {
@@ -450,9 +501,9 @@ class Dashboard_model extends CI_Model {
         $this->db->select('COUNT(*) as count,gender');
         $this->db->from('users');
        // $this->db->group_by('gender');
-        $this->db->where('member_id',$member_type); 
-        $this->db->where('gender',$gender); 
-        //$this->db->where('YEAR(join_date)',$year); 
+        $this->db->where('member_id',$member_type);
+        $this->db->where('gender',$gender);
+        //$this->db->where('YEAR(join_date)',$year);
         $q = $this->db->get()->result();
 
         $result = array();
@@ -462,11 +513,11 @@ class Dashboard_model extends CI_Model {
          // exit;
      //  $result['gender'] = $result['gender'];
         $result['count'] = $result[0]->count;
-          
+
         return $result;
     }
 
-    public function get_scout_info($user_id){        
+    public function get_scout_info($user_id){
         $this->db->select('u.id, scout_id, r.region_name, od.dis_name, ou.upa_name, og.grp_name, unit.unit_name');
         $this->db->from('users u');
         $this->db->join('office_unit unit', 'unit.id = u.sc_unit_id', 'LEFT');
@@ -485,11 +536,11 @@ class Dashboard_model extends CI_Model {
         $this->db->from('users u');
        // $this->db->group_by('gender');
         $this->db->where('u.scout_id IS NOT NULL');
-        $this->db->where('u.sc_region_id', $sc_region_id); 
-        //$this->db->where('gender',$gender); 
-        $this->db->group_by('u.sc_section_id'); 
+        $this->db->where('u.sc_region_id', $sc_region_id);
+        //$this->db->where('gender',$gender);
+        $this->db->group_by('u.sc_section_id');
         $q = $this->db->get()->result();
-        
+
         //echo $this->db->last_query(); exit;
         $result = array();
         $result = $q;
@@ -498,7 +549,7 @@ class Dashboard_model extends CI_Model {
         exit;*/
      //  $result['gender'] = $result['gender'];
         //$result['count'] = $result[0]->count;
-          
+
         return $result;
     }
 
@@ -508,9 +559,9 @@ class Dashboard_model extends CI_Model {
         $this->db->from('users u');
        // $this->db->group_by('gender');
         $this->db->where('u.scout_id IS NOT NULL');
-        $this->db->where('u.sc_district_id',$sc_district_id); 
-        //$this->db->where('gender',$gender); 
-        $this->db->group_by('u.sc_section_id'); 
+        $this->db->where('u.sc_district_id',$sc_district_id);
+        //$this->db->where('gender',$gender);
+        $this->db->group_by('u.sc_section_id');
         $q = $this->db->get()->result();
 
         $result = array();
@@ -520,7 +571,7 @@ class Dashboard_model extends CI_Model {
         exit;*/
      //  $result['gender'] = $result['gender'];
         //$result['count'] = $result[0]->count;
-          
+
         return $result;
     }
     public function get_members_count_by_sc_upa_tha_id($sc_upa_tha_id) {
@@ -529,9 +580,9 @@ class Dashboard_model extends CI_Model {
         $this->db->from('users u');
        // $this->db->group_by('gender');
         $this->db->where('u.scout_id IS NOT NULL');
-        $this->db->where('u.sc_upa_tha_id',$sc_upa_tha_id); 
-        //$this->db->where('gender',$gender); 
-        $this->db->group_by('u.sc_section_id'); 
+        $this->db->where('u.sc_upa_tha_id',$sc_upa_tha_id);
+        //$this->db->where('gender',$gender);
+        $this->db->group_by('u.sc_section_id');
         $q = $this->db->get()->result();
 
         $result = array();
@@ -541,7 +592,7 @@ class Dashboard_model extends CI_Model {
         exit;*/
      //  $result['gender'] = $result['gender'];
         //$result['count'] = $result[0]->count;
-          
+
         return $result;
     }
     public function get_members_count_by_sc_group_id($sc_group_id) {
@@ -550,9 +601,9 @@ class Dashboard_model extends CI_Model {
         $this->db->from('users u');
        // $this->db->group_by('gender');
         $this->db->where('u.scout_id IS NOT NULL');
-        $this->db->where('u.sc_group_id',$sc_group_id); 
-        //$this->db->where('gender',$gender); 
-        $this->db->group_by('u.sc_section_id'); 
+        $this->db->where('u.sc_group_id',$sc_group_id);
+        //$this->db->where('gender',$gender);
+        $this->db->group_by('u.sc_section_id');
         $q = $this->db->get()->result();
 
         $result = array();
@@ -562,7 +613,7 @@ class Dashboard_model extends CI_Model {
         exit;*/
      //  $result['gender'] = $result['gender'];
         //$result['count'] = $result[0]->count;
-          
+
         return $result;
     }
 

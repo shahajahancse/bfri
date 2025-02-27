@@ -3,71 +3,71 @@
 ?>
 
 <style>
-.log_top {
-    display: flex;
-    flex-direction: row;
-    position: relative;
-    padding: 6px 33px;
-    background: #99ad6363;
-    margin: 0;
-    justify-content: center;
-    align-items: center;
-    gap: 23px;
-}
-
-.log_top img {
-    width: 94px;
-    height: 76px;
-}
-
-.log_top span {
-    font-size: 45px;
-    color: #ffffff;
-    font-weight: bold;
-    align-self: center;
-    font-family: sans-serif;
-    text-align: center;
-}
-
-@media screen and (max-width: 900px) {
-    .log_top span {
-        font-size: 40px;
-    }
-}
-@media screen and (max-width: 820px) {
-    .log_top span {
-        font-size: 35px;
-    }
-}
-
-@media screen and (max-width: 767px) {
-    .log_top span {
-        font-size: 30px;
-    }
-}
-@media screen and (max-width: 742px) {
-    .log_top span {
-        font-size: 30px;
-    }
-}
-@media screen and (max-width: 662px) {
-    .log_top span {
-        font-size: 25px;
+    .log_top {
+        display: flex;
+        flex-direction: row;
+        position: relative;
+        padding: 6px 33px;
+        background: #99ad6363;
+        margin: 0;
+        justify-content: center;
+        align-items: center;
+        gap: 23px;
     }
 
-}
-@media screen and (max-width: 582px) {
-    .log_top span {
-        font-size: 20px;
+    .log_top img {
+        width: 94px;
+        height: 76px;
     }
 
-}
-@media screen and (max-width: 502px) {
     .log_top span {
-        font-size: 15px;
+        font-size: 45px;
+        color: #ffffff;
+        font-weight: bold;
+        align-self: center;
+        font-family: sans-serif;
+        text-align: center;
     }
 
-}
+    @media screen and (max-width: 900px) {
+        .log_top span {
+            font-size: 40px;
+        }
+    }
+    @media screen and (max-width: 820px) {
+        .log_top span {
+            font-size: 35px;
+        }
+    }
+
+    @media screen and (max-width: 767px) {
+        .log_top span {
+            font-size: 30px;
+        }
+    }
+    @media screen and (max-width: 742px) {
+        .log_top span {
+            font-size: 30px;
+        }
+    }
+    @media screen and (max-width: 662px) {
+        .log_top span {
+            font-size: 25px;
+        }
+
+    }
+    @media screen and (max-width: 582px) {
+        .log_top span {
+            font-size: 20px;
+        }
+
+    }
+    @media screen and (max-width: 502px) {
+        .log_top span {
+            font-size: 15px;
+        }
+
+    }
 </style>
 
 <body class="error-body no-top" style="background: url(<?=base_url('awedget/assets/img/inventeory.png');?>) no-repeat center center fixed; -webkit-background-size: cover;
@@ -76,13 +76,13 @@
   background-size: cover;">
     <div class="col-md-12 log_top">
         <img src="<?=base_url();?>awedget/assets/img/govt-logo.png" class="img-responsive">
-        <span>Bangladesh Climate ChangeTrust</span>
-        
+        <span>Bangladesh Forest Research Institute (BFRI)</span>
+
         <img src="<?=base_url();?>awedget/assets/img/bcct_logo.png" class="img-responsive">
     </div>
     <div class="container">
         <div class="row login-container login_register column-seperation" style="margin: 15% auto 20px auto;">
-            <?php 
+            <?php
       $attributes = array('id' => 'login_validate');
       echo form_open("login/index", $attributes);
       ?>

@@ -132,7 +132,7 @@ class Purchase extends Backend_Controller {
             'status'          => 1,
             'is_received'     => 1,
             'created_by'      => $user->id,
-            'create_at'       => date('Y-m-d H:i:s'),
+            'created_at'       => date('Y-m-d H:i:s'),
             'attachment'      => $attachmentname
          );
 

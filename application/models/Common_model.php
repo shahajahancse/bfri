@@ -6,6 +6,69 @@ class Common_model extends CI_Model {
       parent::__construct();
    }
 
+   public function user_ntfy($user_id)
+   {
+      $this->db->select("
+         COUNT(CASE WHEN status = 4 THEN 1 END) AS user,
+         COUNT(CASE WHEN status = 5 THEN 1 END) AS user1,
+         COUNT(CASE WHEN status = 8 THEN 1 END) AS user2,
+      ");
+      $this->db->where('user_id', $user_id);
+      $row = $this->db->get('item_requisitions')->row();
+      if (!empty($row)) {
+         return $row->user + $row->user1 + $row->user2;
+      }
+      return 0;
+   }
+
+   public function rev_ntfy()
+   {
+      $this->db->select("
+         COUNT(CASE WHEN status = 2 THEN 1 END) AS sm,
+         COUNT(CASE WHEN status = 8 THEN 1 END) AS apv,
+
+         COUNT(CASE WHEN status = 6 THEN 1 END) AS dg,
+
+         COUNT(CASE WHEN status = 3 THEN 1 END) AS jd,
+         COUNT(CASE WHEN status = 7 THEN 1 END) AS jd1,
+
+      ");
+      $row = $this->db->get('item_requisitions')->row();
+
+      // if ($this->ion_auth->in_group(array('sm'))) {
+      //    $nt = $row->sm + $row->apv;
+      // } elseif ($this->ion_auth->in_group(array('user'))) {
+      //    $nt = $row->user + $row->user1 + $row->apv;
+      // } elseif ($this->ion_auth->in_group(array('jd'))) {
+      //    $nt = $row->jd + $row->jd1;
+      // } elseif ($this->ion_auth->in_group(array('dg'))) {
+      //    $nt = $row->dg;
+      // } elseif ($this->ion_auth->in_group(array('badmin'))) {
+      //    $nt = $row->sm + $row->user + $row->user1 + $row->jd + $row->jd1 + $row->dg;
+      // } else {
+      //    $nt = 0;
+      // }
+      return $row;
+   }
+
+   public function per_ntfy()
+   {
+      $this->db->select("
+         COUNT(CASE WHEN status = 3 THEN 1 END) AS sm,
+         COUNT(CASE WHEN status = 4 THEN 1 END) AS sm1,
+         COUNT(CASE WHEN status = 7 THEN 1 END) AS apv,
+
+         COUNT(CASE WHEN status = 5 THEN 1 END) AS dg,
+
+         COUNT(CASE WHEN status = 2 THEN 1 END) AS jd,
+         COUNT(CASE WHEN status = 6 THEN 1 END) AS jd1,
+
+      ");
+      $row = $this->db->get('item_purchases')->row();
+      return $row;
+   }
+
+
    public function count_low_stock() {
       $unit_id = $this->session->userdata('unit_id');
       $this->db->distinct();
@@ -1521,7 +1584,7 @@ public function get_requisition($limit=1000, $offset=0, $status=NULL) {
       $ta=1;
   }
    $this->db->select('r.*, u.first_name, dp.dept_name, f.fiscal_year_name');
-   $this->db->from('requisitions as r');
+   $this->db->from('item_requisitions as r');
    $this->db->join('users u', 'u.id = r.user_id', 'LEFT');
    $this->db->join('department dp', 'dp.id = u.dept_id', 'LEFT');
    $this->db->join('fiscal_year f', 'f.id = r.f_year_id', 'LEFT');

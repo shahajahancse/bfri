@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title><?=$headding?></title>
-  <style type="text/css">
+   <style type="text/css">
       body{font-family: 'Tahoma'}
       .priview-body{font-size: 16px;color:#000;margin: 25px; }
       .priview-header{margin-bottom: 10px;text-align:center;}
@@ -41,6 +41,7 @@
       .headding td, .total td{border-top:1px solid #ddd;border-bottom:1px solid #ddd;}
       .table th{padding:5px;}
       .table td{padding:5px;}
+      .text-left{text-align:left;}
       .text-center{text-align:center;}
       .text-right{text-align:right;}
       .report_date{text-align: right; font-size: 14px;}
@@ -51,9 +52,8 @@
   <div class="priview-body">
     <div class="priview-header">
       <p class="text-center">
-            <span style="font-size:20px;font-weight: bold;">BCCT Inventory Management System</span>
+            <span style="font-size:20px;font-weight: bold;">BFRI Inventory Management System</span>
             <br> <span style="font-size: 14px;">Address </span>
-            <!-- <br><span style="font-size:12px;">www.scouts.gov.bd</span> -->
          </p>
       </div>
 
@@ -62,7 +62,6 @@
             <div class="col-12 text-center">
                <div style="font-size:18px;"><u><?=$headding?></u></div>
                <br>
-               <!-- <span style="font-size: 14px;">Date From: <?=$date_from?> - Date To: <?=$date_to?></span> -->
             </div>
          </div>
       </div>
@@ -72,47 +71,38 @@
             <thead class="headding">
                <tr>
                   <th class="text-center" width="20">SL</th>
+                  <th class="text-left" width="150">Office Name</th>
+                  <th class="text-left" width="150">Category</th>
                   <th class="text-left" width="150">Item Name</th>
+                  <th class="text-left" width="80">Unit</th>
                   <th class="text-center" width="100">Quantity</th>
-                  <th class="text-left" width="80">Unit</th>     
-                  <th class="text-left" width="100">Order Level</th>     
-                  <th class="text-left" width="150">Category</th>            
+                  <th class="text-center" width="100">Order Level</th>
                </tr>
             </thead>
-
             <tbody>
-               <?php 
-               $i=0;
-               //$total_group=$total_member=$grandTotalGroup=$grandTotalMember=0;
-
-               foreach ($results as $row) { 
-                  $i++;
-                  $total += $row->quantity;
-                  ?>
+               <?php foreach ($results as $k => $row) { ?>
                   <tr>
-                     <td class="text-center"><?=$i?>.</td>
-                     <td class="text-left"><?=$row->item_name?></td>                 
-                     <td class="text-right"><?=$row->quantity?></td>                 
-                     <td class="text-right"><?=$row->unit_name?></td>
-                     <td class="text-center"><?=$row->order_level?></td>
+                     <td class="text-center"><?=$k + 1?>.</td>
+                     <td class="text-left"><?=$row->name_en?></td>
                      <td class="text-left"><?=$row->category_name?></td>
+                     <td class="text-left"><?=$row->item_name?></td>
+                     <td class="text-left"><?=$row->unit_name?></td>
+                     <td class="text-center"><?=$row->balance?></td>
+                     <td class="text-center"><?=$row->order_level?></td>
                   </tr>
-                  <?php } ?>
-               </tbody>
-
-               <tfoot class="headding">
-                  <tr>
-                     <th class="text-right" colspan="2">Total Quantity</th>
-                     <th class="text-right"><?=number_format($total,2)?></th>
-                     <th class="text-right" colspan="3"></th>
-                  </tr>
-               </tfoot>
-            </table>      
-         </div>
-
+               <?php } ?>
+            </tbody>
+            <tfoot class="headding">
+               <!-- <tr>
+                  <th class="text-right" colspan="2">Total Quantity</th>
+                  <th class="text-right"><?=number_format($total,2)?></th>
+                  <th class="text-right" colspan="3"></th>
+               </tr> -->
+            </tfoot>
+         </table>
       </div>
-
-   </body>
-   </html>
+   </div>
+</body>
+</html>
 
 

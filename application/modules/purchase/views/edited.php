@@ -72,7 +72,7 @@
 
                                     <tr>
                                        <th class="tg-khup"> Created </th>
-                                       <td class="tg-ywa9"><?=date('d-m-Y', strtotime($info->create_at)); ?></td>
+                                       <td class="tg-ywa9"><?=date('d-m-Y', strtotime($info->created_at)); ?></td>
                                        <th class="tg-khup"> Updated </th>
                                        <td class="tg-ywa9"><?=date('d-m-Y', strtotime($info->updated_at)); ?></td>
                                     </tr>

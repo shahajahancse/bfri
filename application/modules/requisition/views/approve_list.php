@@ -45,7 +45,7 @@
                                 if ($row->status == 2) {
                                         $status = '<span class="label label-warning">On process</span>';
                                 }else if($row->status == 3){
-                                        $status = '<span class="label label-primary">Forward JD</span>';
+                                        $status = '<span class="label label-primary">Forward SM</span>';
                                 }else if($row->status == 4){
                                         $status = '<span class="label label-info">Back User From JD</span>';
                                 }else if($row->status == 5){
@@ -64,9 +64,9 @@
                             ?>
 
                             <?php
-                                $create_at=date('Y-m-d', strtotime($row->created));
+                                $created_at=date('Y-m-d', strtotime($row->created));
                                 $today_date = date('Y-m-d');
-                                $day_diff=abs(strtotime($today_date) - strtotime($create_at));
+                                $day_diff=abs(strtotime($today_date) - strtotime($created_at));
                                 $number_of_days=floor($day_diff/(60*60*24));
                                 if($number_of_days > 7) {
                                 $colorb = '#ff8686';

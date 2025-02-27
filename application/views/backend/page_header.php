@@ -106,10 +106,7 @@
                 <div class="header-quick-nav">
                     <div class="pull-left">
                         <ul class="nav quick-section">
-                            <li class="quicklinks"> <a href="javascript:;" class="" id="layout-condensed-toggle"
-                                    style="color: #8dc641;"> <i class="fa fa-bars"
-                                        style="font-size: 22px; color: #8dc641 !important;"></i>
-                                </a>
+                            <li class="quicklinks"> <a href="javascript:;" class="" id="layout-condensed-toggle" style="color: #8dc641;"> <i class="fa fa-bars" style="font-size: 22px; color: #8dc641 !important;"></i> </a>
                             </li>
                         </ul>
                     </div>
@@ -120,111 +117,11 @@
                             <a>
                                 <div class="user-details">
                                     <div class="username">
-                                        <span class="bold"
-                                            style="margin-left: 20px;"><?=$userDetails['user_info']->first_name?></span>
-                                        <span
-                                            style="font-size: 12px; font-weight: bold;">(<?=$userDetails['user_info']->username;?>)</span>
+                                        <span class="bold" style="margin-left: 20px;"><?=$userDetails['user_info']->first_name?></span>
+                                        <span style="font-size: 12px; font-weight: bold; margin-right:10px">(<?=$userDetails['user_info']->username;?>)</span>
                                     </div>
                                 </div>
                             </a>
-                            <?php
-                            $this->load->model('Common_model');
-                            $get_requisition = $this->Common_model->get_requisition($limit, $offset, '1');
-                            $get_purchase = $this->Common_model->get_purchase($limit, $offset, '1');
-                            $allcount=count($get_requisition) + count($get_purchase);
-                            ?>
-
-                             <a id="notification" onclick="get_notification()" style="padding: 11px 19px;position: relative; display: inline-block; cursor: pointer;">
-                               <span class="badge badge-danger" style="position: absolute;height: 15px;padding: 1px 6px;margin: -5px 9px;"><?=$allcount?></span>
-                                <i class="fa fa-bell" style="font-size: 22px; color: #8dc641 !important;"></i>
-                             </a>
-                             <style>
-                                .listt {
-                                    list-style: none;
-                                    padding: 4px 7px;
-                                    border: 1px solid black;
-                                    display: flex;
-                                    margin: 5px 7px;
-                                    overflow: hidden;
-                                    border-radius: 5px;
-                                }
-                                .r_title{
-                                    font-size: 16px;
-                                    font-weight: bold;
-                                }
-                                .r_date {
-                                    font-size: 11px;
-                                    color: #606162;
-                                    padding-left: 12px;
-                                }
-                                .r_status {
-                                    font-size: 11px;
-                                    color: #606162;
-                                    padding-left: 12px;
-                                }
-                             </style>
-                             <div id="notification_content" style="position: absolute;background: aliceblue;width: 264px;min-height: 198px;margin: 33px -87px;border-radius: 15px;height: fit-content;">
-                                <div class="col-md-12" style="height: fit-content;border-bottom: 1px solid;padding: 0;overflow: auto;max-height: 241px;">
-                                    <span style="height: 31px;display: block;background: #8dc641;color: black;font-weight: bold;padding: 5px 9px;font-size: larger;position: fixed;width: 264px;">Requisition <span class="badge badge-danger"><?=count($get_requisition)?></span></span>
-                                    <ul style="margin-top: 36px;padding: 0;">
-                                    <?php
-                                        if(count($get_requisition) > 0){
-                                            foreach ($get_requisition as $key => $value) {
-                                                ?>
-                                                 <li class="listt">
-                                                    <a href="<?=base_url('requisition/details/').encrypt_url($value->id) ?>" style="color: black;">
-                                                    <div style="line-height: 15px;">
-                                                    <span class="r_title"><?=$value->title?></span><br>
-                                                    <span class="r_date">Create On : <?= date('d-M-Y h:i A', strtotime($value->created))?></span><br>
-                                                    <span class="r_date">Update On : <?=date('d-M-Y h:i A', strtotime($value->updated)) ?></span><br>
-                                                    <span class="r_status"><span class=" badge badge-danger">Pending</span>
-                                                    </div>
-                                                    </a>
-                                                </li>
-                                                <?php }
-                                             }else{?>
-                                                    <span>No Requisition</span>
-                                                <?php }?>
-                                    </ul>
-                                </div>
-                                <div class="col-md-12" style="height: fit-content;border-bottom: 1px solid;padding: 0;overflow: auto;max-height: 241px;">
-                                    <span style="height: 31px;display: block;background: #8dc641;color: black;font-weight: bold;padding: 5px 9px;font-size: larger;position: fixed;width: 264px;">Purchase <span class="badge badge-danger"><?=count($get_purchase)?> </span></span>
-                                    <ul style="margin-top: 36px;padding: 0;">
-                                        <?php
-                                            if(count($get_purchase) > 0){
-                                                foreach ($get_purchase as $key => $value) {
-                                                    ?>
-                                                     <li class="listt">
-                                                        <a href="<?=base_url('purchase/details/').encrypt_url($value->id)?>" style="color: black;">
-                                                        <div style="line-height: 15px;">
-                                                        <span class="r_title"><?=$value->supplier_name?></span><br>
-                                                        <span class="r_date">Create On <?= date('d-M-Y h:i A', strtotime($value->created))?></span><br>
-                                                        <span class="r_date">Update On <?=date('d-M-Y h:i A', strtotime($value->updated)) ?></span><br>
-                                                        <span class="r_status"><span class=" badge badge-danger">Pending</span>
-                                                        </div>
-                                                        </a>
-                                                    </li>
-
-                                               <?php }}else{?>
-                                                    <span>No Purchase</span>
-                                                <?php }?>
-
-                                    </ul>
-                                </div>
-
-                             </div>
-                             <script>
-                             function get_notification(){
-                                 $("#notification_content").toggle();
-                               }
-                               $("#notification_content").hide();
-                            //    window.onclick = function(event) {
-                            //      if (!event.target.matches('#notification')) {
-                            //        $("#notification_content").toggle();
-                            //      }
-                            //    }
-
-                             </script>
                             <?php
                                 $path = base_url().'profile_img/';
                                 if($userDetails['user_info']->profile_img != NULL){
@@ -232,16 +129,14 @@
                                 }else{
                                     $img_url = $path.'no-img.png';
                                 }
-                                ?>
-                            <div class="profile-pic"> <img src="<?=$img_url?>" alt="Profile Image"
-                                    data-src="<?=$img_url?>" data-src-retina="<?=$img_url?>" width="35" height="35" />
+                            ?>
+                            <div class="profile-pic"> <img src="<?=$img_url?>" alt="Profile Image" data-src="<?=$img_url?>" data-src-retina="<?=$img_url?>" width="35" height="35" />
                             </div>
                         </div>
 
-                        <ul class="nav quick-section ">
+                        <ul class="nav quick-section" style="margin-left: 0px;">
                             <li class="quicklinks"> <a data-toggle="dropdown" class="dropdown-toggle  pull-right "
-                                    href="javascript:;" id="user-options"> <i class="fa fa-cog"
-                                        style="font-size: 22px; color: #8dc641 !important;"></i> </a>
+                                    href="javascript:;" id="user-options"> <i class="fa fa-cog" style="font-size: 22px; color: #8dc641 !important;"></i> </a>
                                 <ul class="dropdown-menu  pull-right" role="menu" aria-labelledby="user-options">
                                     <li class="divider"></li>
                                     <li><a href="<?=base_url('acl/edit_user').'/'.$userDetails['user_info']->id?>"><i class="fa fa-user"></i> Profile</a></li>
@@ -255,6 +150,7 @@
         </div> <!-- END HEADER -->
 
 
+        <?php $low = 0; ?>
         <!-- BEGIN CONTAINER -->
         <div class="page-container row-fluid">
             <?php if($this->router->fetch_class('my_message') == 'my_message'){ ?>
@@ -285,33 +181,69 @@
 
                                 <!-- Requisition section -->
                                 <li class="start <?=backend_activate_menu_class('my_requisition')?>">
-                                    <a href="<?=base_url('my_requisition');?>"> <i class="fa fa-tag"></i> <span class="title">My Requisition</span></a>
+                                    <a href="<?=base_url('my_requisition');?>"> <i class="fa fa-tag"></i> <span class="title">My Requisition</span> <span class="badge badge-danger pull-right"><?=$user_ntfy?></span></a>
                                 </li>
 
+                                <?php
+                                    if ($this->ion_auth->in_group(array('sm'))) {
+                                       $nt = $rev_ntfy->sm + $rev_ntfy->apv;
+                                    } elseif ($this->ion_auth->in_group(array('jd'))) {
+                                       $nt = $rev_ntfy->jd + $rev_ntfy->jd1;
+                                    } elseif ($this->ion_auth->in_group(array('dg'))) {
+                                       $nt = $rev_ntfy->dg;
+                                    } else {
+                                       $nt = 0;
+                                    }
+                                ?>
+
                                 <?php if($this->ion_auth->in_group(array('admin','badmin','sm','jd','dg'))){ ?>
-                                <li class="start <?=backend_activate_menu_class('requisition')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Requisition</span> <span class="selected"></span> <span class="arrow"></span> </a>
+                                <li class="start <?=backend_activate_menu_class('requisition')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Requisition</span> <span class="selected"></span> <span class="badge badge-danger pull-right"><?=$nt?></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
                                         <!-- <li> <a href="<?=base_url('requisition');?>"> Requisition List </a> </li> -->
-                                        <li> <a href="<?=base_url('requisition/request_list');?>"> Requisition Pending  List </a> </li>
-                                        <li> <a href="<?=base_url('requisition/approve_list');?>"> Requisition Approved List </a> </li>
-                                        <li> <a href="<?=base_url('requisition/rejected_list');?>"> Requisition Rejected List </a> </li>
-                                        <li> <a href="<?=base_url('requisition/delivered_list');?>"> Requisition Delivered List </a> </li>
+                                        <?php if ($this->ion_auth->in_group(array('sm'))) { ?>
+                                        <li> <a href="<?=base_url('requisition/request_list');?>">Pending  List <span class="badge badge-danger"><?=$rev_ntfy->sm?></span></a></li>
+                                        <li> <a href="<?=base_url('requisition/approve_list');?>">Approved List <span class="badge badge-danger"><?=$rev_ntfy->apv?></span></a> </li>
+                                        <?php } else { ?>
+                                        <li> <a href="<?=base_url('requisition/request_list');?>">Pending  List <span class="badge badge-danger"><?=$nt?></span></a></li>
+                                        <li> <a href="<?=base_url('requisition/approve_list');?>">Approved List </a> </li>
+                                        <?php } ?>
+
+                                        <li> <a href="<?=base_url('requisition/rejected_list');?>">Rejected List </a> </li>
+                                        <li> <a href="<?=base_url('requisition/delivered_list');?>">Delivered List </a> </li>
                                     </ul>
                                 </li>
                                 <?php } ?>
 
                                 <!-- Purchase section -->
+                                <?php
+                                    if ($this->ion_auth->in_group(array('sm'))) {
+                                       $pn = $per_ntfy->sm + $per_ntfy->sm1 + $per_ntfy->apv;
+                                    } elseif ($this->ion_auth->in_group(array('jd'))) {
+                                       $pn = $per_ntfy->jd + $per_ntfy->jd1;
+                                    } elseif ($this->ion_auth->in_group(array('dg'))) {
+                                       $pn = $per_ntfy->dg;
+                                    } else {
+                                       $pn = 0;
+                                    }
+                                ?>
                                 <?php if($this->ion_auth->in_group(array('admin','badmin','sm','jd','dg'))){ ?>
-                                <li class="start <?=backend_activate_menu_class('purchase')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Purchase</span> <span class="selected"></span> <span class="arrow"></span> </a>
+                                <li class="start <?=backend_activate_menu_class('purchase')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Purchase</span> <span class="selected"></span> <span class="badge badge-danger pull-right"><?=$pn?></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
                                         <?php if($this->ion_auth->in_group(array('badmin','sm'))){ ?>
                                         <li> <a href="<?=base_url('purchase/create');?>"> Create Purchase  </a> </li>
                                         <?php } ?>
                                         <li> <a href="<?=base_url('purchase');?>"> Purchase List </a> </li>
-                                        <li> <a href="<?=base_url('purchase/purchase_pending');?>"> Purchase Pending </a> </li>
-                                        <li> <a href="<?=base_url('purchase/purchase_approved');?>"> Purchase Approved </a> </li>
-                                        <li> <a href="<?=base_url('purchase/purchase_rejected');?>"> Purchase Rejected </a> </li>
-                                        <li> <a href="<?=base_url('purchase/purchase_received');?>"> Purchase Received </a> </li>
+
+                                        <?php if($this->ion_auth->in_group(array('sm'))){ ?>
+                                        <li> <a href="<?=base_url('purchase/purchase_pending');?>">Pending List <span class="badge badge-danger"><?=$per_ntfy->sm + $per_ntfy->sm1;?></span></a> </li>
+                                        <li> <a href="<?=base_url('purchase/purchase_approved');?>">Approved List <span class="badge badge-danger"><?=$per_ntfy->apv;?></span></a> </li>
+                                        <?php } else { ?>
+                                        <li> <a href="<?=base_url('purchase/purchase_pending');?>">Pending List <span class="badge badge-danger"><?=$pn?></span></a> </li>
+                                        <li> <a href="<?=base_url('purchase/purchase_approved');?>">Approved List </a> </li>
+                                        <?php } ?>
+
+                                        <li> <a href="<?=base_url('purchase/purchase_rejected');?>">Rejected List </a> </li>
+                                        <li> <a href="<?=base_url('purchase/purchase_received');?>">Received List </a> </li>
                                     </ul>
                                 </li>
                                 <?php } ?>
@@ -326,13 +258,13 @@
                                 </li>
                                 <?php } ?>
 
-                                <?php $low = 0; if($this->ion_auth->in_group(array('admin','badmin','sm'))){
+                                <?php if($this->ion_auth->in_group(array('admin','badmin','sm'))){
                                     $low = $this->Common_model->count_low_stock();
                                 } ?>
                                 <!-- Item Setup section -->
                                 <?php if($this->ion_auth->in_group(array('admin','badmin','sm'))){ ?>
                                 <li class="start <?=backend_activate_menu_class('items')?>">
-                                    <a href="javascript:;"> <i class="fa fa-tags"></i><span class="title">Item Setup <span class="badge badge-danger"><?=$low?></span></span> <span class="selected"></span> <span class="arrow"></span> </a>
+                                    <a href="javascript:;"> <i class="fa fa-tags"></i><span class="title">Item Setup </span> <span class="selected"></span> <span class="badge badge-danger pull-right"><?=$low?></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
                                         <li> <a href="<?=base_url('items');?>"> Item List </a> </li>
                                         <li> <a href="<?=base_url('items/stock');?>"> Stock List </a> </li>
@@ -357,7 +289,7 @@
                                         <li> <a href="<?=base_url('general_setting/department');?>"> Department</a></li>
                                         <li> <a href="<?=base_url('general_setting/designation');?>"> Designation</a>
                                         <li> <a href="<?=base_url('general_setting/units');?>"> Branch</a>
-                                        <li> <a href="<?=base_url('general_setting/group');?>"> Group</a>
+                                        <!-- <li> <a href="<?=base_url('general_setting/group');?>"> Group</a> -->
                                         </li>
                                     </ul>
                                 </li>

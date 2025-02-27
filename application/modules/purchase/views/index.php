@@ -80,7 +80,7 @@
                                     <td class="v-align-middle"><?=$sl.'.'?></td>
                                     <td class="v-align-middle"><?=$row->first_name; ?></td>
                                     <td class="v-align-middle"><?=$row->supplier_name; ?></td>
-                                    <td class="v-align-middle"><?=date('d-m-Y', strtotime($row->create_at)); ?></td>
+                                    <td class="v-align-middle"><?=date('d-m-Y', strtotime($row->created_at)); ?></td>
                                     <td><?= $desk_id ?></td>
                                     <td><?= $status ?></td>
                                     <td class="v-align-middle"><?= $ast; ?> </td>

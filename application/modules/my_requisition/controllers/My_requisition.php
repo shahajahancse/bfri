@@ -125,7 +125,7 @@ class My_requisition extends Backend_Controller {
       $fiscal_year = $this->Common_model->get_current_fiscal_year();
       $this->data['fiscal_year'] = $fiscal_year->fiscal_year_name;
 
-      if (!$this->Common_model->exists('requisitions', 'id', $id)) {
+      if (!$this->Common_model->exists('item_requisitions', 'id', $id)) {
          show_404('requisition - update - exitsts', true);
       }
 
@@ -184,7 +184,7 @@ class My_requisition extends Backend_Controller {
 
    public function details($id){
 
-      if (!$this->Common_model->exists('requisitions', 'id', $id)) {
+      if (!$this->Common_model->exists('item_requisitions', 'id', $id)) {
          show_404('My_requisition - details - exitsts', TRUE);
       }
       //Results

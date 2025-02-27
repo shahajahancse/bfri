@@ -35,7 +35,7 @@
                      if ($info->status == 2) {
                         $status = '<span class="label label-warning">On process</span>';
                      }else if($info->status == 3){
-                        $status = '<span class="label label-primary">Forward JD</span>';
+                        $status = '<span class="label label-primary">Forward SM</span>';
                      }else if($info->status == 4){
                         $status = '<span class="label label-info">Back User From JD</span>';
                      }else if($info->status == 5){

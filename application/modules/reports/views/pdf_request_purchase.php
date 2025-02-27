@@ -8,7 +8,8 @@
     .priview-body{font-size: 16px;color:#000;margin: 25px; }
     .priview-header{margin-bottom: 10px;text-align:center;}
     .priview-header div{font-size: 18px;}
-    .priview-memorandum, .priview-from, .priview-to, .priview-subject, .priview-message, .priview-office, .priview-demand, .priview-signature{padding-bottom: 20px;}
+    .priview-memorandum, .priview-from, .priview-to, .priview-subject, .priview-message, .priview-office,
+    .priview-demand, .priview-signature{padding-bottom: 20px;}
     .priview-office{text-align: center;}
     .priview-imitation ul{list-style: none;}
     .priview-imitation ul li{display: block;}
@@ -41,6 +42,7 @@
     .headding td, .total td{border-top:1px solid #ddd;border-bottom:1px solid #ddd;}
     .table th{padding:5px;}
     .table td{padding:5px;}
+    .text-left{text-align:left;}
     .text-center{text-align:center;}
     .text-right{text-align:right;}
     .report_date{text-align: right; font-size: 14px;}
@@ -51,96 +53,86 @@
     .tg  {border-collapse:collapse;border-spacing:0; width: 100%}
     .tg td{border-color:#ccc;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
       overflow:hidden;padding:3px 6px;word-break:normal;}
-      .tg th{border-color:#ccc;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+    .tg th{border-color:#ccc;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
         font-weight:normal;overflow:hidden;padding:3px 6px;word-break:normal;}
-        .tg .tg-y6fn{background-color:#c0c0c0;text-align:left;vertical-align:top}
-        .tg .tg-0lax{text-align:left;vertical-align:top}
-      </style>
-    </head>
-    <body>
-      <div class="priview-body">
-        <div class="priview-header">
-          <p class="text-center">
-            <span style="font-size:20px;font-weight: bold;">BCCT Inventory Management System</span>
-            <br> <span style="font-size: 14px;">Address </span>
-            <!-- <br><span style="font-size:12px;">www.scouts.gov.bd</span> -->
-          </p>
+    .tg .tg-y6fn{background-color:#c0c0c0;text-align:left;vertical-align:top}
+    .tg .tg-0lax{text-align:left;vertical-align:top}
+  </style>
+</head>
+  <body>
+    <div class="priview-body">
+      <div class="priview-header">
+        <p class="text-center">
+          <span style="font-size:20px;font-weight: bold;">BFRI Inventory Management System</span>
+          <br> <span style="font-size: 14px;">Address </span>
+        </p>
+      </div>
+
+      <div class="priview-memorandum">
+        <div class="row">
+        <div class="col-12 text-center">
+          <div style="font-size:18px;"><u><?=$headding?></u></div>
+          <br>
         </div>
+      </div>
+    </div>
 
-        <div class="priview-memorandum">
-         <div class="row">
-          <div class="col-12 text-center">
-           <div style="font-size:18px;"><u><?=$headding?></u></div>
-           <br>
-           <!-- <span style="font-size: 14px;">Date From: <?=$date_from?> - Date To: <?=$date_to?></span> -->
-         </div>
-       </div>
-     </div>
-
-     <div class="priview-demand">
-       <div class="report_date">Report Date: <?=date('d-m-Y')?></div>
-       <table class="table table-hover table-bordered report">
+    <div class="priview-demand">
+      <div class="report_date">Report Date: <?=date('d-m-Y')?></div>
+      <table class="table table-hover table-bordered report">
         <thead class="headding">
-         <tr>
-          <th class="text-center" width="20">SL</th>
-          <th class="text-left" width="80">Datetime</th>     
-          <th class="text-left" width="150">Requisition Title</th>
-          <th class="text-center" width="100">Name</th>
-          <th class="text-left" width="100">Designation</th>     
-          <th class="text-left" width="150">Department</th>            
-        </tr>
-      </thead>
-
-      <tbody>
-       <?php 
-       $i=0;
-               //$total_group=$total_member=$grandTotalGroup=$grandTotalMember=0;
-
-       foreach ($results['summary'] as $key => $row) { 
-        $i++;
-                  //$total += $row->quantity;
-        ?>
-        <tr>
-         <td class="text-center"><?=$i?>.</td>
-         <td class="text-left"><?=$row->created?></td>                 
-         <td class="text-left"><?=$row->title?></td>                 
-         <td class="text-left"><?=$row->first_name?></td>
-         <td class="text-left"><?=$row->dept_name?></td>
-         <td class="text-left"><?=$row->desig_name?></td>
-       </tr>
-       <tr>
-       <td colspan="6">
-          <table class="tg">
-            <thead>
-              <tr>
-                <th class="tg-y6fn">Item Name</th>
-                <th class="tg-y6fn">Request Quantity</th>
-                <th class="tg-y6fn">Unit</th>
-                <th class="tg-y6fn">Category</th>
-                <th class="tg-y6fn">Remark</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($results['details'][$key] as $row2) { ?>
-              <tr>
-                <td class="tg-0lax"><?=$row2->item_name?></td>
-                <td class="tg-0lax"><?=$row2->qty_request?></td>
-                <td class="tg-0lax"><?=$row2->unit_name?></td>
-                <td class="tg-0lax"><?=$row2->category_name?></td>
-                <td class="tg-0lax"><?=$row2->remark?></td>
-              </tr>
-              <?php } ?>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-      <?php } ?>
-    </tbody>
-  </table>      
+          <tr>
+            <th class="text-center" width="20">SL</th>
+            <th class="text-left" width="80">Datetime</th>
+            <th class="text-left" width="150">Requisition Title</th>
+            <th class="text-center" width="100">Name</th>
+            <th class="text-left" width="100">Designation</th>
+            <th class="text-left" width="150">Department</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $i=0;
+          foreach ($results['summary'] as $key => $row) { $i++; ?>
+            <tr>
+              <td class="text-center"><?=$i?>.</td>
+              <td class="text-left"><?=$row->created?></td>
+              <td class="text-left"><?=$row->title?></td>
+              <td class="text-left"><?=$row->first_name?></td>
+              <td class="text-left"><?=$row->dept_name?></td>
+              <td class="text-left"><?=$row->desig_name?></td>
+            </tr>
+            <tr>
+              <td colspan="6">
+                <table class="tg">
+                  <thead>
+                    <tr>
+                      <th class="tg-y6fn">Category</th>
+                      <th class="tg-y6fn">Item Name</th>
+                      <th class="tg-y6fn">Unit</th>
+                      <th class="tg-y6fn"><?= $type == 4 ? 'Approve ' : 'Request '?>Quantity</th>
+                      <th class="tg-y6fn">Remark</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($results['details'][$key] as $row2) { ?>
+                    <tr>
+                      <td class="tg-0lax"><?=$row2->category_name?></td>
+                      <td class="tg-0lax"><?=$row2->item_name?></td>
+                      <td class="tg-0lax"><?=$row2->unit_name?></td>
+                      <td class="tg-0lax"><?= $type == 4 ? $row2->pur_approve : $row2->pur_quantity ?></td>
+                      <td class="tg-0lax"><?=$row2->remark?></td>
+                    </tr>
+                    <?php } ?>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          <?php } ?>
+        </tbody>
+      </table>
+    </div>
 </div>
-
-</div>
-
 </body>
 </html>
 

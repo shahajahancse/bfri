@@ -38,30 +38,30 @@
                                 foreach ($results as $row): $sl++;
                                 $status = '<span class="label label-secondary">Draft</span>';
                                 if ($row->status == 2) {
-                                        $status = '<span class="label label-warning">On process</span>';
+                                    $status = '<span class="label label-warning">On process</span>';
                                 }else if($row->status == 3){
-                                        $status = '<span class="label label-primary">Forward JD</span>';
+                                    $status = '<span class="label label-primary">Forward SM</span>';
                                 }else if($row->status == 4){
-                                        $status = '<span class="label label-info">Back User From JD</span>';
+                                    $status = '<span class="label label-info">Back User From JD</span>';
                                 }else if($row->status == 5){
-                                        $status = '<span class="label label-info">Back User From DG</span>';
+                                    $status = '<span class="label label-info">Back User From DG</span>';
                                 }else if($row->status == 6){
-                                        $status = '<span class="label label-blueviolet">Approve JD</span>';
+                                    $status = '<span class="label label-blueviolet">Approve JD</span>';
                                 }else if($row->status == 7){
-                                        $status = '<span class="label label-warning">Back JD From DG</span>';
+                                    $status = '<span class="label label-warning">Back JD From DG</span>';
                                 }else if($row->status == 8){
-                                        $status = '<span class="label label-success">DG Approve</span>';
+                                    $status = '<span class="label label-success">DG Approve</span>';
                                 }else if($row->status == 9){
-                                        $status = '<span class="label label-important">Rejected</span>';
+                                    $status = '<span class="label label-important">Rejected</span>';
                                 }else if($row->status == 10){
-                                        $status = '<span class="label label-primary">Delivery </span>';
+                                    $status = '<span class="label label-primary">Delivery </span>';
                                 }
                             ?>
 
                             <?php
-                                $create_at=date('Y-m-d', strtotime($row->created));
+                                $created_at=date('Y-m-d', strtotime($row->created));
                                 $today_date = date('Y-m-d');
-                                $day_diff=abs(strtotime($today_date) - strtotime($create_at));
+                                $day_diff=abs(strtotime($today_date) - strtotime($created_at));
                                 $number_of_days=floor($day_diff/(60*60*24));
                                 if($number_of_days > 7) {
                                 $colorb = '#ff8686';
