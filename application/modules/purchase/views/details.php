@@ -50,6 +50,8 @@
                                        $status = '<span class="label label-success">Approve DG</span>';
                                  }else if($info->status == 8){
                                        $status = '<span class="label label-important">Rejected</span>';
+                                 } else if($info->status == 9){
+                                       $status = '<span class="label label-success">Received </span>';
                                  }
                               ?>
 
@@ -99,7 +101,7 @@
                                  <tr>
                                     <td><?=$item->item_name?></td>
                                     <td><?=$item->pur_quantity?>  <?=$item->unit_name?></td>
-                                    <td><?=$item->pur_quantity?></td>
+                                    <td><?=$item->pur_approve?></td>
                                     <td><?=$item->unit_name?></td>
                                     <td><?=$item->pur_remark?></td>
                                  </tr>

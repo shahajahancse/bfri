@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <link rel="icon" type="image/ico" href="<?=base_url('awedget/assets/img/favicon.ico');?>" />
-    <title><?=$meta_title?> | BCCT </title>
+    <title><?=$meta_title?> | BFRI </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link href="<?=base_url();?>awedget/assets/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css"
         media="screen" />
@@ -250,11 +250,11 @@
 
                                 <!-- Report section -->
                                 <?php if($this->ion_auth->in_group(array('admin','badmin','sm'))){ ?>
-                                <li class="start <?=activate_menu_method('index')?>"><a
+                                <li class="start <?=backend_activate_menu_class('reports')?>"><a
                                         href="<?=base_url('reports/index')?>"> <i class="fa fa-th"></i><span class="title">Reports</span> </a>
                                 </li>
-                                <li class="start <?=activate_menu_method('dynamic_report')?>"><a
-                                        href="<?=base_url('reports/dynamic_report')?>"> <i class="fa fa-th"></i><span class="title">Dynamic Report</span> </a>
+                                <li class="start <?=activate_menu_method('dynamic_report')?>">
+                                    <a href="<?=base_url('reports/dynamic_report')?>"> <i class="fa fa-th"></i><span class="title">Dynamic Report</span> </a>
                                 </li>
                                 <?php } ?>
 

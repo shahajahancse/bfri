@@ -307,7 +307,7 @@ class Purchase extends Backend_Controller {
                'unit_id'      => $user['unit_id'],
                'item_id'      => $items->item_id,
                'cat_id'       => $items->cat_id,
-               'sub_cat_id'   => $items->sub_cat_id,
+               'sub_cate_id'  => $items->sub_cate_id,
                'qty'          => $p->pur_approve,
                'status'       => 2,
                'updated_by'   => $user['user_id'],
