@@ -1,6 +1,3 @@
-<?php
-// dd('dsjfb')
-?>
 
 <style>
     .log_top {
@@ -16,7 +13,7 @@
     }
 
     .log_top img {
-        width: 94px;
+        width: 85px;
         height: 76px;
     }
 
@@ -70,24 +67,17 @@
     }
 </style>
 
-<body class="error-body no-top" style="background: url(<?=base_url('awedget/assets/img/inventeory.png');?>) no-repeat center center fixed; -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;">
+<body class="error-body no-top" style="background: url(<?=base_url('awedget/assets/img/inventeory.png');?>) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
     <div class="col-md-12 log_top">
         <img src="<?=base_url();?>awedget/assets/img/govt-logo.png" class="img-responsive">
         <span>Bangladesh Forest Research Institute (BFRI)</span>
 
-        <img src="<?=base_url();?>awedget/assets/img/bcct_logo.png" class="img-responsive">
+        <img src="<?=base_url();?>awedget/assets/img/bfri_logo.png" class="img-responsive">
     </div>
     <div class="container">
         <div class="row login-container login_register column-seperation" style="margin: 15% auto 20px auto;">
-            <?php
-      $attributes = array('id' => 'login_validate');
-      echo form_open("login/index", $attributes);
-      ?>
+            <?php $attributes = array('id' => 'login_validate'); echo form_open("login/index", $attributes); ?>
             <div class="col-md-4 col-sm-6 col-sm-offset-3 col-md-offset-4 box_reg">
-                <!-- <img style="height: 83px;width: 340px;" src="<?=base_url('awedget/assets/img/logo.png');?>" class="box_img img-responsive"  width="50"> -->
                 <h4 class="box_title">Inventory Management System</h4>
                 <div id="infoMessage"><?php echo $message;?></div>
 
@@ -138,62 +128,8 @@
                         <!-- <a href="<?=base_url('forgot-password')?>" class="forget"><?php echo lang('login_forgot_password');?></a> -->
                     </div>
                 </div>
-
-                <?php /*
-        <div class="row" style="margin-bottom: 0px;">
-          <div class="col-md-6">
-            <a href="<?=base_url('registration')?>" class="register">Register new account </a>
             </div>
-            <div class="col-md-6">
-                <a href="<?=base_url('forgot-password')?>"
-                    class="forget"><?php echo lang('login_forgot_password');?></a>
-            </div>
+            <?php echo form_close(); ?>
         </div>
-
-        <div class="row">
-            <div class="col-md-12" style="margin-bottom: 0px;">
-                <a href="<?=base_url()?>" class="public_service">Scout Portal (Public Corner)</a>
-            </div>
-        </div>
-
-        <div class="clearfix"></div>
-        <div class="a2i">
-            <span style="text-decoration: underline;">সহযোগীতায়</span>
-
-            <div class="row">
-                <div class="col-md-6 text-left" style="font-size: 10px;">
-
-                    <a href="https://a2i.gov.bd/" target="_blank">
-                        <img src="<?php echo base_url('fwedget/assets/images/a2i_logo.png')?>" height="20"
-                            style="margin-top: 05px;"></a>
-                    <a href="https://ictd.gov.bd/" target="_blank">
-                        <img src="<?php echo base_url('fwedget/assets/images/logo_ict.png')?>" width="55"
-                            style="margin-top: 05px;"></a><br>
-                    <strong>এটুআই প্রোগ্রাম <br>তথ্য ও যোগাযোগ প্রযুক্তি বিভাগ</strong>
-                </div>
-
-                <div class="col-md-6 text-right" style="font-size: 10px;">
-                    <a href="http://www.scouts.gov.bd/" target="_blank">
-                        <img src="<?php echo base_url('fwedget/assets/images/bd_scout_logo.png')?>" height="20"
-                            style="margin-top: 05px;"></a><br>
-                    <strong>আইসিটি বিভাগ <br>বাংলাদেশ স্কাউটস</strong>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12 text-center" style="font-size: 10px; margin-top: 10px;">
-                    <strong>Developed By | <a href="http://mysoftheaven.com/" target="_blank">Mysoftheaven (BD)
-                            Ltd.</a></strong>
-                    <a href="http://mysoftheaven.com/" target="_blank"><img
-                            src="<?php echo base_url('fwedget/assets/images/mysoft-logo.png')?>" height="15"></a>
-                </div>
-            </div>
-        </div>
-
-        */ ?>
-
     </div>
 
-    </form>
-    </div>
-    </div>

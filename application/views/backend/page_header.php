@@ -26,8 +26,6 @@
     <!-- Datepicker -->
     <link href="<?=base_url();?>awedget/assets/plugins/bootstrap-datepicker/css/datepicker.css" rel="stylesheet"
         type="text/css" />
-    <!-- <link href="<?=base_url();?>awedget/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.css" rel="stylesheet" type="text/css" /> -->
-    <!-- <link href="<?=base_url();?>awedget/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" /> -->
 
     <link href="<?=base_url();?>awedget/assets/plugins/jquery-datatable/css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
     <link href="<?=base_url();?>awedget/assets/plugins/datatables-responsive/css/datatables.responsive.css" rel="stylesheet" type="text/css" media="screen"/>
@@ -37,41 +35,23 @@
         media="screen">
     <link href="<?=base_url();?>awedget/assets/plugins/jquery-slider/css/jquery.sidr.light.css" rel="stylesheet"
         type="text/css" media="screen" />
-    <?php /*
-   <!-- <link href="<?=base_url();?>awedget/assets/plugins/boostrapv3/css/bootstrap.min.css" rel="stylesheet"
-    type="text/css"/>
-    <link href="<?=base_url();?>awedget/assets/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet"
-        type="text/css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
-    */ ?>
+
     <link href="<?=base_url();?>awedget/assets/plugins/boostrap-3.3.7/css/bootstrap.min.css" rel="stylesheet"
         type="text/css" />
     <link href="<?=base_url();?>awedget/assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet"
         type="text/css" />
     <link href="<?=base_url();?>awedget/assets/css/animate.min.css" rel="stylesheet" type="text/css" />
-    <?php /*
-   <link rel="stylesheet" href="<?=base_url();?>awedget/assets/croper/css/cropper.min.css">
-    <link rel="stylesheet" href="<?=base_url();?>awedget/assets/croper/css/main.css">
-    */ ?>
 
     <link href="<?=base_url();?>awedget/assets/css/style.css" rel="stylesheet" type="text/css" />
     <link href="<?=base_url();?>awedget/assets/css/responsive.css" rel="stylesheet" type="text/css" />
     <link href="<?=base_url();?>awedget/assets/css/custom-icon-set.css" rel="stylesheet" type="text/css" />
-    <?php /*
-   <!-- <script src="<?=base_url();?>awedget/assets/plugins/jquery-1.8.3.min.js" type="text/javascript"></script> -->
-    <!-- <script src="<?=base_url();?>awedget/assets/plugins/jquery-3.2.1.min.js" type="text/javascript"></script> -->
 
-    <!-- <script src="<?=base_url();?>awedget/assets/plugins/jquery-1.8.3.min.js" type="text/javascript"></script> -->
-    <!-- <script src="<?=base_url();?>awedget/assets/plugins/jquery-1.9.1.min.js" type="text/javascript"></script> -->
-    */?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.3/dist/sweetalert2.min.css" rel="stylesheet">
-    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script> -->
     <script type="text/javascript">
     var hostname = '<?php echo base_url();?>';
     </script>
-    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script> -->
+
 </head> <!-- END HEAD -->
 <style>
     .select2-container{
@@ -95,7 +75,7 @@
                         </li>
                     </ul>
 
-                    <a href="<?=base_url('dashboard')?>"> <img style="height: 60px;width: 251px;" src="<?=base_url('awedget/assets/img/logo.jpg')?>" alt=""></a>
+                    <a href="<?=base_url('dashboard')?>"> <img style="height: 60px;width: 250px;" src="<?=base_url('awedget/assets/img/bfri.png')?>" alt=""></a>
                     <ul class="nav pull-right notifcation-center">
                         <li class="dropdown" id="header_task_bar">
 
@@ -288,7 +268,7 @@
                                         <li> <a href="<?=base_url('general_setting/item_unit');?>"> Item Unit</a></li>
                                         <li> <a href="<?=base_url('general_setting/department');?>"> Department</a></li>
                                         <li> <a href="<?=base_url('general_setting/designation');?>"> Designation</a>
-                                        <li> <a href="<?=base_url('general_setting/units');?>"> Branch</a>
+                                        <li> <a href="<?=base_url('general_setting/units');?>"> Division </a>
                                         <!-- <li> <a href="<?=base_url('general_setting/group');?>"> Group</a> -->
                                         </li>
                                     </ul>

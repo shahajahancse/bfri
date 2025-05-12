@@ -9,8 +9,8 @@
 
     <div class="row">
       <div class="col-md-12">
-        <div class="grid simple horizontal green">
-          <div class="grid-title">
+        <div class="grid simple horizontal">
+          <div class="grid-title" style="border: 3px solid #dddddd; border-bottom: 0px;">
             <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
             <div class="pull-right">
               <a href="<?=base_url('acl/create_user')?>" class="btn btn-blueviolet btn-xs btn-mini"> Create User </a>

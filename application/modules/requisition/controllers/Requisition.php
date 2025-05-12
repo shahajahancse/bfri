@@ -209,7 +209,7 @@ class Requisition extends Backend_Controller
                         'unit_id'       => $info->unit_id,
                         'item_id'       => $item_id,
                         'cat_id'        => $_POST['cat_id'][$i],
-                        'sub_cate_id'   => $_POST['sub_cat_id'][$i],
+                        'sub_cat_id'   => $_POST['sub_cat_id'][$i],
                         'qty'           => $qty_approve,
                         'status'        => 3,
                         'updated_by'    => $info->user_id,
@@ -222,7 +222,7 @@ class Requisition extends Backend_Controller
                     redirect("requisition/approve_list");
                 }
             }
-
+            
             $form_data2 = array(
                 'status'       => 10,
                 'is_delivered' => 2,

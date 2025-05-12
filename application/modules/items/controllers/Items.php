@@ -158,8 +158,6 @@ class Items extends Backend_Controller {
       redirect('items');
    }
 
-
-
    public function details($id){
       if(!$this->ion_auth->is_admin()){
          redirect('dashboard');
@@ -178,33 +176,28 @@ class Items extends Backend_Controller {
       $this->load->view('backend/_layout_main', $this->data);
    }
 
-   /*************details_pdf function pdf start**************/
-   public function details_pdf($id=0){
-      if(!$this->ion_auth->is_admin()){
-         redirect('dashboard');
+   public function low_stock(){
+      $unit_id = $this->session->userdata('unit_id');
+      $this->db->select('i.*, c.category_name, sc.sub_cate_name, u.unit_name, s.balance, b.name_en');
+      $this->db->from('items i');
+      $this->db->join('item_categories c', 'c.id=i.cat_id', 'LEFT');
+      $this->db->join('item_sub_categories sc', 'sc.id=i.sub_cat_id', 'LEFT');
+      $this->db->join('item_unit u', 'u.id=i.unit_id', 'LEFT');
+      $this->db->join('item_stocks s', 's.item_id=i.id', 'LEFT');
+      $this->db->join('units b', 'b.id=s.unit_id', 'LEFT');
+      $this->db->where('i.order_level > s.balance');
+      if (!empty($unit_id)) {
+         $this->db->where('s.unit_id', $unit_id);
       }
+      $this->db->order_by('i.id', 'ASC');
+      $query = $this->db->get()->result();
+      $this->data['results'] = $query;
 
-      $encriptID = (int) decrypt_url($id);
-
-      $this->data['users'] = $this->ion_auth->user()->row();
-
-      $this->data['complain'] = $this->Complain_model->get_info($encriptID);
-
-      //...............................................................................
-      $this->data['meta_title'] = "Details Feedback on Complain";
-      $html = $this->load->view('details_pdf', $this->data, true);
-      $file_name ="details_pdf.pdf";
-
-      //$mpdf = new mPDF('', array(349, 225), 10, '', 0, 0, 0, 0);
-      $mpdf = new mPDF('', 'A4', 10, 'nikosh', 10, 10, 10, 10);
-
-      //generate the PDF from the given html
-      $mpdf->WriteHTML($html);
-
-      //download it for 'D'.
-      $mpdf->Output($file_name, "D");
+      // Load page
+      $this->data['meta_title'] = 'Low Items List';
+      $this->data['subview'] = 'low_stock';
+      $this->load->view('backend/_layout_main', $this->data);
    }
-   /*************details_pdf function pdf End**************/
 
    // ================== Stock Items ==================
    public function stock(){
@@ -215,6 +208,19 @@ class Items extends Backend_Controller {
       $this->data['subview'] = 'stock';
       $this->load->view('backend/_layout_main', $this->data);
    }
+
+   public function stock_details($id){
+      $id = (int) decrypt_url($id);
+      $info = $this->Items_model->get_stock_info($id);
+      $this->data['results'] = $this->Items_model->get_stock_details($info->item_id, $info->unit_id);
+      // dd($this->data['results']);
+      // Load page
+      $this->data['info'] = $info;
+      $this->data['meta_title'] = 'Stock Items Details';
+      $this->data['subview'] = 'stock_details';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+
    public function stock_adjust(){
       $unit_id = $this->session->userdata('unit_id');
       $this->data['results'] = $this->Items_model->get_item_stocks($unit_id);
@@ -323,27 +329,32 @@ class Items extends Backend_Controller {
    }
    // ================== Stock Items end ==================
 
-   public function low_stock(){
-      $unit_id = $this->session->userdata('unit_id');
-      $this->db->select('i.*, c.category_name, sc.sub_cate_name, u.unit_name, s.balance, b.name_en');
-      $this->db->from('items i');
-      $this->db->join('item_categories c', 'c.id=i.cat_id', 'LEFT');
-      $this->db->join('item_sub_categories sc', 'sc.id=i.sub_cat_id', 'LEFT');
-      $this->db->join('item_unit u', 'u.id=i.unit_id', 'LEFT');
-      $this->db->join('item_stocks s', 's.item_id=i.id', 'LEFT');
-      $this->db->join('units b', 'b.id=s.unit_id', 'LEFT');
-      $this->db->where('i.order_level > s.balance');
-      if (!empty($unit_id)) {
-         $this->db->where('s.unit_id', $unit_id);
+   /*************details_pdf function pdf start**************/
+   public function details_pdf($id=0){
+      if(!$this->ion_auth->is_admin()){
+         redirect('dashboard');
       }
-      $this->db->order_by('i.id', 'ASC');
-      $query = $this->db->get()->result();
-      $this->data['results'] = $query;
 
-      // Load page
-      $this->data['meta_title'] = 'Low Items List';
-      $this->data['subview'] = 'low_stock';
-      $this->load->view('backend/_layout_main', $this->data);
+      $encriptID = (int) decrypt_url($id);
+
+      $this->data['users'] = $this->ion_auth->user()->row();
+
+      $this->data['complain'] = $this->Complain_model->get_info($encriptID);
+
+      //...............................................................................
+      $this->data['meta_title'] = "Details Feedback on Complain";
+      $html = $this->load->view('details_pdf', $this->data, true);
+      $file_name ="details_pdf.pdf";
+
+      //$mpdf = new mPDF('', array(349, 225), 10, '', 0, 0, 0, 0);
+      $mpdf = new mPDF('', 'A4', 10, 'nikosh', 10, 10, 10, 10);
+
+      //generate the PDF from the given html
+      $mpdf->WriteHTML($html);
+
+      //download it for 'D'.
+      $mpdf->Output($file_name, "D");
    }
+   /*************details_pdf function pdf End**************/
 
 }
