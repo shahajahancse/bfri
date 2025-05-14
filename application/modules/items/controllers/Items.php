@@ -23,6 +23,7 @@ class Items extends Backend_Controller {
 
    public function create(){
       //Validation
+      $this->form_validation->set_rules('division_id', 'select division', 'required|trim');
       $this->form_validation->set_rules('cat_id', 'select category', 'required|trim');
       $this->form_validation->set_rules('sub_cat_id', 'select sub category', 'required|trim');
       $this->form_validation->set_rules('item_name', 'item name', 'required|trim');
@@ -32,6 +33,7 @@ class Items extends Backend_Controller {
       //Validate and input data
       if ($this->form_validation->run() == true){
          $form_data = array(
+            'division_id'   => $this->input->post('division_id'),
             'cat_id'        => $this->input->post('cat_id'),
             'sub_cat_id'    => $this->input->post('sub_cat_id'),
             'item_name'     => $this->input->post('item_name'),
@@ -112,6 +114,7 @@ class Items extends Backend_Controller {
       }
 
       //Validation
+      $this->form_validation->set_rules('division_id', 'select division', 'required|trim');
       $this->form_validation->set_rules('cat_id', 'select category', 'required|trim');
       $this->form_validation->set_rules('sub_cat_id', 'select sub category', 'required|trim');
       $this->form_validation->set_rules('item_name', 'item name', 'required|trim');
@@ -120,6 +123,7 @@ class Items extends Backend_Controller {
 
       if ($this->form_validation->run() == true){
          $form_data = array(
+            'division_id'   => $this->input->post('division_id'),
             'cat_id'        => $this->input->post('cat_id'),
             'sub_cat_id'    => $this->input->post('sub_cat_id'),
             'item_name'     => $this->input->post('item_name'),
@@ -213,7 +217,7 @@ class Items extends Backend_Controller {
       $id = (int) decrypt_url($id);
       $info = $this->Items_model->get_stock_info($id);
       $this->data['results'] = $this->Items_model->get_stock_details($info->item_id, $info->unit_id);
-      // dd($this->data['results']);
+
       // Load page
       $this->data['info'] = $info;
       $this->data['meta_title'] = 'Stock Items Details';

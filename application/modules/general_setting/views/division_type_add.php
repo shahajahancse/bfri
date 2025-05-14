@@ -2,17 +2,16 @@
   <div class="content">
     <ul class="breadcrumb">
       <li> <a href="<?=base_url()?>" class="active"> Dashboard </a> </li>
-     <!--  <li> <?=$module_name?> </li> -->
       <li><?=$meta_title; ?></li>
     </ul>
 
     <div class="row">
-       <div class="col-md-12">
+       <div class="col-md-8">
           <div class="grid simple horizontal">
              <div class="grid-title">
               <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
               <div class="pull-right">
-                <a href="<?=base_url('general_setting/units')?>" class="btn btn-blueviolet btn-xs btn-mini">List</a>
+                <a href="<?=base_url('general_setting/division_type')?>" class="btn btn-blueviolet btn-xs btn-mini">List</a>
               </div>
              </div>
              <div class="grid-body">
@@ -25,41 +24,18 @@
 
               <?php
               $attributes = array('id' => 'department_validate');
-              echo form_open_multipart("general_setting/unit_add", $attributes);?>
+              echo form_open_multipart('general_setting/division_type_add', $attributes);?>
 
               <div class="row form-row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <label class="form-label">Name Bangla <span style="color:red">*</span></label>
                   <?php echo form_error('name_bn'); ?>
                   <input name="name_bn" id="name_bn" type="text" value="<?=set_value('name_bn')?>" class="form-control input-sm" placeholder="">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <label class="form-label">Name English <span style="color:red">*</span></label>
                   <?php echo form_error('name_en'); ?>
                   <input name="name_en" id="name_en" type="text" value="<?=set_value('name_en')?>" class="form-control input-sm" placeholder="">
-                </div>
-                <div class="col-md-4">
-                  <label class="form-label">Type <span style="color:red">*</span></label>
-                  <?php echo form_error('type'); ?>
-                  <select name="type" class="form-control" id="">
-                    <option value="">Select Type</option>
-                    <option value="1">Head Office</option>
-                    <option value="2">Provider Office</option>
-                    <option value="3">General Office</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="row form-row">
-                <div class="col-md-6">
-                  <label class="form-label">Address Bangla <span style="color:red">*</span></label>
-                  <?php echo form_error('address_bn'); ?>
-                  <input name="address_bn" id="address_bn" type="text" value="<?=set_value('address_bn')?>" class="form-control input-sm" placeholder="">
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Address English <span style="color:red">*</span></label>
-                  <?php echo form_error('address_en'); ?>
-                  <input name="address_en" id="address_en" type="text" value="<?=set_value('address_en')?>" class="form-control input-sm" placeholder="">
                 </div>
               </div>
 

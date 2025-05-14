@@ -38,26 +38,33 @@
                   echo form_open_multipart("items/create", $attributes);?>
                   <div class="row form-row">
                      <div class="col-md-4">
+                        <label class="form-label">Select Division <span class="required">*</span></label>
+                        <?php $divs = $this->db->where('type', 2)->get('units')->result(); ?>
+                        <select name="division_id" class="form-control input-sm" required>
+                           <option value="">-- Select One --</option>
+                           <?php foreach ($divs as $key => $value) { ?>
+                              <option value="<?=$value->id?>"><?=$value->name_en?></option>
+                           <?php } ?>
+                        </select>
+                     </div>
+                     <div class="col-md-3">
                         <label class="form-label">Select Category <span class="required">*</span></label>
                         <?php $cat = $this->db->get('item_categories')->result(); ?>
                         <select name="cat_id" onchange="getSubCategory(this.value)" class="form-control input-sm" required>
                            <option value="">-- Select One --</option>
-                           <?php
-                           foreach ($cat as $key => $value) {
-                              ?>
+                           <?php foreach ($cat as $key => $value) { ?>
                               <option value="<?=$value->id?>"><?=$value->category_name?></option>
-                              <?php
-                           } ?>
+                           <?php } ?>
                         </select>
                      </div>
-                     <div class="col-md-4">
+                     <div class="col-md-3">
                         <label class="form-label">Select Sub Category <span class="required">*</span></label>
                         <?php echo form_error('sub_cat_id'); ?>
                         <select name="sub_cat_id" class="sub_category_val form-control input-sm" id="sub_category" required>
                            <option value="">-- Select One --</option>
                         </select>
                      </div>
-                     <div class="col-md-4">
+                     <div class="col-md-2">
                         <label class="form-label">Item Type <span class="required">*</span></label>
                         <?php echo form_error('type'); ?>
                         <select name="type" id="type" class="form-control input-sm">

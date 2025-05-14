@@ -32,10 +32,10 @@
                             <?php if($this->ion_auth->is_admin()) { ?>
                                 <?php $units = $this->db->get('units')->result(); ?>
                                 <div class="col-md-4">
-                                    <label class="form-label">Branch <span style="color:red">*</span></label>
+                                    <label class="form-label">Division <span style="color:red">*</span></label>
                                     <?php echo form_error('unit_id'); ?>
                                     <select name="unit_id" id="unit_id" class="form-control input-sm select2">
-                                        <option value="">Select Branch</option>
+                                        <option value="">Select Division</option>
                                         <?php foreach($units as $unit):?>
                                         <option value="<?=$unit->id?>" <?= $unit->id== $user->unit_id?'selected':'' ?> ><?=$unit->name_en?></option>
                                         <?php endforeach;?>
@@ -44,7 +44,7 @@
                             <?php }else{?>
                                 <?php $un = $this->db->where('id', $user->unit_id)->get('units')->result(); ?>
                                 <div class="col-md-4">
-                                    <label class="form-label">Branch <span style="color:red">*</span></label>
+                                    <label class="form-label">Division <span style="color:red">*</span></label>
                                     <?php echo form_error('unit_id'); ?>
                                     <select name="unit_id" id="unit_id" class="form-control input-sm select2">
                                         <option value="<?=$un->id?>"><?=$un->name_en?></option>

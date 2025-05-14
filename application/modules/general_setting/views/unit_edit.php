@@ -7,7 +7,7 @@
     </ul>
 
     <div class="row">
-       <div class="col-md-8">
+       <div class="col-md-12">
           <div class="grid simple horizontal">
              <div class="grid-title">
               <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
@@ -28,15 +28,25 @@
               echo form_open_multipart("general_setting/unit_edit/".$info->id, $attributes);?>
 
               <div class="row form-row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label class="form-label">Name Bangla <span style="color:red">*</span></label>
                   <?php echo form_error('name_bn'); ?>
                   <input name="name_bn" id="name_bn" type="text" value="<?=set_value('name_bn', $info->name_bn)?>" class="form-control input-sm" placeholder="">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label class="form-label">Name English <span style="color:red">*</span></label>
                   <?php echo form_error('name_en'); ?>
                   <input name="name_en" id="name_en" type="text" value="<?=set_value('name_en', $info->name_en)?>" class="form-control input-sm" placeholder="">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">type <span style="color:red">*</span></label>
+                  <?php echo form_error('type'); ?>
+                  <select name="type" id="type" class="form-control input-sm" id="">
+                    <option value="">Select</option>
+                    <option value="1" <?=$info->type=='1'?'selected':'';?>>Head Office</option>
+                    <option value="2" <?=$info->type=='2'?'selected':'';?>>Provider Office</option>
+                    <option value="3" <?=$info->type=='3'?'selected':'';?>>General Office</option>
+                  </select>
                 </div>
               </div>
 

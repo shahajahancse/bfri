@@ -28,6 +28,7 @@
                      <thead>
                         <tr>
                            <th style="width:2%"> SL </th>
+                           <th style="width:12%">Division</th>
                            <th style="width:12%">Category</th>
                            <th style="width:12%">Sub Category</th>
                            <th style="width:20%">Item Name</th>
@@ -49,6 +50,7 @@
                            ?>
                            <tr>
                               <td class="v-align-middle"><?=++$i?>.</td>
+                              <td class="v-align-middle"><?=$row->division_name?></td>
                               <td class="v-align-middle"><?=$row->category_name?></td>
                               <td class="v-align-middle"><?=$row->sub_cate_name?></td>
                               <td class="v-align-middle"><strong><?=$row->item_name?></strong></td>

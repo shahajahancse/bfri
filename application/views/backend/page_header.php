@@ -269,6 +269,7 @@
                                         <li> <a href="<?=base_url('general_setting/department');?>"> Department</a></li>
                                         <li> <a href="<?=base_url('general_setting/designation');?>"> Designation</a>
                                         <li> <a href="<?=base_url('general_setting/units');?>"> Division </a>
+                                        <li> <a href="<?=base_url('general_setting/division_type');?>"> Division Type </a>
                                         <!-- <li> <a href="<?=base_url('general_setting/group');?>"> Group</a> -->
                                         </li>
                                     </ul>

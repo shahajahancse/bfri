@@ -47,8 +47,9 @@ class Items_model extends CI_Model {
     }
 
     public function get_items(){
-        $this->db->select('i.*, c.category_name, sc.sub_cate_name, u.unit_name');
+        $this->db->select('i.*, div.name_en as division_name, c.category_name, sc.sub_cate_name, u.unit_name');
         $this->db->from('items i');
+        $this->db->join('units div', 'div.id=i.division_id', 'LEFT');
         $this->db->join('item_categories c', 'c.id=i.cat_id', 'LEFT');
         $this->db->join('item_sub_categories sc', 'sc.id=i.sub_cat_id', 'LEFT');
         $this->db->join('item_unit u', 'u.id=i.unit_id', 'LEFT');

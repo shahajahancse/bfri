@@ -158,7 +158,7 @@ class Acl extends Backend_Controller {
                 'task_name_bn' => $this->input->post('task_name_bn'),
                 'controller_name' => $this->input->post('controller_name'),
                 'controller_function' => $this->input->post('controller_function')
-                );
+            );
 
             // print_r($form_data); exit;
             if($this->Common_model->save('task_register', $form_data)){
@@ -235,15 +235,19 @@ class Acl extends Backend_Controller {
             $email    = strtolower($this->input->post('email'));
             $identity = $this->input->post('identity');
             $password = $this->input->post('password');
+            $unit_id = $this->input->post('unit_id');
+            $row = $this->db->where('id', $unit_id)->get('units')->row();
 
             $data = array(
                 'first_name' => ucwords($this->input->post('full_name')),
-                'unit_id'      => $this->input->post('unit_id'),
-                'username'      => $this->input->post('identity'),
+                'unit_id'    => $this->input->post('unit_id'),
+                'type'       => $row->type,
+                'group_id'   => $this->input->post('group_id'),
+                'username'   => $this->input->post('identity'),
                 'phone'      => $this->input->post('phone'),
-                'dept_id'      => $this->input->post('dept_id'),
-                'desig_id'      => $this->input->post('desig_id'),
-                'status'      => $this->input->post('status'),
+                'dept_id'    => $this->input->post('dept_id'),
+                'desig_id'   => $this->input->post('desig_id'),
+                'status'     => $this->input->post('status'),
             );
         }
         if ($this->form_validation->run() == true && $this->ion_auth->register($identity, $password, $email, $data)) {
@@ -333,6 +337,7 @@ class Acl extends Backend_Controller {
                 $this->form_validation->set_rules('password', $this->lang->line('edit_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
                 $this->form_validation->set_rules('password_confirm', $this->lang->line('edit_user_validation_password_confirm_label'), 'required');
             }
+
             if ($this->form_validation->run() === TRUE){
                 if ($_FILES['profile_img']) {
                     $config['upload_path'] = './profile_img/';
@@ -435,40 +440,40 @@ class Acl extends Backend_Controller {
             'type'  => 'text',
             'class' => 'form-control',
             'value' => $this->form_validation->set_value('first_name', $user->first_name),
-            );
+        );
         $this->data['last_name'] = array(
             'name'  => 'last_name',
             'id'    => 'last_name',
             'type'  => 'text',
             'class' => 'form-control',
             'value' => $this->form_validation->set_value('last_name', $user->last_name),
-            );
+        );
         $this->data['company'] = array(
             'name'  => 'company',
             'id'    => 'company',
             'type'  => 'text',
             'class' => 'form-control',
             'value' => $this->form_validation->set_value('company', $user->company),
-            );
+        );
         $this->data['phone'] = array(
             'name'  => 'phone',
             'id'    => 'phone',
             'type'  => 'text',
             'class' => 'form-control',
             'value' => $this->form_validation->set_value('phone', $user->phone),
-            );
+        );
         $this->data['password'] = array(
             'name' => 'password',
             'id'   => 'password',
             'class' => 'form-control',
             'type' => 'password'
-            );
+        );
         $this->data['password_confirm'] = array(
             'name' => 'password_confirm',
             'id'   => 'password_confirm',
             'class' => 'form-control',
             'type' => 'password'
-            );
+        );
 
         $this->data['department'] = $this->Acl_model->get_department();
         $this->data['designation'] = $this->Acl_model->get_designation();

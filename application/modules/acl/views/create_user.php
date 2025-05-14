@@ -26,10 +26,10 @@
                             </div>
                             <?php $units = $this->db->get('units')->result(); ?>
                             <div class="col-md-6">
-                                <label class="form-label">Branch <span style="color:red">*</span></label>
+                                <label class="form-label">Division <span style="color:red">*</span></label>
                                 <?php echo form_error('unit_id'); ?>
                                 <select name="unit_id" id="unit_id" class="form-control input-sm select2">
-                                    <option value="">Select Branch</option>
+                                    <option value="">Select Division</option>
                                     <?php foreach($units as $unit):?>
                                     <option value="<?=$unit->id?>" <?=set_select('unit_id', $unit->id)?>><?=$unit->name_en?></option>
                                     <?php endforeach;?>
@@ -91,13 +91,24 @@
                         </div>
 
                         <div class="row form-row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label class="form-label">User Type</label>
+                                <?php echo form_error('group_id'); ?>
+                                <?php $groups = $this->db->get('groups')->result(); ?>
+                                <select name="group_id" id="group_id" class="form-control input-sm">
+                                    <option value="">Select User Type</option>
+                                    <?php foreach($groups as $group):?>
+                                    <option value="<?=$group->id?>"><?=$group->name?></option>
+                                    <?php endforeach;?>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
                                 <label
                                     class="form-label"><?php echo lang('create_user_password_label', 'password');?></label>
                                 <?php echo form_error('password'); ?>
                                 <?php echo form_input($password);?>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label
                                     class="form-label"><?php echo lang('create_user_password_confirm_label', 'password_confirm');?></label>
                                 <?php echo form_error('password_confirm'); ?>
@@ -130,7 +141,7 @@
                     required: true
                 },
                 phone: {
-                    required: true,
+                    // required: true,
                     number: true,
                     minlength: 11,
                     maxlength: 11
@@ -140,7 +151,7 @@
                 },
                 identity:{
                     required: true,
-                    number: true,
+                    // number: true,
                     minlength: 3,
                     remote: {
                         url: hostname +"common/ajax_exists_nid/",
@@ -153,13 +164,13 @@
                     }
                 },
                 dept_id: {
-                    required: true
+                    // required: true
                 },
                 designation_id: {
-                    required: true
+                    // required: true
                 },
                 email: {
-                    required: true
+                    // required: true
                 },
             },
             messages: {

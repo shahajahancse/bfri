@@ -937,6 +937,8 @@ class Ion_auth_model extends CI_Model
 		$password   = $this->hash_password($password, $salt);
 		$first_name=$ad_data['first_name'];
 		$unit_id=$ad_data['unit_id'];
+		$type=$ad_data['type'];
+		$group_id=$ad_data['group_id'];
 		$username=$ad_data['username'];
 		$phone=$ad_data['phone'];
 		$dept_id=$ad_data['dept_id'];
@@ -947,7 +949,10 @@ class Ion_auth_model extends CI_Model
 		$data = array(
 			'first_name'	=> $first_name,
 		    'unit_id'   	=> $unit_id,
+		    'type'   		=> $type,
+		    'group_id'   	=> $group_id,
 		    'username'   	=> $username,
+		    'password'   	=> $password,
 		    'phone'      	=> $phone,
 		    'dept_id'      	=> $dept_id,
 		    'desig_id'     	=> $desig_id,
@@ -959,6 +964,12 @@ class Ion_auth_model extends CI_Model
 		);
 		$this->db->insert($this->tables['users'], $data);
 		$id = $this->db->insert_id();
+
+		$data1 = array(
+			'user_id' => $id,
+			'group_id' => $group_id,
+		);
+		$this->db->insert($this->tables['users_groups'], $data1);
 		return (isset($id)) ? $id : FALSE;
 	}
 

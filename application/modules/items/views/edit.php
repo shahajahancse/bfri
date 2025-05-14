@@ -29,20 +29,30 @@
 
                   <div class="row form-row">
                      <div class="col-md-4">
+                        <label class="form-label">Select Division <span class="required">*</span></label>
+                        <?php $divs = $this->db->where('type', 2)->get('units')->result(); ?>
+                        <select name="division_id" class="form-control input-sm" required>
+                           <option value="">-- Select One --</option>
+                           <?php foreach ($divs as $key => $value) { ?>
+                              <option <?= ($info->division_id == $value->id)? 'selected' : '' ?> value="<?=$value->id?>"><?=$value->name_en?></option>
+                           <?php } ?>
+                        </select>
+                     </div>
+                     <div class="col-md-3">
                         <label class="form-label">Select Category <span class="required">*</span></label>
                         <?php echo form_error('cat_id');
                         $more_attr = 'class="form-control input-sm" id="category"';
                         echo form_dropdown('cat_id', $categories, set_value('cat_id', $info->cat_id), $more_attr);
                         ?>
                      </div>
-                     <div class="col-md-4">
+                     <div class="col-md-3">
                         <label class="form-label">Select Sub Category <span class="required">*</span></label>
                         <?php echo form_error('sub_cat_id');
                         $more_attr = 'class="sub_category_val form-control input-sm" id="sub_category" required';
                         echo form_dropdown('sub_cat_id', $sub_categories, set_value('sub_cat_id', $info->sub_cat_id), $more_attr);
                         ?>
                      </div>
-                     <div class="col-md-4">
+                     <div class="col-md-2">
                         <label class="form-label">Type <span class="required">*</span></label>
                         <?php echo form_error('type'); ?>
                         <select name="type" id="type" class="form-control input-sm">

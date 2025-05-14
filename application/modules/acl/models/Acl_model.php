@@ -26,15 +26,14 @@ class Acl_model extends CI_Model {
         $this->db->join('designation dg', 'dg.id = u.desig_id', 'LEFT');
         $this->db->limit($limit);
         $this->db->offset($offset);
-        $this->db->order_by('u.id', 'DESC');
+        $this->db->order_by('u.id', 'ASC');
         if($this->input->get('name') != NULL){
             $this->db->like('u.first_name', $this->input->get('name'));
         }
         if($this->input->get('username') != NULL){
             $this->db->where('u.email', $this->input->get('username'));
         }
-        // $this->db->where('id !=', 3);
-        // echo $this->db->last_query(); exit;
+        $this->db->where_not_in('u.id', array(1,2));
         $result['rows'] = $this->db->get()->result();
 
         // count query
@@ -46,10 +45,9 @@ class Acl_model extends CI_Model {
         if($this->input->get('username') != NULL){
             $this->db->where('email', $this->input->get('username'));
         }
-        // $this->db->where('id !=', 3);
+        $this->db->where_not_in('id', array(1,2));
         $tmp = $this->db->get()->result();
         $result['num_rows'] = $tmp[0]->count;
-
         return $result;
     }
 
