@@ -13,7 +13,7 @@
                   <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
                   <?php if($this->ion_auth->in_group(array('badmin', 'sm'))): ?>
                   <div class="pull-right">
-                     <a href="<?=base_url('items/stock_adjust')?>" class="btn btn-blueviolet btn-xs btn-mini"> Stock Adjust</a>
+                     <a href="<?=base_url('items/stock')?>" class="btn btn-blueviolet btn-xs btn-mini"><< Back List</a>
                   </div>
                   <?php endif; ?>
                </div>
@@ -54,6 +54,7 @@
                            <th style="width:20%">Item Name</th>
                            <th style="width:8%">Quantity</th>
                            <th style="width:8%">Status</th>
+                           <th style="width:15%">Remarks</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -78,6 +79,7 @@
                               <td class="v-align-middle"><strong><?=$row->item_name?></strong></td>
                               <td class="v-align-middle"><?=($row->qty)? $row->qty:0?></td>
                               <td class="v-align-middle"><?=$status?></td>
+                              <td class="v-align-middle"><?=$row->remarks?></td>
                            </tr>
                         <?php } ?>
                      </tbody>

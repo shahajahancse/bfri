@@ -30,10 +30,6 @@
              <th class="tg-d8ej"> Mobile </th>
              <td class="tg-031e"><strong><?=$user->phone?></strong></td>
            </tr>
-           <!-- <tr>
-             <th class="tg-d8ej"> Org. / Office Name </th>
-             <td class="tg-031e"><?=$user->org_prof_name?></td>
-           </tr> -->
          </table>
         </div>
      </div> <!-- /row -->

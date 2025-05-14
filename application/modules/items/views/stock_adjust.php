@@ -34,8 +34,9 @@
                            <th style="width:8%">Quantity</th>
                            <th style="width:10%">Or. Level</th>
                            <th style="width:6%">Status</th>
-                           <th style="width:10%">Adjust</th>
-                           <th style="width:6%" class="text-center">Action</th>
+                           <th style="width:7%">Quantity</th>
+                           <th style="width:15%">Remarks</th>
+                           <th style="width:15%" class="text-center">Action</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -57,8 +58,11 @@
                               <input type="hidden" id="cat<?=$row->id?>" name="cat<?=$row->id?>" value="<?=$row->cat_id?>">
                               <input type="hidden" id="sub_cat<?=$row->id?>" name="sub_cat<?=$row->id?>" value="<?=$row->sub_cat_id?>">
                               <td class="v-align-middle"><input name="stock<?=$row->id?>" class="form-control input-sm" id="stock<?=$row->id?>"></td>
-                              <td class="text-center">
+                              <td class="v-align-middle"><input name="remarks<?=$row->id?>" class="form-control input-sm" id="remarks<?=$row->id?>"></td>
+
+                              <td class="text-center" style="width:15%">
                                  <a class="btn btn-primary btn-xs btn-mini" onclick="ajax_single_adjust(<?=$row->id?>)">Submit</a>
+                                 <a class="btn btn-danger btn-xs btn-mini" onclick="remove_row(this)">Remove</a>
                               </td>
                            </tr>
                            <?php } ?>
@@ -78,6 +82,12 @@
       </div> <!-- END ROW -->
    </div>
 </div>
+
+<script>
+   function remove_row(el) {
+      $(el).closest('tr').remove();
+   }
+</script>
 
 <script type="text/javascript">
    $(document).ready(function () {
@@ -110,14 +120,19 @@
       var stock = $('#stock'+id).val();
       var cat = $('#cat'+id).val();
       var sub_cat = $('#sub_cat'+id).val();
+      var remarks = $('#remarks'+id).val();
       if(stock == ''){
          alert('Please enter stock quantity');
+         return false;
+      }
+      if(remarks == ''){
+         alert('Please enter remarks');
          return false;
       }
       $.ajax({
          url: '<?=base_url('items/ajax_single_adjust')?>',
          type: 'POST',
-         data: {id:id, stock:stock, cat:cat, sub_cat: sub_cat},
+         data: {id:id, stock:stock, cat:cat, sub_cat: sub_cat, remarks:remarks},
          success: function(data){
             if (data == 'success') {
                alert('Updated successfully');

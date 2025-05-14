@@ -46,7 +46,7 @@ class Items extends Backend_Controller {
 
          if($this->Common_model->save('items', $form_data)){
             $insert_id = $this->db->insert_id();
-            if ($this->ion_auth->in_group(array('admin', 'sm'))) {
+            if ($this->ion_auth->in_group(array('do', 'sm'))) {
                $data = array(
                   'unit_id'        => $this->session->userdata('unit_id'),
                   'item_id'        => $insert_id,
@@ -135,6 +135,25 @@ class Items extends Backend_Controller {
          );
 
          if($this->Common_model->edit('items', $dataID, 'id', $form_data)){
+            $unit_id = $this->session->userdata('unit_id');
+            if ($this->ion_auth->in_group(array('do', 'sm'))) {
+               $data = array(
+                  'cat_id'         => $this->input->post('cat_id'),
+                  'sub_cat_id'     => $this->input->post('sub_cat_id'),
+                  'order_level'    => $this->input->post('order_level'),
+               );
+               $this->db->where('unit_id', $unit_id)->where('item_id', $dataID)->update('item_stocks', $data);
+            } else {
+               $units = $this->db->get('units')->result();
+               foreach ($units as $key => $v) {
+                  $data = array(
+                     'cat_id'         => $this->input->post('cat_id'),
+                     'sub_cat_id'     => $this->input->post('sub_cat_id'),
+                     'order_level'    => $this->input->post('order_level'),
+                  );
+                  $this->db->where('unit_id', $v->id)->where('item_id', $dataID)->update('item_stocks', $data);
+               }
+            }
             $this->session->set_flashdata('success', 'Informatioin update successfully.');
             redirect('items');
          }
@@ -215,7 +234,7 @@ class Items extends Backend_Controller {
 
    public function stock_details($id){
       $id = (int) decrypt_url($id);
-      $info = $this->Items_model->get_stock_info($id);
+      $info = $this->Items_model->get_stock_info($id, $this->session->userdata('unit_id'));
       $this->data['results'] = $this->Items_model->get_stock_details($info->item_id, $info->unit_id);
 
       // Load page
@@ -227,7 +246,7 @@ class Items extends Backend_Controller {
 
    public function stock_adjust(){
       $unit_id = $this->session->userdata('unit_id');
-      $this->data['results'] = $this->Items_model->get_item_stocks($unit_id);
+      $this->data['results'] = $this->Items_model->get_items();
 
       // Load page
       $this->data['meta_title'] = 'Stock Adjust';
@@ -242,17 +261,6 @@ class Items extends Backend_Controller {
       // Insert new data
       foreach ($ids as $id) {
          $qty = ($this->input->post('stock'.$id)) ? $this->input->post('stock'.$id) : 0;
-         $data = array(
-            'unit_id' => $unit_id,
-            'item_id' => $id,
-            'cat_id' => $this->input->post('cat'.$id),
-            'sub_cat_id' => $this->input->post('sub_cat'.$id),
-            'qty' => $qty,
-            'status' => 1, // item adjusted
-            'updated_by' => $this->session->userdata('user_id'),
-         );
-         $this->db->insert('item_stocks_details', $data);
-
          $check = $this->db->where('unit_id', $unit_id)->where('item_id', $id)->get('item_stocks')->row();
          if (!empty($check)) { // update
             $data1 = array(
@@ -274,6 +282,22 @@ class Items extends Backend_Controller {
             );
             $this->db->insert('item_stocks', $data2);
          }
+
+         // Insert stock details
+         if (empty($qty)) {
+            continue;
+         }
+         $data = array(
+            'unit_id' => $unit_id,
+            'item_id' => $id,
+            'cat_id' => $this->input->post('cat'.$id),
+            'sub_cat_id' => $this->input->post('sub_cat'.$id),
+            'qty' => $qty,
+            'status' => 1, // item adjusted
+            'remarks' => $this->input->post('remarks'.$id),
+            'updated_by' => $this->session->userdata('user_id'),
+         );
+         $this->db->insert('item_stocks_details', $data);
       }
       // Complete transaction (automatically commits or rolls back)
       $this->db->trans_complete();
@@ -291,17 +315,6 @@ class Items extends Backend_Controller {
       $sub_cat = $this->input->post('sub_cat');
       $qty = $this->input->post('stock');
       $this->db->trans_start();
-      $data = array(
-         'unit_id' => $unit_id,
-         'item_id' => $id,
-         'cat_id' => $cat,
-         'sub_cat_id' => $sub_cat,
-         'qty' => $qty,
-         'status' => 1, // item adjusted
-         'updated_by' => $this->session->userdata('user_id'),
-      );
-      $this->db->insert('item_stocks_details', $data);
-
       $check = $this->db->where('unit_id', $unit_id)->where('item_id', $id)->get('item_stocks')->row();
       if (!empty($check)) { // update
          $data1 = array(
@@ -323,6 +336,22 @@ class Items extends Backend_Controller {
          );
          $this->db->insert('item_stocks', $data2);
       }
+
+      // Insert stock details
+      if (empty($qty)) {
+         continue;
+      }
+      $data = array(
+         'unit_id' => $unit_id,
+         'item_id' => $id,
+         'cat_id' => $cat,
+         'sub_cat_id' => $sub_cat,
+         'qty' => $qty,
+         'status' => 1, // item adjusted
+         'remarks' => $this->input->post('remarks'),
+         'updated_by' => $this->session->userdata('user_id'),
+      );
+      $this->db->insert('item_stocks_details', $data);
 
       $this->db->trans_complete();
       if ($this->db->trans_status() === FALSE) {

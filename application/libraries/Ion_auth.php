@@ -448,25 +448,11 @@ class Ion_auth
 		foreach ($check_group as $key => $value)
 		{
 			$groups = (is_string($value)) ? $groups_array : array_keys($groups_array);
-
-			/**
-			 * if !all (default), in_array
-			 * if all, !in_array
-			 */
 			if (in_array($value, $groups) xor $check_all)
 			{
-				/**
-				 * if !all (default), true
-				 * if all, false
-				 */
 				return !$check_all;
 			}
 		}
-
-		/**
-		 * if !all (default), false
-		 * if all, true
-		 */
 		return $check_all;
 	}
 

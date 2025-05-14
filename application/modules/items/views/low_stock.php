@@ -31,7 +31,7 @@
                            <th style="width:8%">Unit</th>
                            <th style="width:8%">Quantity</th>
                            <th style="width:10%">Order Level</th>
-                           <th style="width:10%">Branch</th>
+                           <th style="width:10%">Division</th>
                         </tr>
                      </thead>
                      <tbody>

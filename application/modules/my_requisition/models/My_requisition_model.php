@@ -19,7 +19,7 @@ class My_requisition_model extends CI_Model {
 
         // count query
       $q = $this->db->select('COUNT(*) as count');
-      $this->db->from('requisitions');
+      $this->db->from('item_requisitions');
       $this->db->where('user_id', $this->session->userdata('user_id'));
       if($status){
          $this->db->where('status', $status);
