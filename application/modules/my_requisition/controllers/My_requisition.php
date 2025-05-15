@@ -31,7 +31,7 @@ class My_requisition extends Backend_Controller {
    public function create(){
       $fiscal_year = $this->Common_model->get_current_fiscal_year();
       $this->data['fiscal_year'] = $fiscal_year->fiscal_year_name;
-
+      // dd($_POST);
       //Validation
       $this->form_validation->set_rules('title', 'title','required|trim|max_length[255]');
       //Validate and input data
@@ -70,6 +70,13 @@ class My_requisition extends Backend_Controller {
             $urgent_status = 1;
          }
 
+         $sl = $this->db->order_by('id', 'desc')->limit(1)->get('item_requisitions')->row();
+         if (!$sl) {
+            $sl = '00000001';
+         } else {
+            $sl = sprintf('%08d', $sl->pin_code + 1);
+         }
+
          $form_data = array(
             'unit_id'       => $user->unit_id,
             'user_id'       => $user->id,
@@ -77,14 +84,14 @@ class My_requisition extends Backend_Controller {
             'title'         => $this->input->post('title'),
             'status'        => $status,
             'desk_id'       => $desk_id,
-            'pin_code'      => mt_rand(1000, 9999),
+            'pin_code'      => $sl,
             'f_year_id'     => $fiscal_year->id,
             'created_at'    => date('Y-m-d H:i:s'),
             'updated_at'    => date('Y-m-d H:i:s'),
             'is_delivered'  => 1,
             'urgent_status' => $urgent_status,
             'attachment'    => $attachmentname,
-            'remark'        => $this->input->post('remark'),
+            'description'   => $this->input->post('description'),
          );
 
          if($this->Common_model->save('item_requisitions', $form_data)){
@@ -134,10 +141,10 @@ class My_requisition extends Backend_Controller {
       if ($this->form_validation->run() == true){
          $user = $this->ion_auth->user()->row();
          $form_data = array(
-            'status'  => $this->input->post('status'),
-            'remark'  => $this->input->post('remark'),
-            'desk_id' => ($this->input->post('status') == 1)? 1:2,
-            'updated_at' => date('Y-m-d H:i:s'),
+            'status'       => $this->input->post('status'),
+            'description'  => $this->input->post('description'),
+            'desk_id'      => ($this->input->post('status') == 1)? 1:2,
+            'updated_at'   => date('Y-m-d H:i:s'),
          );
 
          $this->db->where('id', $id);

@@ -44,24 +44,18 @@
                             <?php
                                 $status = '<span class="label label-secondary">Draft</span>';
                                 if ($info->status == 2) {
-                                    $status = '<span class="label label-warning">On process</span>';
-                                }else if($info->status == 3){
-                                    $status = '<span class="label label-primary">Forward SM</span>';
-                                }else if($info->status == 4){
-                                    $status = '<span class="label label-info">Back User From JD</span>';
-                                }else if($info->status == 5){
-                                    $status = '<span class="label label-info">Back User From DG</span>';
-                                }else if($info->status == 6){
-                                    $status = '<span class="label label-blueviolet">Approve JD</span>';
-                                }else if($info->status == 7){
-                                    $status = '<span class="label label-warning">Back JD From DG</span>';
-                                }else if($info->status == 8){
-                                    $status = '<span class="label label-success">DG Approve</span>';
-                                }else if($info->status == 9){
-                                    $status = '<span class="label label-important">Rejected</span>';
-                                }else if($info->status == 10){
-                                    $status = '<span class="label label-primary">Delivery </span>';
-                                }
+                                 $status = '<span class="label label-warning">On process</span>';
+                              }else if($info->status == 3){
+                                 $status = '<span class="label label-primary">Approve SM</span>';
+                              }else if($info->status == 4){
+                                 $status = '<span class="label label-info">Back User From DO</span>';
+                              }else if($info->status == 5){
+                                 $status = '<span class="label label-info">Approve DO</span>';
+                              }else if($info->status == 6){
+                                 $status = '<span class="label label-primary">Received </span>';
+                              }else if($info->status == 7){
+                                 $status = '<span class="label label-danger">Rejected</span>';
+                              }
                             ?>
 
                            <div class="row">
@@ -94,8 +88,8 @@
                      <?php if($this->ion_auth->in_group(array('sm'))) { ?>
                      <div class="col-md-6" style="margin-bottom: 20px;: ">
                         <label class="form-label">Status Type <span class='required'>*</span></label>
-                        <input type="radio" name="status" value="10" <?=$info->status=='8'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Delivery</strong></span>
-                        <input type="radio" name="status" value="8"> <span style="color: black; font-size: 14px;"><strong>Hold</strong></span>
+                        <input type="radio" name="status" value="6" <?=$info->status=='8'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Delivery</strong></span>
+                        <input type="radio" name="status" value="5"> <span style="color: black; font-size: 14px;"><strong>Hold</strong></span>
                         <div id="typeerror"></div>
                      </div>
                      <?php } ?>
@@ -103,9 +97,8 @@
                      <?php if($this->ion_auth->in_group(array('dg'))) { ?>
                      <div class="col-md-6" style="margin-bottom: 20px;: ">
                         <label class="form-label">Status Type <span class='required'>*</span></label>
-                        <input type="radio" name="status" value="7" <?=$info->status=='6'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Back To JD</strong></span>
-                        <input type="radio" name="status" value="8" checked> <span style="color: black; font-size: 14px;"><strong>Approved</strong></span>
-                        <input type="radio" name="status" value="9" <?=$info->status=='8'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
+                        <input type="radio" name="status" value="5" checked> <span style="color: black; font-size: 14px;"><strong>Approved</strong></span>
+                        <input type="radio" name="status" value="7" <?=$info->status=='7'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
                         <div id="typeerror"></div>
                      </div>
                      <?php } ?>
@@ -148,8 +141,8 @@
                         </fieldset>
                      </div>
                      <div class="col-md-12">
-                        <label for=""> Remark </label>
-                        <textarea name="remark" id="remark" class="form-control input-sm" rows="3" ><?=$info->remark?></textarea>
+                        <label for=""> Description </label>
+                        <textarea name="description" class="form-control input-sm" rows="3" ><?=$info->description?></textarea>
                      </div>
                      <div class="col-md-12">
                         <div class="pull-right">

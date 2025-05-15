@@ -38,24 +38,18 @@
                                 foreach ($results as $row): $sl++;
                                 $status = '<span class="label label-secondary">Draft</span>';
                                 if ($row->status == 2) {
-                                        $status = '<span class="label label-warning">On process</span>';
-                                }else if($row->status == 3){
-                                        $status = '<span class="label label-primary">Forward SM</span>';
-                                }else if($row->status == 4){
-                                        $status = '<span class="label label-info">Back User From JD</span>';
-                                }else if($row->status == 5){
-                                        $status = '<span class="label label-info">Back User From DG</span>';
-                                }else if($row->status == 6){
-                                        $status = '<span class="label label-blueviolet">Approve JD</span>';
-                                }else if($row->status == 7){
-                                        $status = '<span class="label label-warning">Back JD From DG</span>';
-                                }else if($row->status == 8){
-                                        $status = '<span class="label label-success">DG Approve</span>';
-                                }else if($row->status == 9){
-                                        $status = '<span class="label label-important">Rejected</span>';
-                                }else if($row->status == 10){
-                                        $status = '<span class="label label-primary">Delivery </span>';
-                                }
+                                    $status = '<span class="label label-warning">On process</span>';
+                                 }else if($row->status == 3){
+                                    $status = '<span class="label label-primary">SM Approve</span>';
+                                 }else if($row->status == 4){
+                                    $status = '<span class="label label-info">Back User From DO</span>';
+                                 }else if($row->status == 5){
+                                    $status = '<span class="label label-info">Approve DO</span>';
+                                 }else if($row->status == 6){
+                                    $status = '<span class="label label-primary">Delivered </span>';
+                                 }else if($row->status == 7){
+                                    $status = '<span class="label label-danger">Rejected</span>';
+                                 }
                             ?>
 
                             <?php
@@ -85,19 +79,15 @@
                                     <div class="btn-group">
                                         <a class="btn btn-success dropdown-toggle btn-mini" data-toggle="dropdown" href="#"> Action <span class="caret"></span> </a>
                                         <ul class="dropdown-menu pull-right">
-                                            <?php if($this->ion_auth->in_group(array('badmin','sm'))&& $row->status==2){ ?>
+                                            <?php if($this->ion_auth->in_group(array('admin','sm'))&& $row->status==2){ ?>
                                             <li><a href="<?=base_url('requisition/ap_status/'.$row->id)?>"> Approval</a> </li>
                                             <?php } ?>
 
-                                            <?php if($this->ion_auth->in_group(array('badmin','jd'))&&in_array($row->status,array(3,7))){ ?>
+                                            <?php if($this->ion_auth->in_group(array('admin','do'))&& $row->status==3){ ?>
                                             <li><a href="<?=base_url('requisition/ap_status/'.$row->id)?>"> Approval</a> </li>
                                             <?php } ?>
 
-                                            <?php if($this->ion_auth->in_group(array('badmin','dg'))&& $row->status==6){ ?>
-                                            <li><a href="<?=base_url('requisition/ap_status/'.$row->id)?>"> Approval</a> </li>
-                                            <?php } ?>
-
-                                            <?php if($this->ion_auth->in_group(array('badmin','sm'))&& $row->status==8){ ?>
+                                            <?php if($this->ion_auth->in_group(array('admin','sm'))&& $row->status==5){ ?>
                                             <li><a href="<?=base_url('requisition/received/'.$row->id)?>"> Delivery</a> </li>
                                             <?php } ?>
 

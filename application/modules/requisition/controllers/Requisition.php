@@ -36,10 +36,8 @@ class Requisition extends Backend_Controller
     {
         $limit = 25;
         $status = array();
-        if($this->ion_auth->in_group(array('dg'))){
-            $status = array(6);
-        } else if ($this->ion_auth->in_group(array('jd'))) {
-            $status = array(3,5,7);
+        if($this->ion_auth->in_group(array('do'))){
+            $status = array(3);
         } else {
             $status = array(2);
         }
@@ -56,12 +54,10 @@ class Requisition extends Backend_Controller
     {
         $limit = 25;
         $status = array();
-        if($this->ion_auth->in_group(array('dg'))){
-            $status = array(8);
-        } else if ($this->ion_auth->in_group(array('jd'))) {
-            $status = array(6);
+        if($this->ion_auth->in_group(array('do'))){
+            $status = array(5);
         } else {
-            $status = array(3,8);
+            $status = array(3,5);
         }
         $results = $this->Requisition_model->get_requisition($limit, $offset, $status);
         $this->data['results'] = $results['rows'];
@@ -76,7 +72,7 @@ class Requisition extends Backend_Controller
     public function delivered_list($offset = 0)
     {
         $limit = 25;
-        $status = array(10);
+        $status = array(6);
         $results = $this->Requisition_model->get_requisition($limit, $offset, $status);
         $this->data['results'] = $results['rows'];
         $this->data['total_rows'] = $results['num_rows'];
@@ -92,7 +88,7 @@ class Requisition extends Backend_Controller
     public function rejected_list($offset = 0)
     {
         $limit = 25;
-        $status = array(9);
+        $status = array(7);
         $results = $this->Requisition_model->get_requisition($limit, $offset, $status);
         $this->data['results'] = $results['rows'];
         $this->data['total_rows'] = $results['num_rows'];
@@ -125,7 +121,7 @@ class Requisition extends Backend_Controller
             $form_data = array(
                 'desk_id'      => $desk_id,
                 'status'       => $_POST['status'],
-                'remark'       => $_POST['remark'],
+                'description'  => $_POST['description'],
                 'updated_at'   => date('Y-m-d H:i:s'),
             );
             if ($this->ion_auth->in_group(array('jd'))) {
@@ -157,8 +153,8 @@ class Requisition extends Backend_Controller
         $this->db->from('item_requisition_details ri');
         $this->db->join('items i', 'i.id = ri.item_id');
         $this->db->join('item_unit iu', 'iu.id = i.unit_id');
-        $this->db->join('categories c', 'c.id = i.cat_id');
-        $this->db->join('sub_categories sc', 'sc.id = i.sub_cat_id');
+        $this->db->join('item_categories c', 'c.id = i.cat_id');
+        $this->db->join('item_sub_categories sc', 'sc.id = i.sub_cat_id');
         $this->db->where('requisition_id', $id);
         $this->data['purchase_item_data'] = $this->db->get()->result();
         $this->data['meta_title'] = 'Requisition Approve Form';
@@ -174,8 +170,8 @@ class Requisition extends Backend_Controller
         $this->db->from('item_requisition_details ri');
         $this->db->join('items i', 'i.id = ri.item_id');
         $this->db->join('item_unit iu', 'iu.id = i.unit_id');
-        $this->db->join('categories c', 'c.id = i.cat_id');
-        $this->db->join('sub_categories sc', 'sc.id = i.sub_cat_id');
+        $this->db->join('item_categories c', 'c.id = i.cat_id');
+        $this->db->join('item_sub_categories sc', 'sc.id = i.sub_cat_id');
         $this->db->where('requisition_id', $id);
         $this->data['purchase_item_data'] = $this->db->get()->result();
         $this->data['meta_title'] = 'Requisition Delivery Form';
@@ -189,7 +185,7 @@ class Requisition extends Backend_Controller
             show_404('requisition - delivery_product - exitsts', true);
         }
 
-        if ($_POST['status'] == 10) {
+        if ($_POST['status'] == 6) {
             $unit_id = $info->unit_id;
             $this->db->trans_start();
             for ($i=0; $i<sizeof($_POST['hide_id']); $i++) {
@@ -222,9 +218,9 @@ class Requisition extends Backend_Controller
                     redirect("requisition/approve_list");
                 }
             }
-            
+
             $form_data2 = array(
-                'status'       => 10,
+                'status'       => 6,
                 'is_delivered' => 2,
                 'updated_at'   => date('Y-m-d H:i:s'),
             );
@@ -236,6 +232,9 @@ class Requisition extends Backend_Controller
             } else {
                 $this->session->set_flashdata('success', 'Product delivery successfully.');
             }
+            redirect("requisition/approve_list");
+        } else {
+            $this->data['info'] = $info;
             redirect("requisition/approve_list");
         }
 

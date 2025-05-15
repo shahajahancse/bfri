@@ -166,23 +166,20 @@
 
                                 <?php
                                     if ($this->ion_auth->in_group(array('sm'))) {
-                                       $nt = $rev_ntfy->sm + $rev_ntfy->apv;
-                                    } elseif ($this->ion_auth->in_group(array('jd'))) {
-                                       $nt = $rev_ntfy->jd + $rev_ntfy->jd1;
-                                    } elseif ($this->ion_auth->in_group(array('dg'))) {
-                                       $nt = $rev_ntfy->dg;
+                                       $nt = $req_ntfy->sm + $req_ntfy->apv;
+                                    } elseif ($this->ion_auth->in_group(array('do'))) {
+                                       $nt = $req_ntfy->do;
                                     } else {
                                        $nt = 0;
                                     }
                                 ?>
 
-                                <?php if($this->ion_auth->in_group(array('admin','badmin','sm','jd','dg'))){ ?>
+                                <?php if($this->ion_auth->in_group(array('admin','do','sm'))){ ?>
                                 <li class="start <?=backend_activate_menu_class('requisition')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Requisition</span> <span class="selected"></span> <span class="badge badge-danger pull-right"><?=$nt?></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
-                                        <!-- <li> <a href="<?=base_url('requisition');?>"> Requisition List </a> </li> -->
                                         <?php if ($this->ion_auth->in_group(array('sm'))) { ?>
-                                        <li> <a href="<?=base_url('requisition/request_list');?>">Pending  List <span class="badge badge-danger"><?=$rev_ntfy->sm?></span></a></li>
-                                        <li> <a href="<?=base_url('requisition/approve_list');?>">Approved List <span class="badge badge-danger"><?=$rev_ntfy->apv?></span></a> </li>
+                                        <li> <a href="<?=base_url('requisition/request_list');?>">Pending  List <span class="badge badge-danger"><?=$req_ntfy->sm?></span></a></li>
+                                        <li> <a href="<?=base_url('requisition/approve_list');?>">Approved List <span class="badge badge-danger"><?=$req_ntfy->apv?></span></a> </li>
                                         <?php } else { ?>
                                         <li> <a href="<?=base_url('requisition/request_list');?>">Pending  List <span class="badge badge-danger"><?=$nt?></span></a></li>
                                         <li> <a href="<?=base_url('requisition/approve_list');?>">Approved List </a> </li>

@@ -44,19 +44,19 @@
                            <?php
                               $status = '<span class="label label-secondary">Pending</span>';
                               if ($info->status == 2) {
-                                    $status = '<span class="label label-warning">On process</span>';
+                                 $status = '<span class="label label-warning">On process</span>';
                               }else if($info->status == 3){
-                                    $status = '<span class="label label-primary">Back SM From JD</span>';
+                                 $status = '<span class="label label-primary">SM Approve</span>';
                               }else if($info->status == 4){
-                                    $status = '<span class="label label-info">Back SM From DG</span>';
+                                 $status = '<span class="label label-info">Back User From DO</span>';
                               }else if($info->status == 5){
-                                    $status = '<span class="label label-blueviolet">Approve JD</span>';
+                                 $status = '<span class="label label-blueviolet">Approve</span>';
                               }else if($info->status == 6){
-                                    $status = '<span class="label label-warning">Back JD From DG</span>';
+                                 $status = '<span class="label label-primary">Delivered</span>';
                               }else if($info->status == 7){
-                                    $status = '<span class="label label-success">Approve DG</span>';
-                              }else if($info->status == 8){
-                                    $status = '<span class="label label-important">Rejected</span>';
+                                 $status = '<span class="label label-danger">Rejected</span>';
+                              } else {
+                                 $status = '<span class="label label-secondary">Draft/Delete</span>';
                               }
                            ?>
 
@@ -90,28 +90,18 @@
                      <?php if($this->ion_auth->in_group(array('sm'))) { ?>
                      <div class="col-md-6" style="margin-bottom: 20px;: ">
                         <label class="form-label">Status Type <span class='required'>*</span></label>
-                        <input type="radio" name="status" value="3" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Forward To Join Director</strong></span>
-                        <input type="radio" name="status" value="9" <?=$info->status=='3'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
+                        <input type="radio" name="status" value="3" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Forward To DO &nbsp;</strong></span>
+                        <input type="radio" name="status" value="7" <?=$info->status=='7'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
                         <div id="typeerror"></div>
                      </div>
                      <?php } ?>
 
-                     <?php if($this->ion_auth->in_group(array('jd'))) { ?>
+                     <?php if($this->ion_auth->in_group(array('do'))) { ?>
                      <div class="col-md-6" style="margin-bottom: 20px;: ">
                         <label class="form-label">Status Type <span class='required'>*</span></label>
-                        <input type="radio" name="status" value="4" <?=$info->status=='3'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Back To User</strong></span>
-                        <input type="radio" name="status" value="6" checked> <span style="color: black; font-size: 14px;"><strong>Forward To DG</strong></span>
-                        <input type="radio" name="status" value="9" <?=$info->status=='6'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
-                        <div id="typeerror"></div>
-                     </div>
-                     <?php } ?>
-
-                     <?php if($this->ion_auth->in_group(array('dg'))) { ?>
-                     <div class="col-md-6" style="margin-bottom: 20px;: ">
-                        <label class="form-label">Status Type <span class='required'>*</span></label>
-                        <input type="radio" name="status" value="7" <?=$info->status=='6'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Back To JD</strong></span>
-                        <input type="radio" name="status" value="8" checked> <span style="color: black; font-size: 14px;"><strong>Approved</strong></span>
-                        <input type="radio" name="status" value="9" <?=$info->status=='8'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
+                        <input type="radio" name="status" value="5" <?=$info->status=='3'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Approved</strong></span>
+                        <input type="radio" name="status" value="4" <?=$info->status=='4'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Back To user</strong></span>
+                        <input type="radio" name="status" value="7" <?=$info->status=='7'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
                         <div id="typeerror"></div>
                      </div>
                      <?php } ?>
@@ -151,8 +141,8 @@
                         </fieldset>
                      </div>
                      <div class="col-md-12">
-                        <label for=""> Remark </label>
-                        <textarea name="remark" id="remark" class="form-control input-sm" rows="3" ><?=$info->remark?></textarea>
+                        <label for=""> Description </label>
+                        <textarea name="description" class="form-control input-sm" rows="3" ><?=$info->description?></textarea>
                      </div>
                      <div class="col-md-12">
                         <div class="pull-right">

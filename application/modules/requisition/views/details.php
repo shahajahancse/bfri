@@ -35,21 +35,15 @@
                      if ($info->status == 2) {
                         $status = '<span class="label label-warning">On process</span>';
                      }else if($info->status == 3){
-                        $status = '<span class="label label-primary">Forward SM</span>';
+                        $status = '<span class="label label-primary">Approve SM</span>';
                      }else if($info->status == 4){
-                        $status = '<span class="label label-info">Back User From JD</span>';
+                        $status = '<span class="label label-info">Back User From DO</span>';
                      }else if($info->status == 5){
-                        $status = '<span class="label label-info">Back User From DG</span>';
+                        $status = '<span class="label label-primary">Approve DO</span>';
                      }else if($info->status == 6){
-                        $status = '<span class="label label-blueviolet">Approve JD</span>';
-                     }else if($info->status == 7){
-                        $status = '<span class="label label-warning">Back JD From DG</span>';
-                     }else if($info->status == 8){
-                        $status = '<span class="label label-success">DG Approve</span>';
-                     }else if($info->status == 9){
-                        $status = '<span class="label label-important">Rejected</span>';
-                     }else if($info->status == 10){
                         $status = '<span class="label label-primary">Delivered </span>';
+                     }else if($info->status == 7){
+                        $status = '<span class="label label-danger">Rejected</span>';
                      }
                   ?>
 
@@ -107,8 +101,8 @@
                         </fieldset>
                      </div>
                      <div class="col-md-12">
-                        <label for=""> Remark </label>
-                        <p class="form-control input-sm" ><?=$info->remark?></p>
+                        <label for=""> Description </label>
+                        <p class="form-control input-sm" ><?=$info->description?></p>
                      </div>
                      <div class="col-md-12">
                         <div class="pull-right">

@@ -20,11 +20,11 @@ class Backend_Controller extends MY_Controller{
       	$this->data['userDetails'] = $this->Common_model->get_user_details();
 
 		$this->data['user_ntfy'] = 0;
-		$this->data['rev_ntfy'] = 0;
+		$this->data['req_ntfy'] = 0;
 		$this->data['per_ntfy'] = 0;
 		if ($this->ion_auth->logged_in()) {
 			$this->data['user_ntfy'] = $this->Common_model->user_ntfy($this->userSessID);
-			$this->data['rev_ntfy'] = $this->Common_model->rev_ntfy();
+			$this->data['req_ntfy'] = $this->Common_model->req_ntfy();
 			$this->data['per_ntfy'] = $this->Common_model->per_ntfy();
 		}
     }

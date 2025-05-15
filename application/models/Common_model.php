@@ -11,43 +11,23 @@ class Common_model extends CI_Model {
       $this->db->select("
          COUNT(CASE WHEN status = 4 THEN 1 END) AS user,
          COUNT(CASE WHEN status = 5 THEN 1 END) AS user1,
-         COUNT(CASE WHEN status = 8 THEN 1 END) AS user2,
       ");
       $this->db->where('user_id', $user_id);
       $row = $this->db->get('item_requisitions')->row();
       if (!empty($row)) {
-         return $row->user + $row->user1 + $row->user2;
+         return $row->user + $row->user1;
       }
       return 0;
    }
 
-   public function rev_ntfy()
+   public function req_ntfy()
    {
       $this->db->select("
          COUNT(CASE WHEN status = 2 THEN 1 END) AS sm,
-         COUNT(CASE WHEN status = 8 THEN 1 END) AS apv,
-
-         COUNT(CASE WHEN status = 6 THEN 1 END) AS dg,
-
-         COUNT(CASE WHEN status = 3 THEN 1 END) AS jd,
-         COUNT(CASE WHEN status = 7 THEN 1 END) AS jd1,
-
+         COUNT(CASE WHEN status = 5 THEN 1 END) AS apv,
+         COUNT(CASE WHEN status = 3 THEN 1 END) AS do,
       ");
       $row = $this->db->get('item_requisitions')->row();
-
-      // if ($this->ion_auth->in_group(array('sm'))) {
-      //    $nt = $row->sm + $row->apv;
-      // } elseif ($this->ion_auth->in_group(array('user'))) {
-      //    $nt = $row->user + $row->user1 + $row->apv;
-      // } elseif ($this->ion_auth->in_group(array('jd'))) {
-      //    $nt = $row->jd + $row->jd1;
-      // } elseif ($this->ion_auth->in_group(array('dg'))) {
-      //    $nt = $row->dg;
-      // } elseif ($this->ion_auth->in_group(array('badmin'))) {
-      //    $nt = $row->sm + $row->user + $row->user1 + $row->jd + $row->jd1 + $row->dg;
-      // } else {
-      //    $nt = 0;
-      // }
       return $row;
    }
 
@@ -121,9 +101,9 @@ class Common_model extends CI_Model {
    }
 
    public function get_sub_category_by_cate_id($id){
-      $data['0'] = '-Select Sub Category-';
+      $data = array();
       $this->db->select('id, sub_cate_name');
-      $this->db->from('sub_categories');
+      $this->db->from('item_sub_categories');
       $this->db->where('cate_id', $id);
       $query = $this->db->get()->result();
       foreach ($query AS $rows) {

@@ -24,7 +24,9 @@
             <div class="grid simple horizontal">
                 <div class="grid-title">
                     <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
-                    <div class="pull-right"> </div>
+                    <div class="pull-right">
+                     <a href="<?=base_url('my_requisition')?>" class="btn btn-blueviolet btn-xs btn-mini">Requisition List</a>
+                    </div>
                 </div>
 
                 <div class="grid-body">
@@ -49,21 +51,15 @@
                                 if ($info->status == 2) {
                                     $status = '<span class="label label-warning">On process</span>';
                                 }else if($info->status == 3){
-                                    $status = '<span class="label label-primary">Forward SM</span>';
+                                    $status = '<span class="label label-primary">SM Approve</span>';
                                 }else if($info->status == 4){
-                                    $status = '<span class="label label-info">Back User From JD</span>';
+                                    $status = '<span class="label label-info">Back User From DO</span>';
                                 }else if($info->status == 5){
-                                    $status = '<span class="label label-info">Back User From DG</span>';
+                                    $status = '<span class="label label-success">DO Approve</span>';
                                 }else if($info->status == 6){
-                                    $status = '<span class="label label-blueviolet">Approve JD</span>';
-                                }else if($info->status == 7){
-                                    $status = '<span class="label label-warning">Back JD From DG</span>';
-                                }else if($info->status == 8){
-                                    $status = '<span class="label label-success">DG Approve</span>';
-                                }else if($info->status == 9){
-                                    $status = '<span class="label label-important">Rejected</span>';
-                                }else if($info->status == 10){
                                     $status = '<span class="label label-primary">Delivery </span>';
+                                }else if($info->status == 7){
+                                    $status = '<span class="label label-important">Rejected</span>';
                                 }
                             ?>
 
@@ -96,8 +92,8 @@
                         <div class="col-md-9" style="margin-bottom: 20px;: ">
                         <label class="form-label">Status Type <span class='required'>*</span></label>
                         <input type="radio" name="status" value="1" <?=$info->status=='1'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Draft</strong></span>
-                        <?php if($this->ion_auth->in_group(array('sm')) && $row->status == 1){ ?>
-                        <input type="radio" name="status" value="3" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Forward Join Director</strong></span>
+                        <?php if($this->ion_auth->in_group(array('sm')) && $row->status == 2){ ?>
+                        <input type="radio" name="status" value="3" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Forward Director</strong></span>
                         <?php } else { ?>
                             <input type="radio" name="status" value="2" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Forward Store Keeper</strong></span>
                         <?php } ?>
@@ -142,8 +138,8 @@
                         </fieldset>
                         </div>
                         <div class="col-md-12">
-                        <label for=""> Remark </label>
-                        <textarea name="remark" class="form-control input-sm" rows="3" ><?=$info->remark?></textarea>
+                        <label for=""> Description </label>
+                        <textarea name="description" class="form-control input-sm" rows="3" ><?=$info->description?></textarea>
                         </div>
                         <div class="col-md-12">
                             <div class="pull-right">

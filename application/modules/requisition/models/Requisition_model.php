@@ -84,8 +84,8 @@ class Requisition_model extends CI_Model {
       $this->db->from('item_requisition_details ri');
       $this->db->join('items i', 'i.id = ri.item_id', 'LEFT');
       $this->db->join('item_unit iu', 'iu.id = i.unit_id', 'LEFT');
-      $this->db->join('categories c', 'c.id = i.cat_id', 'LEFT');
-      $this->db->join('sub_categories sc', 'sc.id = i.sub_cat_id', 'LEFT');
+      $this->db->join('item_categories c', 'c.id = i.cat_id', 'LEFT');
+      $this->db->join('item_sub_categories sc', 'sc.id = i.sub_cat_id', 'LEFT');
       $this->db->where('ri.requisition_id', $id);
       $query = $this->db->get()->result();
 
