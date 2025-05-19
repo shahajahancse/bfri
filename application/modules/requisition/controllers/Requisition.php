@@ -194,8 +194,8 @@ class Requisition extends Backend_Controller
                 $row = $this->db->where('unit_id', $unit_id)->where('item_id', $item_id)->get('item_stocks')->row();
                 if ($row->balance >= $qty_approve) {
                     $form_data = array(
-                        'balance'    => $row->balance - $qty_approve,
                         'stock_out'  => $row->stock_out + $qty_approve,
+                        'balance'    => $row->balance - $qty_approve,
                         'updated_by' => $info->user_id,
                         'updated_at' => date('Y-m-d H:i:s'),
                     );

@@ -34,15 +34,14 @@ class Common_model extends CI_Model {
    public function per_ntfy()
    {
       $this->db->select("
-         COUNT(CASE WHEN status = 3 THEN 1 END) AS sm,
-         COUNT(CASE WHEN status = 4 THEN 1 END) AS sm1,
-         COUNT(CASE WHEN status = 7 THEN 1 END) AS apv,
+         COUNT(CASE WHEN status = 8 THEN 1 END) AS sm,
+         COUNT(CASE WHEN status = 5 THEN 1 END) AS sm1,
+         COUNT(CASE WHEN status = 4 THEN 1 END) AS sm2,
 
-         COUNT(CASE WHEN status = 5 THEN 1 END) AS dg,
+         COUNT(CASE WHEN status = 2 THEN 1 END) AS do,
+         COUNT(CASE WHEN status = 8 THEN 1 END) AS do1,
 
-         COUNT(CASE WHEN status = 2 THEN 1 END) AS jd,
-         COUNT(CASE WHEN status = 6 THEN 1 END) AS jd1,
-
+         COUNT(CASE WHEN status = 3 THEN 1 END) AS dg,
       ");
       $row = $this->db->get('item_purchases')->row();
       return $row;

@@ -39,7 +39,7 @@
                            <th style="width:20%">Item Name</th>
                            <th style="width:8%">Quantity</th>
                            <th style="width:10%">Order Level</th>
-                           <th style="width:8%">Status</th>
+                           <!-- <th style="width:8%">Status</th> -->
                            <th style="width:12%" class="text-center">Action</th>
                         </tr>
                      </thead>
@@ -63,7 +63,7 @@
                               <td class="v-align-middle"><strong><?=$row->item_name?></strong></td>
                               <td class="v-align-middle"><?=($row->balance)? $row->balance:0?></td>
                               <td class="v-align-middle"><?=$row->order_level?></td>
-                              <td class="v-align-middle"><?=$status?></td>
+                              <!-- <td class="v-align-middle"><?=$status?></td> -->
                               <td class="text-center">
                                  <a href="<?=base_url('items/stock_details/'.encrypt_url($row->id));?>" class="btn btn-info btn-xs btn-mini">Details</a>
                               </td>

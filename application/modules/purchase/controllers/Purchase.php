@@ -19,10 +19,10 @@ class Purchase extends Backend_Controller {
       $limit = 25;
       //Results
       $status = array();
-      if($this->ion_auth->in_group(array('dg'))){
-         $status = array(3,4,5,6,7,8,9);
-      } else if ($this->ion_auth->in_group(array('jd'))) {
+      if($this->ion_auth->in_group(array('do'))){
          $status = array(2,3,4,5,6,7,8,9);
+      } else if ($this->ion_auth->in_group(array('admin'))) {
+         $status = array(3,5,6,7,8,9);
       } else {
          $status = array(1,2,3,4,5,6,7,8,9);
       }
@@ -41,12 +41,12 @@ class Purchase extends Backend_Controller {
    public function purchase_pending($offset=0){
       $limit = 25;
       $status = array();
-      if($this->ion_auth->in_group(array('dg'))){
-         $status = array(5);
-      } else if ($this->ion_auth->in_group(array('jd'))) {
-         $status = array(2,6);
+      if($this->ion_auth->in_group(array('do'))){
+         $status = array(2,8);
+      } else if ($this->ion_auth->in_group(array('admin'))) {
+         $status = array(3);
       } else {
-         $status = array(1,3,4);
+         $status = array(1,4,8);
       }
       $results = $this->Purchase_model->get_purchase($limit, $offset, $status);
       $this->data['results'] = $results['rows'];
@@ -59,7 +59,15 @@ class Purchase extends Backend_Controller {
    }
    public function purchase_approved($offset=0){
       $limit = 25;
-      $results = $this->Purchase_model->get_purchase($limit, $offset, 7);
+      $status = array();
+      if($this->ion_auth->in_group(array('do'))){
+         $status = array(3,5);
+      } else if ($this->ion_auth->in_group(array('admin'))) {
+         $status = array(5);
+      } else {
+         $status = array(5);
+      }
+      $results = $this->Purchase_model->get_purchase($limit, $offset, $status);
       $this->data['results'] = $results['rows'];
       $this->data['total_rows'] = $results['num_rows'];
 
@@ -68,9 +76,10 @@ class Purchase extends Backend_Controller {
       $this->data['subview'] = 'index';
       $this->load->view('backend/_layout_main', $this->data);
    }
+
    public function purchase_rejected($offset=0){
       $limit = 25;
-      $results = $this->Purchase_model->get_purchase($limit, $offset, 8);
+      $results = $this->Purchase_model->get_purchase($limit, $offset, 7);
       $this->data['results'] = $results['rows'];
       $this->data['total_rows'] = $results['num_rows'];
 
@@ -81,7 +90,7 @@ class Purchase extends Backend_Controller {
    }
    public function purchase_received($offset=0){
       $limit = 25;
-      $results = $this->Purchase_model->get_purchase($limit, $offset , 9);
+      $results = $this->Purchase_model->get_purchase($limit, $offset , 6);
       $this->data['results'] = $results['rows'];
       $this->data['total_rows'] = $results['num_rows'];
 
@@ -131,8 +140,10 @@ class Purchase extends Backend_Controller {
             'desk_id'         => 1,
             'status'          => 1,
             'is_received'     => 1,
+            'description'     => $this->input->post('description'),
             'created_by'      => $user->id,
             'created_at'       => date('Y-m-d H:i:s'),
+            'updated_at'       => date('Y-m-d H:i:s'),
             'attachment'      => $attachmentname
          );
 
@@ -172,8 +183,8 @@ class Purchase extends Backend_Controller {
       $this->db->from('item_purchase_details ri');
       $this->db->join('items i', 'i.id = ri.pur_item_id');
       $this->db->join('item_unit iu', 'iu.id = i.unit_id');
-      $this->db->join('categories c', 'c.id = i.cat_id');
-      $this->db->join('sub_categories sc', 'sc.id = i.sub_cat_id');
+      $this->db->join('item_categories c', 'c.id = i.cat_id');
+      $this->db->join('item_sub_categories sc', 'sc.id = i.sub_cat_id');
       $this->db->where('purchase_id', $id);
       $this->data['purchase_item_data'] = $this->db->get()->result();
 
@@ -185,7 +196,8 @@ class Purchase extends Backend_Controller {
       $form_data = array(
          'desk_id'      => $_POST['status'] == 2 ? 2:1,
          'status'       => $_POST['status'],
-         'remark'       => $_POST['remark'],
+         'updated_at'   => date('Y-m-d H:i:s'),
+         'description'  => $_POST['description'],
       );
       $this->db->where('id', $id);
       if ($this->db->update('item_purchases', $form_data)) {
@@ -214,8 +226,8 @@ class Purchase extends Backend_Controller {
       $this->db->from('item_purchase_details ri');
       $this->db->join('items i', 'i.id = ri.pur_item_id');
       $this->db->join('item_unit iu', 'iu.id = i.unit_id');
-      $this->db->join('categories c', 'c.id = i.cat_id');
-      $this->db->join('sub_categories sc', 'sc.id = i.sub_cat_id');
+      $this->db->join('item_categories c', 'c.id = i.cat_id');
+      $this->db->join('item_sub_categories sc', 'sc.id = i.sub_cat_id');
       $this->db->where('purchase_id', $id);
       $this->data['purchase_item_data'] = $this->db->get()->result();
 
@@ -235,8 +247,8 @@ class Purchase extends Backend_Controller {
       $this->db->from('item_purchase_details ri');
       $this->db->join('items i', 'i.id = ri.pur_item_id');
       $this->db->join('item_unit iu', 'iu.id = i.unit_id');
-      $this->db->join('categories c', 'c.id = i.cat_id');
-      $this->db->join('sub_categories sc', 'sc.id = i.sub_cat_id');
+      $this->db->join('item_categories c', 'c.id = i.cat_id');
+      $this->db->join('item_sub_categories sc', 'sc.id = i.sub_cat_id');
       $this->db->where('purchase_id', $id);
       $this->data['purchase_item_data'] = $this->db->get()->result();
       $this->data['meta_title'] = 'Purchase edit Form';
@@ -246,22 +258,18 @@ class Purchase extends Backend_Controller {
    public function change_status($id){
       $user = $this->ion_auth->user()->row();
       $desk_id = 1;
-      if($this->ion_auth->in_group(array('jd')) && $_POST['status'] == 5){
+      if($this->ion_auth->in_group(array('do')) && $_POST['status'] == 3){
          $desk_id = 3;
-      } else if ($this->ion_auth->in_group(array('dg')) && $_POST['status'] == 7) {
-        $desk_id = 4;
-      } else if ($this->ion_auth->in_group(array('dg')) && $_POST['status'] == 6) {
-         $desk_id = 2;
       }
 
       $form_data = array(
          'desk_id'      => $desk_id,
          'status'       => $_POST['status'],
-         'remark'       => $_POST['remark'],
+         'description'  => $_POST['description'],
          'updated_at'   => date('Y-m-d H:i:s'),
       );
-      if ($this->ion_auth->in_group(array('jd'))) {
-         $form_data['asst_id'] = $user->user_id;
+      if ($this->ion_auth->in_group(array('do'))) {
+         $form_data['do_id'] = $user->user_id;
       } else {
          $form_data['director_id'] = $user->user_id;
       }
@@ -284,7 +292,7 @@ class Purchase extends Backend_Controller {
 
       $form_data = array(
          'is_received'  => 2,
-         'status'       => 9,
+         'status'       => 6,
          'updated_at'   => date('Y-m-d H:i:s'),
       );
       $this->db->where('id', $id);
@@ -297,10 +305,11 @@ class Purchase extends Backend_Controller {
             $items = $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->pur_item_id)->get('item_stocks')->row();
             $aa = array(
                'stock_in'   => $items->stock_in + $p->pur_approve,
-               'balance'    => $items->stock_in + $p->pur_approve,
+               'balance'    => $items->balance + $p->pur_approve,
                'updated_by' => $user['user_id'],
                'updated_at' => date('Y-m-d H:i:s'),
             );
+
             $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->pur_item_id);
             $this->db->update('item_stocks',$aa);
             $dd = array(

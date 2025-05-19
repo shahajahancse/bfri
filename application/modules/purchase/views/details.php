@@ -35,24 +35,22 @@
                            <fieldset >
                               <legend>Purchase Information </legend>
                               <?php
-                                 $status = '<span class="label label-secondary">Pending</span>';
+                                 $status = '<span class="label label-secondary">Draft</span>';
                                  if ($info->status == 2) {
-                                       $status = '<span class="label label-warning">On process</span>';
-                                 }else if($info->status == 3){
-                                       $status = '<span class="label label-primary">Back SM From JD</span>';
-                                 }else if($info->status == 4){
-                                       $status = '<span class="label label-info">Back SM From DG</span>';
-                                 }else if($info->status == 5){
-                                       $status = '<span class="label label-blueviolet">Approve JD</span>';
-                                 }else if($info->status == 6){
-                                       $status = '<span class="label label-warning">Back JD From DG</span>';
-                                 }else if($info->status == 7){
-                                       $status = '<span class="label label-success">Approve DG</span>';
-                                 }else if($info->status == 8){
-                                       $status = '<span class="label label-important">Rejected</span>';
-                                 } else if($info->status == 9){
-                                       $status = '<span class="label label-success">Received </span>';
-                                 }
+                                    $status = '<span class="label label-warning">On process</span>';
+                                }else if($info->status == 3){
+                                    $status = '<span class="label label-success">DO Approve</span>';
+                                }else if($info->status == 4){
+                                    $status = '<span class="label label-info">Back SM From DO</span>';
+                                }else if($info->status == 5){
+                                    $status = '<span class="label label-primary">Director Approve</span>';
+                                }else if($info->status == 6){
+                                    $status = '<span class="label label-blueviolet">Received</span>';
+                                }else if($info->status == 7){
+                                    $status = '<span class="label label-important">Rejected</span>';
+                                }else if($info->status == 8){
+                                    $status = '<span class="label label-warning">Back DO/SM From Director</span>';
+                                }
                               ?>
 
                               <div class="row">
@@ -69,7 +67,7 @@
                                           <th class="tg-khup"> Created </th>
                                           <td class="tg-ywa9"><?=date('d-m-Y', strtotime($info->created_at)); ?></td>
                                           <th class="tg-khup"> Updated </th>
-                                          <td class="tg-ywa9"><?=date('d-m-Y', strtotime($info->updated_at)); ?></td>
+                                          <td class="tg-ywa9"><?= empty($info->updated_at) ? '' : date('d-m-Y', strtotime($info->updated_at)); ?></td>
                                        </tr>
                                     </table>
                                  </div>
@@ -110,8 +108,8 @@
                            </fieldset>
                         </div>
                         <div class="col-md-12">
-                           <label for=""> Remark </label>
-                           <p class="form-control input-sm" ><?=$info->remark?></p>
+                           <label for=""> Description </label>
+                           <p class="form-control input-sm" ><?=$info->description?></p>
                         </div>
                         <div class="col-md-12">
                            <div class="pull-right">

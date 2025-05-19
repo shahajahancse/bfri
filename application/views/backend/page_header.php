@@ -194,31 +194,30 @@
                                 <!-- Purchase section -->
                                 <?php
                                     if ($this->ion_auth->in_group(array('sm'))) {
-                                       $pn = $per_ntfy->sm + $per_ntfy->sm1 + $per_ntfy->apv;
-                                    } elseif ($this->ion_auth->in_group(array('jd'))) {
-                                       $pn = $per_ntfy->jd + $per_ntfy->jd1;
-                                    } elseif ($this->ion_auth->in_group(array('dg'))) {
+                                       $pn = $per_ntfy->sm + $per_ntfy->sm1 + $per_ntfy->sm2;
+                                    } elseif ($this->ion_auth->in_group(array('do'))) {
+                                       $pn = $per_ntfy->do + $per_ntfy->do1;
+                                    } else if ($this->ion_auth->in_group(array('admin'))) {
                                        $pn = $per_ntfy->dg;
                                     } else {
                                        $pn = 0;
                                     }
                                 ?>
-                                <?php if($this->ion_auth->in_group(array('admin','badmin','sm','jd','dg'))){ ?>
+                                <?php if($this->ion_auth->in_group(array('admin','sm','do'))){ ?>
                                 <li class="start <?=backend_activate_menu_class('purchase')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Purchase</span> <span class="selected"></span> <span class="badge badge-danger pull-right"><?=$pn?></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
-                                        <?php if($this->ion_auth->in_group(array('badmin','sm'))){ ?>
+                                        <?php if($this->ion_auth->in_group(array('sm'))){ ?>
                                         <li> <a href="<?=base_url('purchase/create');?>"> Create Purchase  </a> </li>
                                         <?php } ?>
                                         <li> <a href="<?=base_url('purchase');?>"> Purchase List </a> </li>
 
                                         <?php if($this->ion_auth->in_group(array('sm'))){ ?>
-                                        <li> <a href="<?=base_url('purchase/purchase_pending');?>">Pending List <span class="badge badge-danger"><?=$per_ntfy->sm + $per_ntfy->sm1;?></span></a> </li>
-                                        <li> <a href="<?=base_url('purchase/purchase_approved');?>">Approved List <span class="badge badge-danger"><?=$per_ntfy->apv;?></span></a> </li>
+                                        <li> <a href="<?=base_url('purchase/purchase_pending');?>">Pending List <span class="badge badge-danger"><?=$per_ntfy->sm + $per_ntfy->sm2;?></span></a> </li>
+                                        <li> <a href="<?=base_url('purchase/purchase_approved');?>">Approved List <span class="badge badge-danger"><?=$per_ntfy->sm1;?></span></a> </li>
                                         <?php } else { ?>
                                         <li> <a href="<?=base_url('purchase/purchase_pending');?>">Pending List <span class="badge badge-danger"><?=$pn?></span></a> </li>
                                         <li> <a href="<?=base_url('purchase/purchase_approved');?>">Approved List </a> </li>
                                         <?php } ?>
-
                                         <li> <a href="<?=base_url('purchase/purchase_rejected');?>">Rejected List </a> </li>
                                         <li> <a href="<?=base_url('purchase/purchase_received');?>">Received List </a> </li>
                                     </ul>

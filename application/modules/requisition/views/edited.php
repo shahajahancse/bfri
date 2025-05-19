@@ -90,7 +90,10 @@
                      <?php if($this->ion_auth->in_group(array('sm'))) { ?>
                      <div class="col-md-6" style="margin-bottom: 20px;: ">
                         <label class="form-label">Status Type <span class='required'>*</span></label>
+                        <input type="radio" name="status" value="2" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong> Draft &nbsp;</strong></span>
+
                         <input type="radio" name="status" value="3" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Forward To DO &nbsp;</strong></span>
+
                         <input type="radio" name="status" value="7" <?=$info->status=='7'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
                         <div id="typeerror"></div>
                      </div>
@@ -127,11 +130,13 @@
                                  <th width="20%">Remark</th>
                               </tr>
 
-                              <?php foreach($purchase_item_data as $item){ ?>
+                              <?php foreach($purchase_item_data as $item){
+                                 $qty_approve = $item->qty_approve == 0 ? $item->qty_request : $item->qty_approve;
+                              ?>
                               <tr>
                                  <td><?=$item->item_name?></td>
                                  <td><?=$item->qty_request?>  <?=$item->unit_name?></td>
-                                 <td><input name="qty_approve[]"  value="<?=$item->qty_approve?>" class="form-control input-sm"></td>
+                                 <td><input name="qty_approve[]"  value="<?=$qty_approve?>" class="form-control input-sm"></td>
                                  <td><?=$item->unit_name?></td>
                                  <td><?=$item->remark?></td>
                                  <input type="hidden" name="hide_id[]" value="<?=$item->id?>">

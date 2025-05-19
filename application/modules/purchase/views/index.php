@@ -31,7 +31,7 @@
                                     <th style="">Name</th>
                                     <th style="">Title Name</th>
                                     <th style="">Date</th>
-                                    <th style="">On Desk</th>
+                                    <!-- <th style="">On Desk</th> -->
                                     <th style="">Status</th>
                                     <th style="">Received Status</th>
                                     <th style="text-align: right;">Action</th>
@@ -50,28 +50,26 @@
                                         $desk_id = 'Back store';
                                     }
 
-                                    $status = '<span class="label label-secondary">Draft</span>';
+                                    $status = '<span class="label label-secondary"> Draft </span>';
                                     if ($row->status == 2) {
-                                        $status = '<span class="label label-warning">On process</span>';
+                                        $status = '<span class="label label-warning"> On process </span>';
                                     }else if($row->status == 3){
-                                        $status = '<span class="label label-primary">Back SM From JD</span>';
+                                        $status = '<span class="label label-success"> DO Approve </span>';
                                     }else if($row->status == 4){
-                                        $status = '<span class="label label-info">Back SM From DG</span>';
+                                        $status = '<span class="label label-info"> Back SM From DO </span>';
                                     }else if($row->status == 5){
-                                        $status = '<span class="label label-blueviolet">Approve JD</span>';
+                                        $status = '<span class="label label-primary"> Director Approve </span>';
                                     }else if($row->status == 6){
-                                        $status = '<span class="label label-warning">Back JD From DG</span>';
+                                        $status = '<span class="label label-info"> Received </span>';
                                     }else if($row->status == 7){
-                                        $status = '<span class="label label-success">Approve DG</span>';
+                                        $status = '<span class="label label-important"> Rejected </span>';
                                     }else if($row->status == 8){
-                                        $status = '<span class="label label-important">Rejected</span>';
-                                    }else if($row->status == 9){
-                                        $status = '<span class="label label-primary">Received</span>';
+                                        $status = '<span class="label label-warning"> Back DO/SM From Director </span>';
                                     }
                                 ?>
                                 <?php
                                     if($row->is_received == 2) {
-                                        $ast = '<span class="label label-success">Received</span>';
+                                        $ast = '<span class="label label-success"> Received </span>';
                                     }else{
                                         $ast = '<span class="label label-important">Pending</span>';
                                     }
@@ -81,21 +79,27 @@
                                     <td class="v-align-middle"><?=$row->first_name; ?></td>
                                     <td class="v-align-middle"><?=$row->supplier_name; ?></td>
                                     <td class="v-align-middle"><?=date('d-m-Y', strtotime($row->created_at)); ?></td>
-                                    <td><?= $desk_id ?></td>
+                                    <!-- <td><?= $desk_id ?></td> -->
                                     <td><?= $status ?></td>
                                     <td class="v-align-middle"><?= $ast; ?> </td>
                                     <td align="right">
                                         <div class="btn-group">
                                             <a class="btn btn-success dropdown-toggle btn-mini" data-toggle="dropdown" href="#"> Action <span class="caret"></span> </a>
                                             <ul class="dropdown-menu pull-right">
-                                                <?php if($this->ion_auth->in_group(array('admin','badmin','sm')) && in_array($row->status, array(1,3,4))){ ?>
+                                                <?php if($this->ion_auth->in_group(array('admin','sm')) && in_array($row->status, array(1,8,4))){ ?>
                                                     <li><a href="<?=base_url('purchase/edit/'.$row->id)?>"> Edit</a> </li>
                                                 <?php } ?>
-                                                <?php if($this->ion_auth->in_group(array('badmin','jd','dg'))){ ?>
+
+                                                <?php if($this->ion_auth->in_group(array('do')) && $row->status == 2){ ?>
                                                     <li><a href="<?=base_url('purchase/ap_status/'.$row->id)?>"> Approval</a> </li>
                                                 <?php } ?>
-                                                <?php if($this->ion_auth->in_group(array('badmin','sm')) && $row->status == 7){ ?>
-                                                    <li><a href="<?=base_url('purchase/received/'.$row->id)?>"> Received</a> </li>
+
+                                                <?php if($this->ion_auth->in_group(array('admin')) && $row->status == 3){ ?>
+                                                    <li><a href="<?=base_url('purchase/ap_status/'.$row->id)?>"> Approval</a> </li>
+                                                <?php } ?>
+
+                                                <?php if($this->ion_auth->in_group(array('sm')) && $row->status == 5){ ?>
+                                                    <li><a href="<?=base_url('purchase/received/'.$row->id)?>"> Received </a> </li>
                                                 <?php } ?>
                                                 <li><a href="<?=base_url('purchase/details/'.$row->id)?>"> Details</a> </li>
                                             </ul>

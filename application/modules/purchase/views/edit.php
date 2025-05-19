@@ -41,7 +41,7 @@
                            <fieldset >
                               <legend>Change Approval</legend>
                               <?php
-                                 $status = '<span class="label label-secondary">Pending</span>';
+                                 $status = '<span class="label label-secondary">Draft</span>';
                                  if ($row->status == 2) {
                                        $status = '<span class="label label-warning">On process</span>';
                                  }else if($row->status == 3){
@@ -73,7 +73,7 @@
                                           <th class="tg-khup"> Created </th>
                                           <td class="tg-ywa9"><?=date('d-m-Y', strtotime($info->created_at)); ?></td>
                                           <th class="tg-khup"> Updated </th>
-                                          <td class="tg-ywa9"><?=date('d-m-Y', strtotime($info->updated_at)); ?></td>
+                                          <td class="tg-ywa9"><?= empty($info->updated_at) ? '' : date('d-m-Y', strtotime($info->updated_at)); ?></td>
                                        </tr>
                                     </table>
                                  </div>
@@ -87,7 +87,7 @@
                         <div class="col-md-3" style="margin-bottom: 20px;: ">
                            <label class="form-label">Status Type <span class='required'>*</span></label>
                            <input type="radio" name="status" value="1" <?=$info->status=='1'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Draft</strong></span>
-                           <input type="radio" name="status" value="2" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Forward JD</strong></span>
+                           <input type="radio" name="status" value="2" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Forward DO</strong></span>
                            <div id="typeerror"></div>
                         </div>
                         <?php } ?>
@@ -126,8 +126,8 @@
                            </fieldset>
                         </div>
                         <div class="col-md-12">
-                           <label for=""> Remark </label>
-                           <textarea name="remark" id="remark" class="form-control input-sm" rows="3" ><?=$info->remark?></textarea>
+                           <label for=""> Description </label>
+                           <textarea name="description" class="form-control input-sm" rows="3" ><?=$info->description?></textarea>
                         </div>
                         <div class="col-md-12">
                            <div class="pull-right">

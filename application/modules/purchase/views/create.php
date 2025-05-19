@@ -94,7 +94,7 @@
                             $attributes = array('id' => 'jsvalidate');
                             echo form_open_multipart("purchase/create",$attributes);
                             echo validation_errors();
-                            ?>
+                        ?>
                         <div class="row">
                             <div class="col-md-12">
                                 <fieldset>
@@ -152,6 +152,10 @@
                                         </div>
                                     </div>
                                 </fieldset>
+                            </div>
+                            <div class="col-md-12">
+                                <label for=""> Description </label>
+                                <textarea name="description" class="form-control input-sm" rows="3"><?=$info->description?></textarea>
                             </div>
                         </div>
 
