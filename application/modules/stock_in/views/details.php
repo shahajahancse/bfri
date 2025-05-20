@@ -33,36 +33,40 @@
                      <div class="row">
                         <div class="col-md-12">
                            <fieldset >
-                              <legend>Purchase Information </legend>
+                              <legend>Stock Information </legend>
                               <?php
-                                 $status = '<span class="label label-secondary">Draft</span>';
+                                 $status = '<span class="label label-secondary"> Draft </span>';
                                  if ($info->status == 2) {
-                                    $status = '<span class="label label-warning">On process</span>';
-                                }else if($info->status == 3){
-                                    $status = '<span class="label label-success">DO Approve</span>';
-                                }else if($info->status == 4){
-                                    $status = '<span class="label label-info">Back SM From DO</span>';
-                                }else if($info->status == 5){
-                                    $status = '<span class="label label-primary">Director Approve</span>';
-                                }else if($info->status == 6){
-                                    $status = '<span class="label label-blueviolet">Received</span>';
-                                }else if($info->status == 7){
-                                    $status = '<span class="label label-important">Rejected</span>';
-                                }else if($info->status == 8){
-                                    $status = '<span class="label label-warning">Back DO/SM From Director</span>';
-                                } else if($info->status == 9){
-                                    $status = '<span class="label label-warning">Return Request</span>';
-                                } else if($info->status == 10){
-                                    $status = '<span class="label label-important">Return Complete</span>';
-                                }
+                                    $status = '<span class="label label-warning"> On process </span>';
+                                 }else if($info->status == 3){
+                                    $status = '<span class="label label-success"> DO Approve </span>';
+                                 }else if($info->status == 4){
+                                    $status = '<span class="label label-info"> Back SM From DO </span>';
+                                 }else if($info->status == 5){
+                                    $status = '<span class="label label-primary"> Division Sm </span>';
+                                 }else if($info->status == 6){
+                                    $status = '<span class="label label-primary"> Division Admin </span>';
+                                 }else if($info->status == 7){
+                                    $status = '<span class="label label-info"> Director Approve </span>';
+                                 }else if($info->status == 8){
+                                    $status = '<span class="label label-warning"> Back DO/SM From Director </span>';
+                                 }else if($info->status == 9){
+                                    $status = '<span class="label label-info"> Received </span>';
+                                 }else if($info->status == 10){
+                                    $status = '<span class="label label-important"> Rejected </span>';
+                                 }else if($info->status == 11){
+                                    $status = '<span class="label label-important"> Return Request </span>';
+                                 } else if($info->status == 12){
+                                    $status = '<span class="label label-important"> Return Complete </span>';
+                                 }
                               ?>
 
                               <div class="row">
                                  <div class="col-md-12">
                                     <table class="tg" width="100%">
                                        <tr>
-                                          <th class="tg-khup"> Title Name</th>
-                                          <td class="tg-ywa9"><?=$info->supplier_name?></td>
+                                          <th class="tg-khup"> Title</th>
+                                          <td class="tg-ywa9"><?=$info->title?></td>
                                           <th class="tg-khup"> Status </th>
                                           <td class="tg-ywa9"><?=$status?></td>
                                        </tr>
@@ -84,7 +88,7 @@
                         <div class="col-md-12">
                            <style type="text/css">td{color: black; font-size: 15px;}</style>
                            <fieldset>
-                              <legend>Purchase List</legend>
+                              <legend>Stock List</legend>
                               <style type="text/css">
                                  #appRowDiv td{padding: 5px; border-color: #ccc;}
                                  #appRowDiv th{padding: 5px;text-align:left;border-color: #ccc; color: black;}
@@ -102,10 +106,10 @@
                                  <?php foreach($purchase_item_data as $item){ ?>
                                  <tr>
                                     <td><?=$item->item_name?></td>
-                                    <td><?=$item->pur_quantity?>  <?=$item->unit_name?></td>
-                                    <td><?=$item->pur_approve?></td>
+                                    <td><?=$item->quantity?>  <?=$item->unit_name?></td>
+                                    <td><?=$item->approve_qty == 0 ? $item->quantity : $item->approve_qty?></td>
                                     <td><?=$item->unit_name?></td>
-                                    <td><?=$item->pur_remark?></td>
+                                    <td><?=$item->remark?></td>
                                  </tr>
                                  <?php } ?>
                               </table>
@@ -115,9 +119,14 @@
                            <label for=""> Description </label>
                            <p class="form-control input-sm" ><?=$info->description?></p>
                         </div>
+                        <?php $unit_id = $this->session->userdata('unit_id'); ?>
                         <div class="col-md-12">
                            <div class="pull-right">
-                              <a class="btn btn-primary btn-cons" href="<?= base_url('purchase') ?>">Back</a>
+                              <?php if(!in_array($unit_id, array(1,2,3,4))){ ?>
+                              <a class="btn btn-primary btn-cons" href="<?= base_url('stock_in') ?>">Back</a>
+                              <?php } else { ?>
+                              <a class="btn btn-primary btn-cons" href="<?= base_url('stock_in/purchase_pending') ?>">Back</a>
+                              <?php } ?>
                            </div>
                         </div>
                      </div>

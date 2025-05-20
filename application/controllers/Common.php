@@ -26,6 +26,11 @@ class Common extends Backend_Controller {
       // print_r($this->session->all_userdata());
    }
 
+   function ajax_get_category_by_division($id){
+      header('Content-Type: application/x-json; charset=utf-8');
+      echo (json_encode($this->Common_model->ajax_get_category_by_division($id)));
+   }
+
    function ajax_get_sub_category_by_category($id){
       header('Content-Type: application/x-json; charset=utf-8');
       echo (json_encode($this->Common_model->get_sub_category_by_cate_id($id)));

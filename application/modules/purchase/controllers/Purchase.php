@@ -20,11 +20,11 @@ class Purchase extends Backend_Controller {
       //Results
       $status = array();
       if($this->ion_auth->in_group(array('do'))){
-         $status = array(2,3,4,5,6,7,8,9);
+         $status = array(2,3,4,5,6,7,8,9,10);
       } else if ($this->ion_auth->in_group(array('admin'))) {
-         $status = array(3,5,6,7,8,9);
+         $status = array(3,5,6,7,8,9,10);
       } else {
-         $status = array(1,2,3,4,5,6,7,8,9);
+         $status = array(1,2,3,4,5,6,7,8,9,10);
       }
       $results = $this->Purchase_model->get_purchase($limit, $offset, $status);
       $this->data['results'] = $results['rows'];
@@ -99,6 +99,23 @@ class Purchase extends Backend_Controller {
       $this->data['subview'] = 'index';
       $this->load->view('backend/_layout_main', $this->data);
    }
+   public function return_list($offset=0){
+      $limit = 25;
+      $status = array(9,10);
+      if ($this->ion_auth->in_group(array('admin'))) {
+         $results = $this->Purchase_model->get_purchase($limit, $offset, $status);
+      } else {
+         $results = $this->Purchase_model->get_purchase($limit, $offset, $status, $this->unit_id);
+      }
+      $this->data['results'] = $results['rows'];
+      $this->data['total_rows'] = $results['num_rows'];
+
+      $this->data['pagination'] = create_pagination('purchase/purchase_received/', $this->data['total_rows'], $limit, 3, $full_tag_wrap = true);
+      $this->data['meta_title'] = 'Return List';
+      $this->data['subview'] = 'index';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+
 
    // item purchase create here
    public function create(){
@@ -327,6 +344,18 @@ class Purchase extends Backend_Controller {
          $this->session->set_flashdata('success', 'Update Purchase successfully.');
          redirect("purchase");
       };
+   }
+
+   public function purchase_return($status, $id){
+      $form_data = array(
+         'status'       => $status,
+         'updated_at'   => date('Y-m-d H:i:s'),
+      );
+      $this->db->where('id', $id);
+      if ($this->db->update('item_purchases', $form_data)) {
+         $this->session->set_flashdata('success', 'Update successfully.');
+         redirect("purchase");
+      }
    }
    // item purchase approve process end
 }

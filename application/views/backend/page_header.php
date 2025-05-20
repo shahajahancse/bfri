@@ -220,6 +220,40 @@
                                         <?php } ?>
                                         <li> <a href="<?=base_url('purchase/purchase_rejected');?>">Rejected List </a> </li>
                                         <li> <a href="<?=base_url('purchase/purchase_received');?>">Received List </a> </li>
+                                        <li> <a href="<?=base_url('purchase/return_list');?>">Return List </a> </li>
+                                    </ul>
+                                </li>
+                                <?php } ?>
+
+                                <!-- Stock In section -->
+                                <?php
+                                    if ($this->ion_auth->in_group(array('sm'))) {
+                                       $pn = $per_ntfy->sm + $per_ntfy->sm1 + $per_ntfy->sm2;
+                                    } elseif ($this->ion_auth->in_group(array('do'))) {
+                                       $pn = $per_ntfy->do + $per_ntfy->do1;
+                                    } else if ($this->ion_auth->in_group(array('admin'))) {
+                                       $pn = $per_ntfy->dg;
+                                    } else {
+                                       $pn = 0;
+                                    }
+                                    $unit_id = $this->session->userdata('unit_id');
+                                ?>
+                                <?php if($this->ion_auth->in_group(array('admin','sm','do'))){ ?>
+                                <li class="start <?=backend_activate_menu_class('stock_in')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Stock In</span> <span class="selected"></span> <span class="badge badge-danger pull-right"><?=$pn?></span> <span class="arrow"></span> </a>
+                                    <ul class="sub-menu">
+                                        <?php if(!in_array($unit_id, array(1,2,3,4))){ ?>
+                                            <li> <a href="<?=base_url('stock_in');?>"> Stock In List </a> </li>
+                                        <?php } ?>
+
+                                        <?php if($this->ion_auth->in_group(array('sm'))){ ?>
+                                        <li> <a href="<?=base_url('stock_in/purchase_pending');?>">Pending List <span class="badge badge-danger"><?=$per_ntfy->sm + $per_ntfy->sm2;?></span></a> </li>
+                                        <li> <a href="<?=base_url('stock_in/purchase_approved');?>">Approved List <span class="badge badge-danger"><?=$per_ntfy->sm1;?></span></a> </li>
+                                        <?php } else { ?>
+                                        <li> <a href="<?=base_url('stock_in/purchase_pending');?>">Pending List <span class="badge badge-danger"><?=$pn?></span></a> </li>
+                                        <li> <a href="<?=base_url('stock_in/purchase_approved');?>">Approved List </a> </li>
+                                        <?php } ?>
+                                        <li> <a href="<?=base_url('stock_in/purchase_rejected');?>">Rejected List </a> </li>
+                                        <li> <a href="<?=base_url('stock_in/purchase_received');?>">Received List </a> </li>
                                     </ul>
                                 </li>
                                 <?php } ?>

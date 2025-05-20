@@ -99,6 +99,22 @@ class Common_model extends CI_Model {
       }
    }
 
+   public function ajax_get_category_by_division($id){
+      $data = array();
+      $this->db->select('id, category_name');
+      $this->db->from('item_categories');
+      $this->db->where('division_id', $id);
+      $query = $this->db->get()->result();
+      foreach ($query AS $rows) {
+         $data[$rows->id] = $rows->category_name;
+      }
+      if (!empty($this->input->post('type'))) {
+         return $query;
+      } else {
+         return $data;
+      }
+   }
+
    public function get_sub_category_by_cate_id($id){
       $data = array();
       $this->db->select('id, sub_cate_name');
