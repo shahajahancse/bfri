@@ -41,15 +41,14 @@
                                 <?php $sl=$pagination['current_page'];
                                 foreach ($results as $row): $sl++; ?>
                                 <?php
-                                    $desk_id = 'Draft';
-                                    if ($row->desk_id == 2) {
-                                        $desk_id = 'Join director';
-                                    }else if($row->desk_id == 3){
-                                        $desk_id = 'Director';
-                                    } else if($row->desk_id == 4){
-                                        $desk_id = 'Back store';
+                                    if($row->is_received == 2) {
+                                        $ast = '<span class="label label-success"> Received </span>';
+                                    }else{
+                                        $ast = '<span class="label label-important">Pending</span>';
                                     }
+                                ?>
 
+                                <?php
                                     $status = '<span class="label label-secondary"> Draft </span>';
                                     if ($row->status == 2) {
                                         $status = '<span class="label label-warning"> On process </span>';
@@ -69,21 +68,16 @@
                                         $status = '<span class="label label-warning"> Return Request </span>';
                                     }else if($row->status == 10){
                                         $status = '<span class="label label-important"> Return Complete </span>';
+                                        $ast = '<span class="label label-important">Return</span>';
                                     }
                                 ?>
-                                <?php
-                                    if($row->is_received == 2) {
-                                        $ast = '<span class="label label-success"> Received </span>';
-                                    }else{
-                                        $ast = '<span class="label label-important">Pending</span>';
-                                    }
-                                ?>
+
                                 <tr>
                                     <td class="v-align-middle"><?=$sl.'.'?></td>
                                     <td class="v-align-middle"><?=$row->first_name; ?></td>
                                     <td class="v-align-middle"><?=$row->supplier_name; ?></td>
                                     <td class="v-align-middle"><?=date('d-m-Y', strtotime($row->created_at)); ?></td>
-                                    <!-- <td><?= $desk_id ?></td> -->
+
                                     <td><?= $status ?></td>
                                     <td class="v-align-middle"><?= $ast; ?> </td>
                                     <td align="right">

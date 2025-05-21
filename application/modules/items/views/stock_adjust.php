@@ -55,6 +55,7 @@
                               <td class="v-align-middle"><?=$row->order_level?></td>
                               <td class="v-align-middle"><?=$status?></td>
                               <input type="hidden" name="ids[]" value="<?=$row->id?>">
+                              <input type="hidden" id="order<?=$row->id?>" name="order[]" value="<?=$row->order_level?>">
                               <input type="hidden" id="cat<?=$row->id?>" name="cat<?=$row->id?>" value="<?=$row->cat_id?>">
                               <input type="hidden" id="sub_cat<?=$row->id?>" name="sub_cat<?=$row->id?>" value="<?=$row->sub_cat_id?>">
                               <td class="v-align-middle"><input name="stock<?=$row->id?>" class="form-control input-sm" id="stock<?=$row->id?>"></td>
@@ -118,6 +119,7 @@
 <script type="text/javascript">
    function ajax_single_adjust(id){
       var stock = $('#stock'+id).val();
+      var order = $('#order'+id).val();
       var cat = $('#cat'+id).val();
       var sub_cat = $('#sub_cat'+id).val();
       var remarks = $('#remarks'+id).val();
@@ -132,7 +134,7 @@
       $.ajax({
          url: '<?=base_url('items/ajax_single_adjust')?>',
          type: 'POST',
-         data: {id:id, stock:stock, cat:cat, sub_cat: sub_cat, remarks:remarks},
+         data: {id:id, stock:stock, order:order, cat:cat, sub_cat: sub_cat, remarks:remarks},
          success: function(data){
             if (data == 'success') {
                alert('Updated successfully');

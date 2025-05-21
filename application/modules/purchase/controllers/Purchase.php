@@ -116,7 +116,6 @@ class Purchase extends Backend_Controller {
       $this->load->view('backend/_layout_main', $this->data);
    }
 
-
    // item purchase create here
    public function create(){
       $fiscal_year = $this->Common_model->get_current_fiscal_year();
@@ -186,12 +185,12 @@ class Purchase extends Backend_Controller {
       //Dropdown
       $this->data['categories'] = $this->Common_model->get_categories();
       $this->data['info'] = $this->Common_model->get_user_details();
-
       //Load view
       $this->data['meta_title'] = 'Purchase Entry Form';
       $this->data['subview'] = 'create';
       $this->load->view('backend/_layout_main', $this->data);
    }
+
    public function edit($id){
       $this->data['categories'] = $this->Common_model->get_categories();
       $this->db->where('id', $id);
@@ -345,7 +344,6 @@ class Purchase extends Backend_Controller {
          redirect("purchase");
       };
    }
-
    public function purchase_return($status, $id){
       $form_data = array(
          'status'       => $status,

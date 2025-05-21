@@ -26,6 +26,7 @@ class Backend_Controller extends MY_Controller{
 		if ($this->ion_auth->logged_in()) {
 			$this->data['user_ntfy'] = $this->Common_model->user_ntfy($this->userSessID);
 			$this->data['req_ntfy'] = $this->Common_model->req_ntfy();
+			$this->data['per_ntfy'] = $this->Common_model->per_ntfy();
 			$this->data['stk_ntfy'] = $this->Common_model->stk_ntfy();
 		}
     }

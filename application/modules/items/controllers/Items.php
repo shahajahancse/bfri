@@ -259,7 +259,8 @@ class Items extends Backend_Controller {
       // Start transaction
       $this->db->trans_start();
       // Insert new data
-      foreach ($ids as $id) {
+      foreach ($ids as $key => $id) {
+         $order = $_POST['order'][$key];
          $qty = ($this->input->post('stock'.$id)) ? $this->input->post('stock'.$id) : 0;
          $check = $this->db->where('unit_id', $unit_id)->where('item_id', $id)->get('item_stocks')->row();
          if (!empty($check)) { // update
@@ -278,7 +279,9 @@ class Items extends Backend_Controller {
                'sub_cat_id' => $this->input->post('sub_cat'.$id),
                'stock_in' => $check->stock_in + ($qty),
                'balance' => $check->balance + ($qty),
+               'order_level' => $order,
                'updated_by' => $this->session->userdata('user_id'),
+               'updated_at' => date('Y-m-d H:i:s'),
             );
             $this->db->insert('item_stocks', $data2);
          }
@@ -296,6 +299,7 @@ class Items extends Backend_Controller {
             'status' => 1, // item adjusted
             'remarks' => $this->input->post('remarks'.$id),
             'updated_by' => $this->session->userdata('user_id'),
+            'updated_at' => date('Y-m-d H:i:s'),
          );
          $this->db->insert('item_stocks_details', $data);
       }
@@ -311,6 +315,7 @@ class Items extends Backend_Controller {
    function ajax_single_adjust() {
       $unit_id = $this->session->userdata('unit_id');
       $id = $this->input->post('id');
+      $order = $this->input->post('order');
       $cat = $this->input->post('cat');
       $sub_cat = $this->input->post('sub_cat');
       $qty = $this->input->post('stock');
@@ -332,6 +337,7 @@ class Items extends Backend_Controller {
             'sub_cat_id' => $sub_cat,
             'stock_in' => $check->stock_in + ($qty),
             'balance' => $check->balance + ($qty),
+            'order_level' => $order,
             'updated_by' => $this->session->userdata('user_id'),
          );
          $this->db->insert('item_stocks', $data2);
@@ -350,6 +356,7 @@ class Items extends Backend_Controller {
          'status' => 1, // item adjusted
          'remarks' => $this->input->post('remarks'),
          'updated_by' => $this->session->userdata('user_id'),
+         'updated_at' => date('Y-m-d H:i:s'),
       );
       $this->db->insert('item_stocks_details', $data);
 

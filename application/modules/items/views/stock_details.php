@@ -62,11 +62,13 @@
                         $i=0;
                         foreach ($results as $row) {
                            if($row->status == 2){
-                              $status = " <span class='label label-success'>Purchase (In)</span> ";
+                              $status = " <span class='label label-primary'>Purchase (In)</span> ";
                            }else if($row->status == 3){
-                              $status = " <span class='label btn-blueviolet'>Requisition (Out)</span> ";
+                              $status = " <span class='label btn-danger'>Requisition (Out)</span> ";
                            } else if($row->status == 4){
                               $status = " <span class='label label-primary'>Store In</span> ";
+                           }  else if($row->status == 5){
+                              $status = " <span class='label label-warning'>Direct Purchase</span> ";
                            } else {
                               $status = " <span class='label label-info'>Adjust</span> ";
                            } ?>

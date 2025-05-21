@@ -35,26 +35,7 @@
                            <fieldset >
                               <legend>Purchase Information </legend>
                               <?php
-                                 $status = '<span class="label label-secondary">Draft</span>';
-                                 if ($info->status == 2) {
-                                    $status = '<span class="label label-warning">On process</span>';
-                                }else if($info->status == 3){
-                                    $status = '<span class="label label-success">DO Approve</span>';
-                                }else if($info->status == 4){
-                                    $status = '<span class="label label-info">Back SM From DO</span>';
-                                }else if($info->status == 5){
-                                    $status = '<span class="label label-primary">Director Approve</span>';
-                                }else if($info->status == 6){
-                                    $status = '<span class="label label-primary">Received</span>';
-                                }else if($info->status == 7){
-                                    $status = '<span class="label label-important">Rejected</span>';
-                                }else if($info->status == 8){
-                                    $status = '<span class="label label-warning">Back DO/SM From Director</span>';
-                                } else if($info->status == 9){
-                                    $status = '<span class="label label-warning">Return Request</span>';
-                                } else if($info->status == 10){
-                                    $status = '<span class="label label-important">Return Complete</span>';
-                                }
+                                 $status = '<span class="label label-primary"> Direct Purchase </span>';
                               ?>
 
                               <div class="row">

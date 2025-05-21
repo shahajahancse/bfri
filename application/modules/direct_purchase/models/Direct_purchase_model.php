@@ -1,20 +1,24 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Purchase_model extends CI_Model {
+class Direct_purchase_model extends CI_Model {
 
    public function __construct() {
       parent::__construct();
    }
 
-   public function get_purchase($limit=1000, $offset=0, $status=array()) {
+   public function get_purchase($limit=1000, $offset=0, $unit_id=null, $status=array()) {
       $this->db->select('p.*, u.first_name');
       $this->db->from('item_purchases p');
       $this->db->join('users u', 'u.id = p.created_by', 'LEFT');
-      $this->db->where('p.type', 1);
-      
+      $this->db->where('p.type', 2);
+
+      if (!empty($unit_id)) {
+         $this->db->where('p.unit_id', $unit_id);
+      }
       if (!empty($status)) {
          $this->db->where_in('p.status', $status);
       }
+
       $this->db->order_by('p.id', 'DESC');
       $query = $this->db->get();
       $result['rows'] = $query->result();
@@ -22,7 +26,11 @@ class Purchase_model extends CI_Model {
         // count query
       $this->db->select('COUNT(*) as count');
       $this->db->from('item_purchases');
-      $this->db->where('type', 1);
+      $this->db->where('type', 2);
+
+      if (!empty($unit_id)) {
+         $this->db->where('unit_id', $unit_id);
+      }
       if (!empty($status)) {
          $this->db->where_in('status', $status);
       }
@@ -54,28 +62,4 @@ class Purchase_model extends CI_Model {
 
       return $query;
    }
-
-   public function get_dd_host_persons(){
-      $data[''] = '-- Select Host Person --';
-      $this->db->select('id, CONCAT(host_name, " (",host_designation," )") as text');
-      $this->db->from('host_person');
-      // $this->db->order_by('task_name_en', 'ASC');
-      $query = $this->db->get();
-
-      foreach ($query->result_array() AS $rows) {
-         $data[$rows['id']] = $rows['text'];
-      }
-
-      return $data;
-   }
-
-   public function appointment_destroy($id) {
-      // Delete row
-      if($this->db->delete('appointment', array('id' => $id))){
-         return TRUE;
-      }else{
-         return FALSE;
-      }
-   }
-
 }

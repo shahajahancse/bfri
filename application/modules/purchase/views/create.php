@@ -396,7 +396,7 @@
                 type: "POST",
                 url: hostname + "common/ajax_get_sub_category_by_category/" + id,
             success: function(func_data) {
-                    var item=''
+                    var item='<option value=""> -select one- </option>';
                 $.each(func_data, function(id, name) {
                     item+='<option value="'+id+'">'+name+'</option>';
                     });

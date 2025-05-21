@@ -2,7 +2,7 @@
     <div class="content">
         <ul class="breadcrumb">
             <li><a href="<?=base_url('dashboard')?>" class="active"> Dashboard </a></li>
-            <li><a href="<?=base_url('purchase')?>" class="active"><?=$module_name?></a></li>
+            <li><a href="<?=base_url('direct_purchase')?>" class="active"><?=$module_name?></a></li>
             <li><?=$meta_title; ?></li>
         </ul>
 
@@ -79,8 +79,7 @@
                     <div class="grid-title">
                         <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
                         <div class="pull-right">
-                            <a href="<?=base_url('stock_in')?>" class="btn btn-blueviolet btn-xs btn-mini"> Entry
-                                List</a>
+                            <a href="<?=base_url('direct_purchase')?>" class="btn btn-blueviolet btn-xs btn-mini"> Purchase List</a>
                         </div>
                     </div>
                     <div class="grid-body">
@@ -92,48 +91,38 @@
 
                         <?php
                             $attributes = array('id' => 'jsvalidate');
-                            echo form_open_multipart("stock_in/create",$attributes);
+                            echo form_open_multipart("direct_purchase/create",$attributes);
                             echo validation_errors();
                         ?>
                         <div class="row">
                             <div class="col-md-12">
                                 <fieldset>
-                                    <legend>Stock Information</legend>
+                                    <legend>Purchase Information</legend>
                                     <div class="row form-row">
                                         <div class="col-md-6">
                                             <label class="form-label">Title Name <span class='required'>*</span></label>
                                             <?php echo form_error('title');?>
                                             <input name="title" value="<?=set_value('title')?>" type="text" class="form-control input-sm" placeholder="">
                                         </div>
-                                        <?php $divisions = $this->db->where('type', 2)->get('units')->result(); ?>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Division <span class='required'>*</span></label>
-                                            <?php echo form_error('division_id');?>
-                                            <select name="division_id" id="division_id" class="form-control input-sm">
-                                                <option value="">Select Division</option>
-                                                <?php foreach($divisions as $division): ?>
-                                                <option value="<?=$division->id?>"><?=$division->name_en?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-3" style="color: black; font-weight: bold;">
-                                        <label class="form-label">Attached Document</label>
-                                            <input style="padding: 0px 0px 0px 5px;" class="form-control" type="file" name="attachment" id="attachment" accept="application/pdf, image/*">
-                                            <div class='resizable' id='resizablec'>
-                                                <div class='resizers'>
-                                                    <div id="preview-container" >
-                                                        <iframe id="preview" frameborder="0" scrolling="auto"></iframe>
+                                        <div class="col-md-6" style="color: black; font-weight: bold;">
+                                            <div class="col-md-6" style="color: black; font-weight: bold;">
+                                                <label class="form-label">Attached Document</label>
+                                                <input type="file" name="attachment" id="attachment"
+                                                    accept="application/pdf, image/*">
+                                                <div class='resizable' id='resizablec'>
+                                                    <div class='resizers'>
+                                                        <div id="preview-container" style="position: sticky;height: -webkit-fill-available;display: flex;">
+                                                            <iframe id="preview" frameborder="0" scrolling="auto"></iframe>
+                                                        </div>
+                                                        <div class='resizer top-left'></div>
+                                                        <div class='resizer top-right'></div>
+                                                        <div class='resizer bottom-left'></div>
+                                                        <div class='resizer bottom-right'></div>
                                                     </div>
-                                                    <div class='resizer top-left'></div>
-                                                    <div class='resizer top-right'></div>
-                                                    <div class='resizer bottom-left'></div>
-                                                    <div class='resizer bottom-right'></div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
 
                                     <div class="row form-row">
                                         <div class="col-md-12">
@@ -169,7 +158,7 @@
 
                         <div class="form-actions">
                             <div class="pull-right">
-                                <button type="submit" class="btn btn-primary btn-cons">Save</button>
+                                <button type="submit" class="btn btn-primary btn-cons"><i class="icon-ok"></i> Save</button>
                             </div>
                         </div>
                         <?php echo form_close();?>
@@ -183,9 +172,9 @@
 
 <?php
     $category_data = '';
-    // foreach ($categories as $key => $value) {
-    //     $category_data .= '<option value="'.$key.'">'.$value.'</option>';
-    // }
+    foreach ($categories as $key => $value) {
+        $category_data .= '<option value="'.$key.'">'.$value.'</option>';
+    }
 ?>
 <script>
     function makeResizableDiv(div) {
@@ -304,7 +293,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         //Load First row
-        // addNewRow();
+        addNewRow();
 
         // JS Validation
         $('#jsvalidate').validate({
@@ -362,12 +351,7 @@
 
     // Add multiple person
     $("#addRow").click(function(e) {
-        var division_id = $('#division_id').val();
-        if (division_id == '') {
-            alert('Please select division first');
-            return false;
-        }
-        addNewRow(division_id);
+        addNewRow();
     });
     //remove row
     function removeRow(id) {
@@ -375,37 +359,26 @@
     }
     //add row function
     //add row function
-    function addNewRow(division_id) {
-        $.ajax({
-            type: "POST",
-            url: hostname + "common/ajax_get_category_by_division/" + division_id,
-            success: function(func_data) {
-                var c='<option value="">select one</option>';
-                $.each(func_data, function(id, name) {
-                    c+='<option value="'+id+'">'+name+'</option>';
-                });
+    function addNewRow() {
+        var sl = $('#count').val();
+        var items = '';
+        items += '<tr>';
+        items += '<td><select name="item_cate_id[]" class="form-control input-sm" id="category_' + sl + '" ><?php echo $category_data;?></select></td>';
+        items += '<td><select name="item_sub_cat_id[]"  id="subcategory_' + sl + '" class="sub_category_val_' + sl +
+            ' form-control input-sm"><option value="">Select One</option></select></td>';
+        items += '<td><select name="item_id[]" id="item_' + sl + '" class="item_val_' + sl +
+            ' form-control input-sm"><option value="">Select One</option></select></td>';
 
-                var sl = $('#count').val();
-                var items = '';
-                items += '<tr>';
-                items += '<td><select name="item_cat_id[]" class="form-control input-sm" id="category_' + sl + '" >'+c+'</select></td>';
-                items += '<td><select name="item_sub_cat_id[]"  id="subcategory_' + sl + '" class="sub_category_val_' + sl +
-                    ' form-control input-sm"><option value="">Select One</option></select></td>';
-                items += '<td><select name="item_id[]" id="item_' + sl + '" class="item_val_' + sl +
-                    ' form-control input-sm"><option value="">Select One</option></select></td>';
+        items += '<td><input style="width: 82px;" name="qty_request[]" value="" type="number" class="form-control input-sm qtyr"></td>';
 
-                items += '<td><input style="width: 82px;" name="qty_request[]" value="" type="number" class="form-control input-sm qtyr"></td>';
-
-                items += '<td><textarea name="remark[]" value=""  class="form-control input-sm" ></textarea></td>';
-                items +=
-                    '<td> <a class="label label-important" onclick="removeRow(this)"> <i class="fa fa-minus-circle"></i> Remove </a></td>';
-                items += '</tr>';
-                $('#count').val(sl + 1);
-                $('#appRowDiv tr:last').after(items);
-                category_dd(sl);
-                subcategory_dd(sl);
-            }
-        });
+        items += '<td><textarea name="remark[]" value=""  class="form-control input-sm" ></textarea></td>';
+        items +=
+            '<td> <a class="label label-important" onclick="removeRow(this)"> <i class="fa fa-minus-circle"></i> Remove </a></td>';
+        items += '</tr>';
+        $('#count').val(sl + 1);
+        $('#appRowDiv tr:last').after(items);
+        category_dd(sl);
+        subcategory_dd(sl);
     }
 
     function category_dd(sl) {
@@ -417,13 +390,13 @@
             $.ajax({
                 type: "POST",
                 url: hostname + "common/ajax_get_sub_category_by_category/" + id,
-                success: function(func_data) {
-                    var item='<option value="">Select One</option>';
-                    $.each(func_data, function(id, name) {
-                        item+='<option value="'+id+'">'+name+'</option>';
+            success: function(func_data) {
+                    var item='<option value=""> -select one- </option>';
+                $.each(func_data, function(id, name) {
+                    item+='<option value="'+id+'">'+name+'</option>';
                     });
                     $('#subcategory_'+sl+'').append(item).select2();
-                }
+            }
             });
         });
     }
@@ -437,7 +410,7 @@
                 type: "POST",
                 url: hostname + "common/ajax_get_item_by_sub_category/" + id,
                 success: function(func_data) {
-                    var item=''
+                    var item='';
                     $.each(func_data, function(id, name) {
                         item+='<option value="'+id+'">'+name+'</option>';
                     });
