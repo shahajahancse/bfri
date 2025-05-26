@@ -37,6 +37,7 @@ class Reports extends Backend_Controller {
         $mpdf->WriteHtml($html);
         $mpdf->output();
       }
+
       // Item low Results
       if( $btn_submit == 'low_inventory') {
         $this->data['date_from'] = $this->input->post('date_from');
@@ -53,6 +54,7 @@ class Reports extends Backend_Controller {
         $mpdf->output();
         exit();
       }
+
       if ($btn_submit == 'item_excel') {
         $this->data['results'] = $this->Reports_model->get_items();
         // Generate PDF
@@ -60,7 +62,7 @@ class Reports extends Backend_Controller {
         $this->load->view('item_excel', $this->data, true);
       }
       if ($btn_submit == 'low_excel') {
-        $this->data['results'] = $this->Reports_model->get_items();
+        $this->data['results'] = $this->Reports_model->get_low_inventory_items();
         // Generate PDF
         $this->data['headding'] = 'Low Item Report';
         $this->load->view('low_excel', $this->data, true);
@@ -71,7 +73,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(2,3,4,5,6,7);
+        $arr = array(2,3,4);
         $this->data['results'] = $this->Reports_model->get_requisition($arr);
         // Generate PDF
         $this->data['headding'] = 'Request Requisition';
@@ -84,7 +86,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(8);
+        $arr = array(5);
         $this->data['results'] = $this->Reports_model->get_requisition($arr);
         // Generate PDF
         $this->data['headding'] = 'Approve Requisition';
@@ -97,7 +99,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(9);
+        $arr = array(7);
         $this->data['results'] = $this->Reports_model->get_requisition($arr);
         // Generate PDF
         $this->data['headding'] = 'Rejected Requisition';
@@ -110,7 +112,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(10);
+        $arr = array(6);
         $this->data['results'] = $this->Reports_model->get_requisition($arr);
         // Generate PDF
         $this->data['headding'] = 'Delivered Requisition';
@@ -126,7 +128,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(2,3,4,5,6,7);
+        $arr = array(2,3,4);
         $this->data['results'] = $this->Reports_model->get_requisition($arr);
         // Generate PDF
         $this->data['headding'] = 'Request Requisition';
@@ -135,7 +137,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(8);
+        $arr = array(5);
         $this->data['results'] = $this->Reports_model->get_requisition($arr);
         // Generate PDF
         $this->data['headding'] = 'Approve Requisition';
@@ -144,7 +146,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(9);
+        $arr = array(7);
         $this->data['results'] = $this->Reports_model->get_requisition($arr);
         // Generate PDF
         $this->data['headding'] = 'Rejected Requisition';
@@ -153,7 +155,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(10);
+        $arr = array(6);
         $this->data['results'] = $this->Reports_model->get_requisition($arr);
         // Generate PDF
         $this->data['headding'] = 'Delivered Requisition';
@@ -165,7 +167,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(2,3,4,5,6);
+        $arr = array(2,3,4,8);
         $this->data['results'] = $this->Reports_model->get_purchase($arr);
         // Generate PDF
         $this->data['headding'] = 'Request Purchase';
@@ -178,7 +180,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(7);
+        $arr = array(5);
         $this->data['results'] = $this->Reports_model->get_purchase($arr);
         // Generate PDF
         $this->data['headding'] = 'Approve Purchase';
@@ -191,7 +193,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(8);
+        $arr = array(7);
         $this->data['results'] = $this->Reports_model->get_purchase($arr);
         // Generate PDF
         $this->data['headding'] = 'Rejected Purchase';
@@ -205,7 +207,7 @@ class Reports extends Backend_Controller {
         $this->data['date_to'] = $this->input->post('to_date');
         $this->data['type'] = 4;
         // Results
-        $arr = array(9);
+        $arr = array(6);
         $this->data['results'] = $this->Reports_model->get_purchase($arr);
         // Generate PDF
         $this->data['headding'] = 'Purchase Received';
@@ -221,7 +223,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(2,3,4,5,6);
+        $arr = array(2,3,4,8);
         $this->data['results'] = $this->Reports_model->get_purchase($arr);
         // Generate PDF
         $this->data['headding'] = 'Request Purchase';
@@ -230,7 +232,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(7);
+        $arr = array(5);
         $this->data['results'] = $this->Reports_model->get_purchase($arr);
         // Generate PDF
         $this->data['headding'] = 'Approve Purchase';
@@ -239,7 +241,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(8);
+        $arr = array(7);
         $this->data['results'] = $this->Reports_model->get_purchase($arr);
         // Generate PDF
         $this->data['headding'] = 'Rejected Purchase';
@@ -249,7 +251,7 @@ class Reports extends Backend_Controller {
         $this->data['date_to'] = $this->input->post('to_date');
         $this->data['type'] = 4;
         // Results
-        $arr = array(9);
+        $arr = array(6);
         $this->data['results'] = $this->Reports_model->get_purchase($arr);
         // Generate PDF
         $this->data['headding'] = 'Purchase Received';
@@ -261,7 +263,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(2,3,4,5,6,7);
+        $arr = array(2,3,4);
         $this->data['results'] = $this->Reports_model->get_user_report($arr);
         // Generate PDF
         $this->data['headding'] = 'Request Requisition';
@@ -274,7 +276,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(9);
+        $arr = array(5);
         $this->data['results'] = $this->Reports_model->get_user_report($arr);
         // Generate PDF
         $this->data['headding'] = 'Approve Requisition';
@@ -287,7 +289,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(8);
+        $arr = array(7);
         $this->data['results'] = $this->Reports_model->get_user_report($arr);
         // Generate PDF
         $this->data['headding'] = 'Rejected Requisition';
@@ -300,7 +302,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(10);
+        $arr = array(6);
         $this->data['results'] = $this->Reports_model->get_user_report($arr);
         // Generate PDF
         $this->data['headding'] = 'Delivered Requisition';
@@ -316,7 +318,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(2,3,4,5,6,7);
+        $arr = array(2,3,4);
         $this->data['results'] = $this->Reports_model->get_user_report($arr);
         // Generate PDF
         $this->data['headding'] = 'Request Requisition';
@@ -325,7 +327,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(9);
+        $arr = array(5);
         $this->data['results'] = $this->Reports_model->get_user_report($arr);
         // Generate PDF
         $this->data['headding'] = 'Approve Requisition';
@@ -334,7 +336,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(8);
+        $arr = array(7);
         $this->data['results'] = $this->Reports_model->get_user_report($arr);
         // Generate PDF
         $this->data['headding'] = 'Rejected Requisition';
@@ -343,7 +345,7 @@ class Reports extends Backend_Controller {
         $this->data['date_from'] = $this->input->post('from_date');
         $this->data['date_to'] = $this->input->post('to_date');
         // Results
-        $arr = array(10);
+        $arr = array(6);
         $this->data['results'] = $this->Reports_model->get_user_report($arr);
         // Generate PDF
         $this->data['headding'] = 'Delivered Requisition';

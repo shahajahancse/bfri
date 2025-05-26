@@ -82,8 +82,8 @@
           <thead class="headding">
             <tr>
               <th class="text-center" width="20">SL</th>
-              <th class="text-left" width="80">Datetime</th>
-              <th class="text-left" width="150">Requisition Title</th>
+              <th class="text-left" width="80">Date</th>
+              <th class="text-left" width="150">Title</th>
               <th class="text-center" width="100">Name</th>
               <th class="text-left" width="100">Designation</th>
               <th class="text-left" width="150">Department</th>
@@ -94,7 +94,7 @@
             <?php $i=0; foreach ($results['summary'] as $key => $row) { $i++; ?>
               <tr>
               <td class="text-center"><?=$i?>.</td>
-              <td class="text-left"><?=$row->created?></td>
+              <td class="text-left"><?=date('d-m-Y', strtotime($row->updated_at))?></td>
               <td class="text-left"><?=$row->title?></td>
               <td class="text-left"><?=$row->first_name?></td>
               <td class="text-left"><?=$row->dept_name?></td>

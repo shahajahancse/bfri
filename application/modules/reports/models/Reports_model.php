@@ -15,6 +15,7 @@ class Reports_model extends CI_Model {
     if(!empty($this->input->post('unit_id'))){
       $this->db->where('s.unit_id', $this->input->post('unit_id'));
     }
+    $this->db->order_by('s.unit_id', 'ASC');
     $this->db->order_by('i.id', 'ASC');
     $query = $this->db->get()->result();
     return $query;
@@ -29,6 +30,7 @@ class Reports_model extends CI_Model {
     if(!empty($this->input->post('unit_id'))){
       $this->db->where('s.unit_id', $this->input->post('unit_id'));
     }
+    $this->db->order_by('s.unit_id', 'ASC');
     $this->db->order_by('i.id', 'ASC');
     $this->db->where('s.balance <= s.order_level');
     $query = $this->db->get()->result();
@@ -73,6 +75,47 @@ class Reports_model extends CI_Model {
     }
     return $data;
   }
+
+  public function get_purchase($status = array()){
+    $data = array();
+
+    $this->db->select('r.*, u.first_name, dp.dept_name, dg.desig_name');
+    $this->db->from('item_purchases r');
+    $this->db->join('users u', 'u.id = r.created_by', 'LEFT');
+    $this->db->join('department dp', 'dp.id = u.dept_id', 'LEFT');
+    $this->db->join('designation dg', 'dg.id = u.desig_id', 'LEFT');
+    if(!empty($status)){
+      $this->db->where_in('r.status', $status);
+    }
+    if(!empty($this->input->post('unit_id'))){
+      $this->db->where('r.unit_id', $this->input->post('unit_id'));
+    }
+    if(!empty($this->input->post('user_id'))){
+      $this->db->where('r.created_by', $this->input->post('user_id'));
+    }
+    if(!empty($this->input->post('fiscal_year'))){
+      $this->db->where('r.f_year_id', $this->input->post('fiscal_year'));
+    }
+    if(!empty($this->input->post('from_date')) && !empty($this->input->post('to_date'))){
+      $from = $this->input->post('from_date');
+      $to = $this->input->post('to_date');
+      $this->db->where('DATE(r.created_at) BETWEEN "'. $from. '" AND "'. $to.'"');
+    }
+    $data['summary'] = $this->db->get()->result();
+
+    foreach($data['summary'] as $key=>$value)
+    {
+      $this->db->select('ri.*, i.item_name, iu.unit_name, c.category_name');
+      $this->db->from('	item_purchase_details ri');
+      $this->db->join('items i', 'i.id = ri.pur_item_id', 'LEFT');
+      $this->db->join('item_unit iu', 'iu.id = i.unit_id', 'LEFT');
+      $this->db->join('item_categories c', 'c.id = i.cat_id', 'LEFT');
+      $this->db->where('ri.purchase_id', $value->id);
+      $data['details'][$key] = $this->db->get()->result();
+    }
+    return $data;
+  }
+
   public function get_user_report($status = array()){
     $data = array();
     $this->db->select('r.*, u.first_name, dp.dept_name, dg.desig_name');
@@ -111,6 +154,24 @@ class Reports_model extends CI_Model {
     }
     return $data;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   public function get_item_report($status = array(), $product_id){
     $data = array();
     $this->db->select('r.*, u.first_name, dp.dept_name, dg.desig_name');
@@ -153,45 +214,6 @@ class Reports_model extends CI_Model {
     return $data;
   }
 
-  public function get_purchase($status = array()){
-    $data = array();
-
-    $this->db->select('r.*, u.first_name, dp.dept_name, dg.desig_name');
-    $this->db->from('item_purchases r');
-    $this->db->join('users u', 'u.id = r.created_by', 'LEFT');
-    $this->db->join('department dp', 'dp.id = u.dept_id', 'LEFT');
-    $this->db->join('designation dg', 'dg.id = u.desig_id', 'LEFT');
-    if(!empty($status)){
-      $this->db->where_in('r.status', $status);
-    }
-    if(!empty($this->input->post('unit_id'))){
-      $this->db->where('r.unit_id', $this->input->post('unit_id'));
-    }
-    if(!empty($this->input->post('user_id'))){
-      $this->db->where('r.created_by', $this->input->post('user_id'));
-    }
-    if(!empty($this->input->post('fiscal_year'))){
-      $this->db->where('r.f_year_id', $this->input->post('fiscal_year'));
-    }
-    if(!empty($this->input->post('from_date')) && !empty($this->input->post('to_date'))){
-      $from = $this->input->post('from_date');
-      $to = $this->input->post('to_date');
-      $this->db->where('DATE(r.created_at) BETWEEN "'. $from. '" AND "'. $to.'"');
-    }
-    $data['summary'] = $this->db->get()->result();
-
-    foreach($data['summary'] as $key=>$value)
-    {
-      $this->db->select('ri.*, i.item_name, iu.unit_name, c.category_name');
-      $this->db->from('	item_purchase_details ri');
-      $this->db->join('items i', 'i.id = ri.pur_item_id', 'LEFT');
-      $this->db->join('item_unit iu', 'iu.id = i.unit_id', 'LEFT');
-      $this->db->join('item_categories c', 'c.id = i.cat_id', 'LEFT');
-      $this->db->where('ri.purchase_id', $value->id);
-      $data['details'][$key] = $this->db->get()->result();
-    }
-    return $data;
-  }
   public function get_purchase_request($status = array(), $product_id){
     $data = array();
     $this->db->select('r.*, u.first_name, dp.dept_name, dg.desig_name');

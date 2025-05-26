@@ -84,7 +84,7 @@
           <tr>
             <th class="text-center" width="20">SL</th>
             <th class="text-left" width="80">Datetime</th>
-            <th class="text-left" width="150">Requisition Title</th>
+            <th class="text-left" width="150">Title</th>
             <th class="text-center" width="100">Name</th>
             <th class="text-left" width="100">Designation</th>
             <th class="text-left" width="150">Department</th>
@@ -96,8 +96,8 @@
           foreach ($results['summary'] as $key => $row) { $i++; ?>
             <tr>
               <td class="text-center"><?=$i?>.</td>
-              <td class="text-left"><?=$row->created?></td>
-              <td class="text-left"><?=$row->title?></td>
+              <td class="text-left"><?= date('d-m-Y', strtotime($row->updated_at)) ?></td>
+              <td class="text-left"><?=$row->supplier_name?></td>
               <td class="text-left"><?=$row->first_name?></td>
               <td class="text-left"><?=$row->dept_name?></td>
               <td class="text-left"><?=$row->desig_name?></td>
@@ -121,7 +121,7 @@
                       <td class="tg-0lax"><?=$row2->item_name?></td>
                       <td class="tg-0lax"><?=$row2->unit_name?></td>
                       <td class="tg-0lax"><?= $type == 4 ? $row2->pur_approve : $row2->pur_quantity ?></td>
-                      <td class="tg-0lax"><?=$row2->remark?></td>
+                      <td class="tg-0lax"><?=$row2->pur_remark?></td>
                     </tr>
                     <?php } ?>
                   </tbody>
