@@ -43,7 +43,7 @@
                   <?php echo form_error('type'); ?>
                   <select name="type" class="form-control" id="">
                     <option value="">Select Type</option>
-                    <option value="1">Head Office</option>
+                    <option value="1">Director Office</option>
                     <option value="2">Provider Office</option>
                     <option value="3">General Office</option>
                   </select>

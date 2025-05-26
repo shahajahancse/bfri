@@ -8,15 +8,12 @@ class Dashboard_model extends CI_Model {
     }
     public function count_data($tf = NULL, $from_date = NULL, $to_date = NULL, $unit_id = NULL) {
         $this->db->select("
-            COUNT(CASE WHEN r.status = 10 THEN 1 END) AS apv,
-            COUNT(CASE WHEN r.status = 9 THEN 1 END) AS rej,
-            COUNT(CASE WHEN r.status = 8 THEN 1 END) AS apv1,
-            COUNT(CASE WHEN r.status = 7 THEN 1 END) AS pen,
-            COUNT(CASE WHEN r.status = 6 THEN 1 END) AS pen1,
-            COUNT(CASE WHEN r.status = 5 THEN 1 END) AS pen2,
-            COUNT(CASE WHEN r.status = 4 THEN 1 END) AS pen3,
-            COUNT(CASE WHEN r.status = 3 THEN 1 END) AS pen4,
-            COUNT(CASE WHEN r.status = 2 THEN 1 END) AS pen5,
+            COUNT(CASE WHEN r.status = 7 THEN 1 END) AS rej,
+            COUNT(CASE WHEN r.status = 6 THEN 1 END) AS apv1,
+            COUNT(CASE WHEN r.status = 5 THEN 1 END) AS apv,
+            COUNT(CASE WHEN r.status = 4 THEN 1 END) AS pen2,
+            COUNT(CASE WHEN r.status = 3 THEN 1 END) AS pen1,
+            COUNT(CASE WHEN r.status = 2 THEN 1 END) AS pen,
         ");
         if ($tf) {
             $this->db->where('r.unit_id', $this->session->userdata('unit_id'));
@@ -30,13 +27,14 @@ class Dashboard_model extends CI_Model {
         $row = $this->db->get('item_requisitions r')->row();
         return $row;
     }
+
     public function count_data_parches($tf = NULL, $from_date = NULL, $to_date = NULL, $unit_id = NULL) {
         $this->db->select("
-            COUNT(CASE WHEN r.status = 9 THEN 1 END) AS apv,
-            COUNT(CASE WHEN r.status = 8 THEN 1 END) AS rej,
-            COUNT(CASE WHEN r.status = 7 THEN 1 END) AS apv1,
-            COUNT(CASE WHEN r.status = 6 THEN 1 END) AS pen,
-            COUNT(CASE WHEN r.status = 5 THEN 1 END) AS pen1,
+            COUNT(CASE WHEN r.status = 7 THEN 1 END) AS rej,
+            COUNT(CASE WHEN r.status = 6 THEN 1 END) AS apv1,
+            COUNT(CASE WHEN r.status = 5 THEN 1 END) AS apv,
+
+            COUNT(CASE WHEN r.status = 8 THEN 1 END) AS pen1,
             COUNT(CASE WHEN r.status = 4 THEN 1 END) AS pen2,
             COUNT(CASE WHEN r.status = 3 THEN 1 END) AS pen3,
             COUNT(CASE WHEN r.status = 2 THEN 1 END) AS pen4,

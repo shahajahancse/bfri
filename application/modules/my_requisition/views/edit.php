@@ -92,11 +92,13 @@
                         <div class="col-md-9" style="margin-bottom: 20px;: ">
                         <label class="form-label">Status Type <span class='required'>*</span></label>
                         <input type="radio" name="status" value="1" <?=$info->status=='1'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Draft</strong></span>
-                        <?php if($this->ion_auth->in_group(array('sm')) && $row->status == 2){ ?>
-                        <input type="radio" name="status" value="3" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Forward Director</strong></span>
+
+                        <?php if($this->ion_auth->in_group(array('sm'))){ ?>
+                        <input type="radio" name="status" value="3" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Forward DO Sir</strong></span>
                         <?php } else { ?>
                             <input type="radio" name="status" value="2" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Forward Store Keeper</strong></span>
                         <?php } ?>
+
                         <div id="typeerror"></div>
                         </div>
                     </div>

@@ -40,11 +40,11 @@
                 <?php $sl = 0; foreach ($results as $row): $sl++; ?>
                   <?php
                     if ($row->type == 1) {
-                      $row->type = 'head';
+                      $row->type = 'Director Office';
                     } elseif ($row->type == 2) {
-                      $row->type = 'provider';
+                      $row->type = 'provider Office';
                     } elseif ($row->type == 3) {
-                      $row->type = 'general';
+                      $row->type = 'general Office';
                     }
                   ?>
                   <tr>

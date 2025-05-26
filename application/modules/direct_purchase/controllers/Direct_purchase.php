@@ -158,7 +158,6 @@ class Direct_purchase extends Backend_Controller {
    // item purchase create end
 
    // item purchase approve process here
-
    public function change_status($id){
       $user = $this->ion_auth->user()->row();
       $desk_id = 1;
@@ -231,6 +230,27 @@ class Direct_purchase extends Backend_Controller {
          $this->session->set_flashdata('success', 'Update Purchase successfully.');
          redirect("direct_purchase");
       };
+   }
+
+   public function print_direct($id){
+      //Results
+      $this->db->where('id', $id);
+      $this->data['info']=$this->db->get('item_purchases')->row();
+
+      $this->db->select('ri.*, i.item_name, iu.unit_name, c.category_name, sc.sub_cate_name');
+      $this->db->from('item_purchase_details ri');
+      $this->db->join('items i', 'i.id = ri.pur_item_id');
+      $this->db->join('item_unit iu', 'iu.id = i.unit_id');
+      $this->db->join('item_categories c', 'c.id = i.cat_id');
+      $this->db->join('item_sub_categories sc', 'sc.id = i.sub_cat_id');
+      $this->db->where('purchase_id', $id);
+      $this->data['items'] = $this->db->get()->result();
+      // Generate PDF
+      $this->data['headding'] = 'Direct Purchase';
+      $html = $this->load->view('pdf_print_direct', $this->data, true);
+      $mpdf = new mPDF('', 'A4', 10, '', 10, 10, 10, 5);
+      $mpdf->WriteHtml($html);
+      $mpdf->output();
    }
    // item purchase approve process end
 }

@@ -18,7 +18,7 @@
                         </div>
                     </div>
 
-                    <div class="grid-body ">
+                    <div class="grid-body" style="height: 70vh;">
                         <?php if($this->session->flashdata('success')):?>
                         <div class="alert alert-success">
                             <?=$this->session->flashdata('success');?>
@@ -52,6 +52,7 @@
                                             <a class="btn btn-success dropdown-toggle btn-mini" data-toggle="dropdown" href="#"> Action <span class="caret"></span> </a>
                                             <ul class="dropdown-menu pull-right">
                                                 <li><a href="<?=base_url('direct_purchase/details/'.$row->id)?>"> Details</a> </li>
+                                                <li><a target="_blank" href="<?=base_url('direct_purchase/print_direct/'.$row->id)?>"> Print </a> </li>
                                             </ul>
                                         </div>
                                     </td>

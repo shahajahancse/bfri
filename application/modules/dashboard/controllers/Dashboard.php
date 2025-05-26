@@ -21,14 +21,15 @@ class Dashboard extends Backend_Controller {
             $tf = true;
         }
 		$r = $this->Dashboard_model->count_data($tf);
-		$this->data['total_data'] = $r->apv+$r->rej+$r->apv1+$r->pen+$r->pen1+$r->pen2+$r->pen3+$r->pen4+$r->pen5;
-		$this->data['total_pending'] = $r->pen + $r->pen1 + $r->pen2 + $r->pen3 + $r->pen4 + $r->pen5;
+		$this->data['total_data'] = $r->apv+$r->rej+$r->apv1+$r->pen+$r->pen1+$r->pen2;
+
+		$this->data['total_pending'] = $r->pen + $r->pen1 + $r->pen2;
 		$this->data['total_approve'] = $r->apv + $r->apv1;
 		$this->data['total_rejected'] = $r->rej;
 
 		$p = $this->Dashboard_model->count_data_parches($tf);
-		$this->data['total_datap'] = $p->apv+$p->rej+$p->apv1+$p->pen+$p->pen1+$p->pen2+$p->pen3+$p->pen4;
-		$this->data['total_pendingp'] = $p->pen + $p->pen1 + $p->pen2 + $p->pen3 + $p->pen4;
+		$this->data['total_datap'] = $p->apv+$p->rej+$p->apv1+$p->pen1+$p->pen2+$p->pen3+$p->pen4;
+		$this->data['total_pendingp'] = $p->pen1 + $p->pen2 + $p->pen3 + $p->pen4;
 		$this->data['total_approvep'] = $p->apv + $p->apv1;
 		$this->data['total_rejectedp'] = $p->rej;
 

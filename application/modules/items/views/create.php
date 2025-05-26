@@ -45,6 +45,7 @@
                            <?php foreach ($divs as $key => $value) { ?>
                               <option value="<?=$value->id?>"><?=$value->name_en?></option>
                            <?php } ?>
+                           <option value="0">Others</option>
                         </select>
                      </div>
                      <div class="col-md-3">

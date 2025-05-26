@@ -18,7 +18,7 @@
                         </div>
                     </div>
 
-                    <div class="grid-body ">
+                    <div class="grid-body" style="height: 70vh;">
                         <?php if($this->session->flashdata('success')):?>
                         <div class="alert alert-success">
                             <?=$this->session->flashdata('success');?>
@@ -104,6 +104,7 @@
                                                     <li><a href="<?=base_url('stock_in/received/'.$row->id)?>"> Received </a> </li>
                                                 <?php } ?>
                                                 <li><a href="<?=base_url('stock_in/details/'.$row->id)?>"> Details</a> </li>
+                                                <li><a target="_blank" href="<?=base_url('stock_in/print_stock_in/'.$row->id)?>"> Print </a> </li>
                                             </ul>
                                         </div>
                                     </td>

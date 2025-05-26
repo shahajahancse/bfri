@@ -13,28 +13,13 @@
           <div class="grid-title" style="border: 3px solid #dddddd; border-bottom: 0px;">
             <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
             <div class="pull-right">
+              <a target="_blank" href="<?=base_url('acl/acl_excel')?>" class="btn btn-info btn-xs btn-mini"> Excel </a>
               <a href="<?=base_url('acl/create_user')?>" class="btn btn-blueviolet btn-xs btn-mini"> Create User </a>
             </div>
           </div>
 
           <div class="grid-body ">
             <div id="infoMessage"><?php echo $message;?></div>
-            <form method="get" action="">
-              <div class="row">
-                <div class="col-md-2">
-                  <input type="text" name="name" value="<?=$_GET['name']?>" class="form-control input-sm" placeholder="Name">
-                </div>
-
-                <div class="col-md-2">
-                  <input type="text" name="username" value="<?=$_GET['username']?>" class="form-control input-sm" placeholder="Username">
-                </div>
-                <div class="col-md-1">
-                  <div class="pull-right ">
-                    <button type="submit" class="btn btn-blueviolet btn-mini"><i class="icon-ok"></i> Search</button>
-                  </div>
-                </div>
-              </div>
-            </form>
 
             <table class="table table-hover table-bordered dataTable  table-flip-scroll cf">
               <thead class="cf">

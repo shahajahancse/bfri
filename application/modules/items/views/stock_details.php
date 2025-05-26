@@ -62,15 +62,17 @@
                         $i=0;
                         foreach ($results as $row) {
                            if($row->status == 2){
-                              $status = " <span class='label label-primary'>Purchase (In)</span> ";
+                              $status = " <span class='label label-primary'>Store Purchase (In)</span> ";
                            }else if($row->status == 3){
-                              $status = " <span class='label btn-danger'>Requisition (Out)</span> ";
+                              $status = " <span class='label btn-danger'>Internal Requisition (Out)</span> ";
                            } else if($row->status == 4){
-                              $status = " <span class='label label-primary'>Store In</span> ";
-                           }  else if($row->status == 5){
-                              $status = " <span class='label label-warning'>Direct Purchase</span> ";
+                              $status = " <span class='label label-primary'>Store Requisition (In)</span> ";
+                           } else if($row->status == 5){
+                              $status = " <span class='label label-primary'>Direct Purchase</span> ";
+                           } else if($row->status == 6){
+                              $status = " <span class='label label-warning'>Store Requisition (Out)</span> ";
                            } else {
-                              $status = " <span class='label label-info'>Adjust</span> ";
+                              $status = " <span class='label label-info'>Adjust (In)</span> ";
                            } ?>
                            <tr>
                               <td class="v-align-middle"><?=++$i?>.</td>

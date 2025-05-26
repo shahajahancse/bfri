@@ -319,11 +319,35 @@ class Stock_in extends Backend_Controller {
       $this->db->where('id', $id);
       if ($this->db->update('item_stock_in', $form_data)) {
 
-         $this->db->where('stock_in_id', $id);
-         $purchase_data = $this->db->get('item_stock_in_details')->result();
+         $division_id = $this->db->where('id', $id)->get('item_stock_in')->row()->division_id;
+         $records =  $this->db->where('stock_in_id', $id)->get('item_stock_in_details')->result();
 
-         foreach($purchase_data as $p){
+         foreach($records as $p){
+            $div_items = $this->db->where('unit_id',$division_id)->where('item_id',$p->item_id)->get('item_stocks')->row();
             $items = $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->item_id)->get('item_stocks')->row();
+            // minus division stock
+            $daa = array(
+               'stock_out'  => $div_items->stock_out + $p->approve_qty,
+               'balance'    => $div_items->balance - $p->approve_qty,
+               'updated_by' => $user['user_id'],
+               'updated_at' => date('Y-m-d H:i:s'),
+            );
+
+            $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->item_id);
+            $this->db->update('item_stocks',$daa);
+            $ddd = array(
+               'unit_id'      => $division_id,
+               'item_id'      => $div_items->item_id,
+               'cat_id'       => $div_items->cat_id,
+               'sub_cat_id'   => $div_items->sub_cat_id,
+               'qty'          => $p->approve_qty,
+               'status'       => 6,  // stock out to requisition
+               'updated_by'   => $user['user_id'],
+               'updated_at'   => date('Y-m-d H:i:s'),
+            );
+            $this->db->insert('item_stocks_details', $ddd);
+
+            // plus user division stock
             $aa = array(
                'stock_in'   => $items->stock_in + $p->approve_qty,
                'balance'    => $items->balance + $p->approve_qty,
@@ -348,6 +372,27 @@ class Stock_in extends Backend_Controller {
          $this->session->set_flashdata('success', 'Update successfully.');
          redirect("stock_in");
       }
+   }
+
+   function print_stock_in( $id ) {
+      //Results
+      $this->db->where('id', $id);
+      $this->data['info']=$this->db->get('item_stock_in')->row();
+      $this->db->select('ri.*, i.item_name, iu.unit_name, c.category_name, sc.sub_cate_name');
+      $this->db->from('item_stock_in_details ri');
+      $this->db->join('items i', 'i.id = ri.item_id');
+      $this->db->join('item_unit iu', 'iu.id = i.unit_id');
+      $this->db->join('item_categories c', 'c.id = i.cat_id');
+      $this->db->join('item_sub_categories sc', 'sc.id = i.sub_cat_id');
+      $this->db->where('stock_in_id', $id);
+      $this->data['items'] = $this->db->get()->result();
+
+      // Generate PDF
+      $this->data['headding'] = 'Stock in';
+      $html = $this->load->view('pdf_print_stock_in', $this->data, true);
+      $mpdf = new mPDF('', 'A4', 10, '', 10, 10, 10, 5);
+      $mpdf->WriteHtml($html);
+      $mpdf->output();
    }
    // item purchase approve process end
 }

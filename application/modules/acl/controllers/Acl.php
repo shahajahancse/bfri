@@ -37,6 +37,18 @@ class Acl extends Backend_Controller {
         $this->load->view('backend/_layout_main', $this->data);
     }
 
+    function acl_excel() {
+        $results = $this->Acl_model->get_users($limit, $offset);
+        $this->data['users'] = $results['rows'];
+        foreach ($this->data['users'] as $k => $user){
+            $this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
+        }
+
+        // Generate PDF
+        $this->data['headding'] = 'User List';
+        $this->load->view('acl_excel', $this->data, true);
+    }
+
     /******************** Access Level *********************/
     public function access_level(){
         // set the flash data error message if there is one
@@ -612,207 +624,206 @@ class Acl extends Backend_Controller {
 
         if ($this->form_validation->run() == true){
 
-         $form_data = array(
-            'role_name_en' => $this->input->post('role_name_en'),
-            'role_name_bn' => $this->input->post('role_name_bn'),
-            'role_description' => $this->input->post('role_description')
+            $form_data = array(
+                'role_name_en' => $this->input->post('role_name_en'),
+                'role_name_bn' => $this->input->post('role_name_bn'),
+                'role_description' => $this->input->post('role_description')
             );
 
-            // print_r($form_data); exit;
-         if($this->Common_model->edit('groups_role', $id, 'id', $form_data)){
-            /***********Activity Logs Start**********/
-            //$insert_id = $this->db->insert_id();
-            func_activity_log(2, 'role update ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
-            /***********Activity Logs End**********/
-            $this->session->set_flashdata('success', 'Information update successfully.');
-            redirect('acl/role_group');
+                // print_r($form_data); exit;
+            if($this->Common_model->edit('groups_role', $id, 'id', $form_data)){
+                /***********Activity Logs Start**********/
+                //$insert_id = $this->db->insert_id();
+                func_activity_log(2, 'role update ID :'.$id); //1=C, 2=U, 3=D, 4=V, 5=G ,A = 6
+                /***********Activity Logs End**********/
+                $this->session->set_flashdata('success', 'Information update successfully.');
+                redirect('acl/role_group');
+            }
         }
+
+        $this->data['meta_title'] = 'Edit Role Group';
+        $this->data['subview'] = 'edit_role_group';
+        $this->load->view('backend/_layout_main', $this->data);
     }
 
-    $this->data['meta_title'] = 'Edit Role Group';
-    $this->data['subview'] = 'edit_role_group';
-    $this->load->view('backend/_layout_main', $this->data);
-}
+    /******************** GROUP Name *********************/
+    public function group_name(){
+            // set the flash data error message if there is one
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 
-/******************** GROUP Name *********************/
-public function group_name(){
-        // set the flash data error message if there is one
-    $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+            //list the users
+        $this->data['results'] = $this->Acl_model->get_group_name();
 
-        //list the users
-    $this->data['results'] = $this->Acl_model->get_group_name();
-
-        //Load page
-    $this->data['meta_title'] = 'Group Name';
-    $this->data['subview'] = 'group_name';
-    $this->load->view('backend/_layout_main', $this->data);
-}
+            //Load page
+        $this->data['meta_title'] = 'Group Name';
+        $this->data['subview'] = 'group_name';
+        $this->load->view('backend/_layout_main', $this->data);
+    }
 
 
     // create a new group
-public function create_group(){
+    public function create_group(){
 
-        // validate form input
-    $this->form_validation->set_rules('group_name', $this->lang->line('create_group_validation_name_label'), 'required|alpha_dash');
+            // validate form input
+        $this->form_validation->set_rules('group_name', $this->lang->line('create_group_validation_name_label'), 'required|alpha_dash');
 
-    if ($this->form_validation->run() == TRUE){
-        $new_group_id = $this->ion_auth->create_group($this->input->post('group_name'), $this->input->post('description'));
-        if($new_group_id) {
-                // check to see if we are creating the group
-                // redirect them back to the admin page
-            $this->session->set_flashdata('message', $this->ion_auth->messages());
-            redirect('acl/group_name');
+        if ($this->form_validation->run() == TRUE){
+            $new_group_id = $this->ion_auth->create_group($this->input->post('group_name'), $this->input->post('description'));
+            if($new_group_id) {
+                    // check to see if we are creating the group
+                    // redirect them back to the admin page
+                $this->session->set_flashdata('message', $this->ion_auth->messages());
+                redirect('acl/group_name');
+            }
+        }else{
+                // display the create group form
+                // set the flash data error message if there is one
+            $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+
+            $this->data['group_name'] = array(
+                'name'  => 'group_name',
+                'id'    => 'group_name',
+                'type'  => 'text',
+                'class' => 'form-control input-sm',
+                'value' => $this->form_validation->set_value('group_name'),
+                );
+            $this->data['description'] = array(
+                'name'  => 'description',
+                'id'    => 'description',
+                'type'  => 'text',
+                'class' => 'form-control input-sm',
+                'value' => $this->form_validation->set_value('description'),
+                );
+
+            $this->data['meta_title'] = $this->lang->line('create_group_title');
+            $this->data['subview'] = 'create_group';
+            $this->load->view('backend/_layout_main', $this->data);
         }
-    }else{
-            // display the create group form
-            // set the flash data error message if there is one
-        $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-
-        $this->data['group_name'] = array(
-            'name'  => 'group_name',
-            'id'    => 'group_name',
-            'type'  => 'text',
-            'class' => 'form-control input-sm',
-            'value' => $this->form_validation->set_value('group_name'),
-            );
-        $this->data['description'] = array(
-            'name'  => 'description',
-            'id'    => 'description',
-            'type'  => 'text',
-            'class' => 'form-control input-sm',
-            'value' => $this->form_validation->set_value('description'),
-            );
-
-        $this->data['meta_title'] = $this->lang->line('create_group_title');
-        $this->data['subview'] = 'create_group';
-        $this->load->view('backend/_layout_main', $this->data);
     }
-}
 
 
 
     // edit a group
-public function edit_group($id)
-{
-        // bail if no group id given
-    if(!$id || empty($id)) {
-        redirect('dashboard');
-    }
-
-    if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
-     redirect('dashboard');
- }
-
- $group = $this->ion_auth->group($id)->row();
-
-        // validate form input
- $this->form_validation->set_rules('group_name', $this->lang->line('edit_group_validation_name_label'), 'required|alpha_dash');
-
- if (isset($_POST) && !empty($_POST)) {
-    if ($this->form_validation->run() === TRUE) {
-        $group_update = $this->ion_auth->update_group($id, $_POST['group_name'], $_POST['group_description']);
-
-        if($group_update) {
-            $this->session->set_flashdata('message', $this->lang->line('edit_group_saved'));
-        } else {
-            $this->session->set_flashdata('message', $this->ion_auth->errors());
+    public function edit_group($id)
+    {
+            // bail if no group id given
+        if(!$id || empty($id)) {
+            redirect('dashboard');
         }
-        redirect('acl/group_name');
+
+        if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+            redirect('dashboard');
+        }
+
+        $group = $this->ion_auth->group($id)->row();
+
+                // validate form input
+        $this->form_validation->set_rules('group_name', $this->lang->line('edit_group_validation_name_label'), 'required|alpha_dash');
+        if (isset($_POST) && !empty($_POST)) {
+            if ($this->form_validation->run() === TRUE) {
+                $group_update = $this->ion_auth->update_group($id, $_POST['group_name'], $_POST['group_description']);
+
+                if($group_update) {
+                    $this->session->set_flashdata('message', $this->lang->line('edit_group_saved'));
+                } else {
+                    $this->session->set_flashdata('message', $this->ion_auth->errors());
+                }
+                redirect('acl/group_name');
+            }
+        }
+
+                // set the flash data error message if there is one
+        $this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
+
+                // pass the user to the view
+        $this->data['group'] = $group;
+
+        $readonly = $this->config->item('admin_group', 'ion_auth') || $this->config->item('default_group', 'ion_auth') === $group->name ? 'readonly' : '';
+
+        $this->data['group_name'] = array(
+            'name'    => 'group_name',
+            'id'      => 'group_name',
+            'class'   => 'form-control input-sm',
+            'type'    => 'text',
+            'value'   => $this->form_validation->set_value('group_name', $group->name),
+            $readonly => $readonly,
+        );
+        $this->data['group_description'] = array(
+            'name'  => 'group_description',
+            'id'    => 'group_description',
+            'class' => 'form-control input-sm',
+            'type'  => 'text',
+            'value' => $this->form_validation->set_value('group_description', $group->description),
+        );
+
+        $this->data['meta_title'] = $this->lang->line('edit_group_title');
+        $this->data['subview'] = 'edit_group';
+        $this->load->view('backend/_layout_main', $this->data);
     }
-}
-
-        // set the flash data error message if there is one
-$this->data['message'] = (validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message')));
-
-        // pass the user to the view
-$this->data['group'] = $group;
-
-$readonly = $this->config->item('admin_group', 'ion_auth') || $this->config->item('default_group', 'ion_auth') === $group->name ? 'readonly' : '';
-
-$this->data['group_name'] = array(
-    'name'    => 'group_name',
-    'id'      => 'group_name',
-    'class'   => 'form-control input-sm',
-    'type'    => 'text',
-    'value'   => $this->form_validation->set_value('group_name', $group->name),
-    $readonly => $readonly,
-    );
-$this->data['group_description'] = array(
-    'name'  => 'group_description',
-    'id'    => 'group_description',
-    'class' => 'form-control input-sm',
-    'type'  => 'text',
-    'value' => $this->form_validation->set_value('group_description', $group->description),
-    );
-
-$this->data['meta_title'] = $this->lang->line('edit_group_title');
-$this->data['subview'] = 'edit_group';
-$this->load->view('backend/_layout_main', $this->data);
-}
 
 
     // activate the user
-public function activate($id, $code=false){
-    if ($code !== false){
-        $activation = $this->ion_auth->activate($id, $code);
-    }else if ($this->ion_auth->is_admin()){
-        $activation = $this->ion_auth->activate($id);
-    }
-
-    if ($activation){
-            // redirect them to the auth page
-        $this->session->set_flashdata('message', $this->ion_auth->messages());
-        redirect("acl");
-    }else{
-            // redirect them to the forgot password page
-            // $this->session->set_flashdata('message', $this->ion_auth->errors());
-            // redirect("login/forgot_password");
-
-        redirect("acl");
-    }
-}
-
-    // deactivate the user
-public function deactivate($id = NULL){
-        // if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()){
-        //     // redirect them to the home page because they must be an administrator to view this
-        //     return show_error('You must be an administrator to view this page.');
-        // }
-
-    $id = (int) $id;
-
-    $this->load->library('form_validation');
-    $this->form_validation->set_rules('confirm', $this->lang->line('deactivate_validation_confirm_label'), 'required');
-    $this->form_validation->set_rules('id', $this->lang->line('deactivate_validation_user_id_label'), 'required|alpha_numeric');
-
-    if ($this->form_validation->run() == FALSE){
-            // insert csrf check
-        $this->data['csrf'] = $this->_get_csrf_nonce();
-        $this->data['user'] = $this->ion_auth->user($id)->row();
-
-            //Load Page
-        $this->data['meta_title'] = 'Deactivate User';
-        $this->data['subview'] = 'deactivate_user';
-        $this->load->view('backend/_layout_main', $this->data);
-
-    }else{
-            // do we really want to deactivate?
-        if ($this->input->post('confirm') == 'yes'){
-                // do we have a valid request?
-            if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id')){
-                show_error($this->lang->line('error_csrf'));
-            }
-
-                // do we have the right userlevel?
-            if ($this->ion_auth->logged_in() && $this->ion_auth->is_admin()){
-                $this->ion_auth->deactivate($id);
-            }
+    public function activate($id, $code=false){
+        if ($code !== false){
+            $activation = $this->ion_auth->activate($id, $code);
+        }else if ($this->ion_auth->is_admin()){
+            $activation = $this->ion_auth->activate($id);
         }
 
-            // redirect them back to the auth page
-        redirect('acl');
+        if ($activation){
+                // redirect them to the auth page
+            $this->session->set_flashdata('message', $this->ion_auth->messages());
+            redirect("acl");
+        }else{
+                // redirect them to the forgot password page
+                // $this->session->set_flashdata('message', $this->ion_auth->errors());
+                // redirect("login/forgot_password");
+
+            redirect("acl");
+        }
     }
-}
+
+    // deactivate the user
+    public function deactivate($id = NULL){
+            // if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()){
+            //     // redirect them to the home page because they must be an administrator to view this
+            //     return show_error('You must be an administrator to view this page.');
+            // }
+
+        $id = (int) $id;
+
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('confirm', $this->lang->line('deactivate_validation_confirm_label'), 'required');
+        $this->form_validation->set_rules('id', $this->lang->line('deactivate_validation_user_id_label'), 'required|alpha_numeric');
+
+        if ($this->form_validation->run() == FALSE){
+                // insert csrf check
+            $this->data['csrf'] = $this->_get_csrf_nonce();
+            $this->data['user'] = $this->ion_auth->user($id)->row();
+
+                //Load Page
+            $this->data['meta_title'] = 'Deactivate User';
+            $this->data['subview'] = 'deactivate_user';
+            $this->load->view('backend/_layout_main', $this->data);
+
+        }else{
+                // do we really want to deactivate?
+            if ($this->input->post('confirm') == 'yes'){
+                    // do we have a valid request?
+                if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id')){
+                    show_error($this->lang->line('error_csrf'));
+                }
+
+                    // do we have the right userlevel?
+                if ($this->ion_auth->logged_in() && $this->ion_auth->is_admin()){
+                    $this->ion_auth->deactivate($id);
+                }
+            }
+
+                // redirect them back to the auth page
+            redirect('acl');
+        }
+    }
 
     public function user_delete($id){
       if($this->ion_auth->is_admin()){
@@ -822,7 +833,7 @@ public function deactivate($id = NULL){
       }else{
          redirect('dashboard');
       }
-   }
+    }
 
 
 public function _get_csrf_nonce(){

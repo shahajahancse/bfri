@@ -9,7 +9,7 @@ class Reports_model extends CI_Model {
     $this->db->select('i.*, c.category_name, u.unit_name, s.balance, units.name_en');
     $this->db->from('items i');
     $this->db->join('item_stocks s', 's.item_id=i.id', 'LEFT');
-    $this->db->join('categories c', 'c.id=i.cat_id', 'LEFT');
+    $this->db->join('item_categories c', 'c.id=i.cat_id', 'LEFT');
     $this->db->join('item_unit u', 'u.id=i.unit_id', 'LEFT');
     $this->db->join('units', 'units.id=s.unit_id', 'LEFT');
     if(!empty($this->input->post('unit_id'))){
@@ -23,7 +23,7 @@ class Reports_model extends CI_Model {
     $this->db->select('i.*, c.category_name, u.unit_name, s.balance, s.order_level, units.name_en');
     $this->db->from('items i');
     $this->db->join('item_stocks s', 's.item_id=i.id', 'LEFT');
-    $this->db->join('categories c', 'c.id=i.cat_id', 'LEFT');
+    $this->db->join('item_categories c', 'c.id=i.cat_id', 'LEFT');
     $this->db->join('item_unit u', 'u.id=i.unit_id', 'LEFT');
     $this->db->join('units', 'units.id=s.unit_id', 'LEFT');
     if(!empty($this->input->post('unit_id'))){
@@ -67,7 +67,7 @@ class Reports_model extends CI_Model {
       $this->db->from('item_requisition_details ri');
       $this->db->join('items i', 'i.id = ri.item_id', 'LEFT');
       $this->db->join('item_unit iu', 'iu.id = i.unit_id', 'LEFT');
-      $this->db->join('categories c', 'c.id = i.cat_id', 'LEFT');
+      $this->db->join('item_categories c', 'c.id = i.cat_id', 'LEFT');
       $this->db->where('ri.requisition_id', $value->id);
       $data['details'][$key] = $this->db->get()->result();
     }
@@ -105,7 +105,7 @@ class Reports_model extends CI_Model {
       $this->db->from('item_requisition_details ri');
       $this->db->join('items i', 'i.id = ri.item_id', 'LEFT');
       $this->db->join('item_unit iu', 'iu.id = i.unit_id', 'LEFT');
-      $this->db->join('categories c', 'c.id = i.cat_id', 'LEFT');
+      $this->db->join('item_categories c', 'c.id = i.cat_id', 'LEFT');
       $this->db->where('ri.requisition_id', $value->id);
       $data['details'][$key] = $this->db->get()->result();
     }
@@ -145,7 +145,7 @@ class Reports_model extends CI_Model {
       $this->db->from('item_requisition_details ri');
       $this->db->join('items i', 'i.id = ri.item_id', 'LEFT');
       $this->db->join('item_unit iu', 'iu.id = i.unit_id', 'LEFT');
-      $this->db->join('categories c', 'c.id = i.cat_id', 'LEFT');
+      $this->db->join('item_categories c', 'c.id = i.cat_id', 'LEFT');
       $this->db->where('ri.requisition_id', $value->id);
       $this->db->where('ri.item_id', $product_id);
       $data['details'][$key] = $this->db->get()->result();
@@ -186,7 +186,7 @@ class Reports_model extends CI_Model {
       $this->db->from('	item_purchase_details ri');
       $this->db->join('items i', 'i.id = ri.pur_item_id', 'LEFT');
       $this->db->join('item_unit iu', 'iu.id = i.unit_id', 'LEFT');
-      $this->db->join('categories c', 'c.id = i.cat_id', 'LEFT');
+      $this->db->join('item_categories c', 'c.id = i.cat_id', 'LEFT');
       $this->db->where('ri.purchase_id', $value->id);
       $data['details'][$key] = $this->db->get()->result();
     }
@@ -227,7 +227,7 @@ class Reports_model extends CI_Model {
       $this->db->from('item_purchase_details ri');
       $this->db->join('items i', 'i.id = ri.pur_item_id', 'LEFT');
       $this->db->join('item_unit iu', 'iu.id = i.unit_id', 'LEFT');
-      $this->db->join('categories c', 'c.id = i.cat_id', 'LEFT');
+      $this->db->join('item_categories c', 'c.id = i.cat_id', 'LEFT');
       $this->db->where('ri.purchase_id', $value->id);
       $this->db->where('ri.pur_item_id', $product_id);
       $data['details'][$key] = $this->db->get()->result();
