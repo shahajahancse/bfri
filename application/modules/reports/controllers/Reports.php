@@ -359,12 +359,12 @@ class Reports extends Backend_Controller {
     $this->load->view('backend/_layout_main', $this->data);
   }
 
-
   public function dynamic_report() {
     $this->data['meta_title'] = 'Dynamic Reports';
     $this->data['subview'] = 'dynamic/dynamic_report';
     $this->load->view('backend/_layout_main', $this->data);
   }
+
   public function get_dynamic_report() {
     $report_type = $this->input->post('report_type');
     $user_id = $this->input->post('user_id');
@@ -378,16 +378,16 @@ class Reports extends Backend_Controller {
       $arr = array();
       if (!empty($status) && $status == 4) {
         $this->data['headding'] = 'Delivered List';
-        $arr = array(10);
+        $arr = array(6);
       } else if (!empty($status) && $status == 3) {
         $this->data['headding'] = 'Approved List';
-        $arr = array(9);
+        $arr = array(5);
       } else if (!empty($status) && $status == 2) {
         $this->data['headding'] = 'Rejected List';
-        $arr = array(8);
+        $arr = array(7);
       } else if (!empty($status) && $status == 1) {
         $this->data['headding'] = 'Request List';
-        $arr = array(2,3,4,5,6,7);
+        $arr = array(2,3,4);
       }
       if (!empty($product_id)) {
         $this->data['results'] = $this->Reports_model->get_item_report($arr, $product_id);
@@ -401,16 +401,16 @@ class Reports extends Backend_Controller {
       $arr = array();
       if (!empty($status) && $status == 4) {
         $this->data['headding'] = 'Received List';
-        $arr = array(9);
+        $arr = array(6);
       } else if (!empty($status) && $status == 3) {
         $this->data['headding'] = 'Approved List';
-        $arr = array(7);
-      } else if (!empty($status) && $status == '2') {
+        $arr = array(5);
+      } else if (!empty($status) && $status == 2) {
         $this->data['headding'] = 'Rejected List';
-        $arr = array(8);
+        $arr = array(7);
       } else if (!empty($status) && $status == 1) {
         $this->data['headding'] = 'Pending List';
-        $arr = array(2,3,4,5,6);
+        $arr = array(2,3,4,8);
       }
       if (!empty($product_id)) {
         $this->data['results'] = $this->Reports_model->get_purchase_request($arr, $product_id);
