@@ -392,6 +392,7 @@ class General_setting extends Backend_Controller {
       if ($this->form_validation->run() == true){
          $form_data = array(
             'category_name'  => $this->input->post('cate_name'),
+            'division_id'    => $this->input->post('division_id'),
             'status'      => 'Enable'
          );
          $this->db->insert('item_categories', $form_data);
@@ -409,8 +410,9 @@ class General_setting extends Backend_Controller {
       if ($this->form_validation->run() == true){
          $form_data = array(
             'category_name' => $this->input->post('cate_name'),
+            'division_id'   => $this->input->post('division_id'),
             'status'      => 'Enable'
-         ); 
+         );
          $this->db->where('id', $id);
          $this->db->update('item_categories', $form_data);
          $this->session->set_flashdata('success', 'Category update successfully.');

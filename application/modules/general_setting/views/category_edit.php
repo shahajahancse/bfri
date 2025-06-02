@@ -29,6 +29,18 @@
 
                   <div class="row form-row">
                      <div class="col-md-6">
+                        <label class="form-label">Select Division <span class="required">*</span></label>
+                        <?php $divs = $this->db->where('type', 2)->get('units')->result(); ?>
+                        <select name="division_id" class="form-control input-sm" required>
+                           <option value="">-- Select One --</option>
+                           <option <?php if($category[0]->division_id == 7){echo 'selected';} ?> value="7">Others</option>
+                           <?php foreach ($divs as $key => $value) { ?>
+                              <option <?php if($category[0]->division_id == $value->id){echo 'selected';} ?> value="<?=$value->id?>"><?=$value->name_en?></option>
+                           <?php } ?>
+                        </select>
+                     </div>
+
+                     <div class="col-md-6">
                         <label class="form-label">Category Name </label>
                         <?php echo form_error('cate_name'); ?>
                         <input name="cate_name" type="text" value="<?=$category[0]->category_name?>" class="form-control input-sm" placeholder="">

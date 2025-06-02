@@ -64,7 +64,7 @@ class Direct_purchase extends Backend_Controller {
                 $attachmentname=$uniqueFileName;
             }
          }
-
+         // form data
          $form_data = array(
             'unit_id'         => $user->unit_id,
             'supplier_name'   => $this->input->post('title'),
@@ -81,7 +81,7 @@ class Direct_purchase extends Backend_Controller {
             'attachment'      => $attachmentname
          );
 
-         if($this->Common_model->save('item_purchases', $form_data)){
+         if($this->Common_model->save('item_purchases', $form_data)){  // save item purchase
             $insert_id = $this->db->insert_id();
             for ($i=0; $i<sizeof($_POST['item_id']); $i++) {
                $form_data2 = array(
@@ -93,23 +93,42 @@ class Direct_purchase extends Backend_Controller {
                   'pur_fiscal_year_id' => $fiscal_year->id,
                   'pur_remark'         => $_POST['remark'][$i]
                );
-               $this->Common_model->save('item_purchase_details', $form_data2);
+               $this->Common_model->save('item_purchase_details', $form_data2); // save item purchase details
 
                $items = $this->db->where('unit_id',$user->unit_id)->where('item_id',$_POST['item_id'][$i])->get('item_stocks')->row();
-               $aa = array(
-                  'stock_in'   => $items->stock_in + $_POST['qty_request'][$i],
-                  'balance'    => $items->balance + $_POST['qty_request'][$i],
-                  'updated_by' => $user->unit_id,
-                  'updated_at' => date('Y-m-d H:i:s'),
-               );
-
-               $this->db->where('unit_id',$user->unit_id)->where('item_id',$_POST['item_id'][$i]);
-               $this->db->update('item_stocks',$aa);
+               if (!empty($items)) {
+                  // update item stock
+                  $aa = array(
+                     'stock_in'   => $items->stock_in + $_POST['qty_request'][$i],
+                     'balance'    => $items->balance + $_POST['qty_request'][$i],
+                     'updated_by' => $user->unit_id,
+                     'updated_at' => date('Y-m-d H:i:s'),
+                  );
+                  $this->db->where('unit_id',$user->unit_id)->where('item_id',$_POST['item_id'][$i]);
+                  $this->db->update('item_stocks',$aa);
+               } else {
+                  // insert
+                  $it = $this->db->where('id',$_POST['item_id'][$i])->get('items')->row();
+                  $aa = array(
+                     'unit_id'      => $user->unit_id,
+                     'item_id'      => $_POST['item_id'][$i],
+                     'cat_id'       => $it->cat_id,
+                     'sub_cat_id'   => $it->sub_cat_id,
+                     'stock_in'   => $items->stock_in + $_POST['qty_request'][$i],
+                     'stock_out'  => 0,
+                     'balance'    => $items->balance + $_POST['qty_request'][$i],
+                     'order_level' => $it->order_level,
+                     'updated_by' => $user->unit_id,
+                     'updated_at'   => date('Y-m-d H:i:s'),
+                  );
+                  $this->db->insert('item_stocks', $aa);
+               }
+               // insert item stock details
                $dd = array(
                   'unit_id'      => $user->unit_id,
-                  'item_id'      => $items->item_id,
-                  'cat_id'       => $items->cat_id,
-                  'sub_cat_id'   => $items->sub_cat_id,
+                  'item_id'      => $_POST['item_id'][$i],
+                  'cat_id'       => $items->cat_id ? $items->cat_id : $it->cat_id,
+                  'sub_cat_id'   => $items->sub_cat_id ? $items->sub_cat_id : $it->sub_cat_id,
                   'qty'          => $_POST['qty_request'][$i],
                   'status'       => 5,  // 5 for direct purchase
                   'updated_by'   => $user->id,

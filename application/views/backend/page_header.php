@@ -77,9 +77,7 @@
 
                     <a href="<?=base_url('dashboard')?>"> <img style="height: 60px;width: 250px;" src="<?=base_url('awedget/assets/img/bfri.png')?>" alt=""></a>
                     <ul class="nav pull-right notifcation-center">
-                        <li class="dropdown" id="header_task_bar">
-
-                        </li>
+                        <li class="dropdown" id="header_task_bar"> </li>
                     </ul>
                 </div>
 
