@@ -13,7 +13,6 @@ class Stock_in extends Backend_Controller {
       $this->data['module_name'] = 'Stock In';
       $this->load->model('Stock_in_model');
       $this->userSessID = $this->session->userdata('user_id');
-      $this->unit_id = $this->session->userdata('unit_id');
    }
 
    public function index($offset=0){
@@ -218,7 +217,7 @@ class Stock_in extends Backend_Controller {
       } else if ($this->ion_auth->in_group(array('admin'))) {
          $results = $this->Stock_in_model->get_purchase($limit, $offset, $status);
       } else {
-         $results = $this->Stock_in_model->get_purchase($limit, $offset, $status, $this->unit_id);
+         $results = $this->Stock_in_model->get_purchase($limit, $offset, array(11), $this->unit_id);
       }
       $this->data['results'] = $results['rows'];
       $this->data['total_rows'] = $results['num_rows'];
@@ -247,9 +246,9 @@ class Stock_in extends Backend_Controller {
    public function purchase_received($offset=0){
       $limit = 25;
       if (in_array($this->unit_id, array(2,3,4))) {
-         $results = $this->Stock_in_model->get_purchase($limit, $offset, 9);
+         $results = $this->Stock_in_model->get_purchase($limit, $offset, array(9,11));
       } else {
-         $results = $this->Stock_in_model->get_purchase($limit, $offset, 9, $this->unit_id);
+         $results = $this->Stock_in_model->get_purchase($limit, $offset, array(9), $this->unit_id);
       }
       $this->data['results'] = $results['rows'];
       $this->data['total_rows'] = $results['num_rows'];
@@ -324,7 +323,6 @@ class Stock_in extends Backend_Controller {
 
          foreach($records as $p){
             $div_items = $this->db->where('unit_id',$division_id)->where('item_id',$p->item_id)->get('item_stocks')->row();
-            $items = $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->item_id)->get('item_stocks')->row();
             // minus division stock
             $daa = array(
                'stock_out'  => $div_items->stock_out + $p->approve_qty,
@@ -333,8 +331,9 @@ class Stock_in extends Backend_Controller {
                'updated_at' => date('Y-m-d H:i:s'),
             );
 
-            $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->item_id);
+            $this->db->where('unit_id',$division_id)->where('item_id',$p->item_id);
             $this->db->update('item_stocks',$daa);
+
             $ddd = array(
                'unit_id'      => $division_id,
                'item_id'      => $div_items->item_id,
@@ -348,20 +347,39 @@ class Stock_in extends Backend_Controller {
             $this->db->insert('item_stocks_details', $ddd);
 
             // plus user division stock
-            $aa = array(
-               'stock_in'   => $items->stock_in + $p->approve_qty,
-               'balance'    => $items->balance + $p->approve_qty,
-               'updated_by' => $user['user_id'],
-               'updated_at' => date('Y-m-d H:i:s'),
-            );
+            $items = $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->item_id)->get('item_stocks')->row();
+            if (!empty($items)) {
+               $aa = array(
+                  'stock_in'   => $items->stock_in + $p->approve_qty,
+                  'balance'    => $items->balance + $p->approve_qty,
+                  'updated_by' => $user['user_id'],
+                  'updated_at' => date('Y-m-d H:i:s'),
+               );
+               $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->item_id);
+               $this->db->update('item_stocks',$aa);
+            } else {
+               $it = $this->db->where('id', $p->item_id)->get('items')->row();
+               $aa = array(
+                  'unit_id'    => $user['unit_id'],
+                  'item_id'    => $p->item_id,
+                  'cat_id'     => $it->cat_id,
+                  'sub_cat_id' => $it->sub_cat_id,
+                  'stock_in'   => $p->approve_qty,
+                  'stock_out'  => 0,
+                  'balance'    => $p->approve_qty,
+                  'order_level'=> $it->order_level,
+                  'updated_by' => $user['user_id'],
+                  'updated_at' => date('Y-m-d H:i:s'),
+               );
+               $this->db->insert('item_stocks', $aa);
+            }
 
-            $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->item_id);
-            $this->db->update('item_stocks',$aa);
+            // plus user stock
             $dd = array(
                'unit_id'      => $user['unit_id'],
-               'item_id'      => $items->item_id,
-               'cat_id'       => $items->cat_id,
-               'sub_cat_id'   => $items->sub_cat_id,
+               'item_id'      => $p->item_id,
+               'cat_id'       => $p->cat_id,
+               'sub_cat_id'   => $p->sub_cat_id,
                'qty'          => $p->approve_qty,
                'status'       => 4,  // stock in
                'updated_by'   => $user['user_id'],
@@ -372,6 +390,63 @@ class Stock_in extends Backend_Controller {
          $this->session->set_flashdata('success', 'Update successfully.');
          redirect("stock_in");
       }
+   }
+
+   public function in_received($id){
+      $user = $this->session->userdata();
+
+      $form_data = array(
+         'is_received'  => 2,
+         'status'       => 11,
+         'updated_at'   => date('Y-m-d H:i:s'),
+      );
+      $this->db->where('id', $id);
+      if ($this->db->update('item_stock_in', $form_data)) {
+         $records =  $this->db->where('stock_in_id', $id)->get('item_stock_in_details')->result();
+         foreach($records as $p){
+            $div_items = $this->db->where('unit_id',$this->unit_id)->where('item_id',$p->item_id)->get('item_stocks')->row();
+            if (!empty($div_items)) {   // purchase division stock
+               $aa = array(
+                  'stock_in'   => $div_items->stock_in + $p->approve_qty,
+                  'balance'    => $div_items->balance + $p->approve_qty,
+                  'updated_by' => $user['user_id'],
+                  'updated_at' => date('Y-m-d H:i:s'),
+               );
+               $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->item_id);
+               $this->db->update('item_stocks',$aa);
+            } else {   // division stock
+               $it = $this->db->where('id', $p->item_id)->get('items')->row();
+               $aa = array(
+                  'unit_id'    => $user['unit_id'],
+                  'item_id'    => $p->item_id,
+                  'cat_id'     => $it->cat_id,
+                  'sub_cat_id' => $it->sub_cat_id,
+                  'stock_in'   => $p->approve_qty,
+                  'stock_out'  => 0,
+                  'balance'    => $p->approve_qty,
+                  'order_level'=> $it->order_level,
+                  'updated_by' => $user['user_id'],
+                  'updated_at' => date('Y-m-d H:i:s'),
+               );
+               $this->db->insert('item_stocks', $aa);
+            }
+
+            // plus user division stock
+            $dd = array(
+               'unit_id'      => $user['unit_id'],
+               'item_id'      => $p->item_id,
+               'cat_id'       => $p->cat_id,
+               'sub_cat_id'   => $p->sub_cat_id,
+               'qty'          => $p->approve_qty,
+               'status'       => 4,  // stock in
+               'updated_by'   => $user['user_id'],
+               'updated_at'   => date('Y-m-d H:i:s'),
+            );
+            $this->db->insert('item_stocks_details', $dd);
+         }
+         $this->session->set_flashdata('success', 'Update successfully.');
+         redirect("stock_in");
+      };
    }
 
    function print_stock_in( $id ) {

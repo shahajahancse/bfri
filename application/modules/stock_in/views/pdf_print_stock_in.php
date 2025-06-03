@@ -93,9 +93,7 @@
                 }else if($info->status == 10){
                     $status = '<span class="label label-important"> Rejected </span>';
                 }else if($info->status == 11){
-                    $status = '<span class="label label-important"> Return Request </span>';
-                } else if($info->status == 12){
-                    $status = '<span class="label label-important"> Return Complete </span>';
+                    $status = '<span class="label label-important"> Provider Purchased </span>';
                 }
             ?>
             <table class="tg" width="100%">

@@ -13,6 +13,9 @@ class Requisition_model extends CI_Model {
       $this->db->join('users u', 'u.id = r.user_id', 'LEFT');
       $this->db->join('department dp', 'dp.id = u.dept_id', 'LEFT');
       $this->db->join('fiscal_year f', 'f.id = r.f_year_id', 'LEFT');
+      if (!in_array($this->unit_id, array(1))) {
+         $this->db->where('r.unit_id', $this->unit_id);
+      }
       if($status){
          $this->db->where_in('r.status', $status);
       }
@@ -21,6 +24,9 @@ class Requisition_model extends CI_Model {
       $result['rows'] = $query;
 
       $this->db->from('item_requisitions');
+      if (!in_array($this->unit_id, array(1))) {
+         $this->db->where('unit_id', $this->unit_id);
+      }
       if($status){
          $this->db->where_in('status', $status);
       }

@@ -29,6 +29,12 @@ class Stock_in_model extends CI_Model {
       if (!empty($status)) {
          $this->db->where_in('status', $status);
       }
+      if ($unit_id != null) {
+         $this->db->where('unit_id', $unit_id);
+      }
+      if ($division_id != null) {
+         $this->db->where('division_id', $division_id);
+      }
       $query = $this->db->get()->result();
       $tmp = $query;
       $result['num_rows'] = $tmp[0]->count;

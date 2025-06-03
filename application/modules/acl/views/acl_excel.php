@@ -66,7 +66,7 @@
                 <tr>
                     <th>SL</th>
                     <th>Name</th>
-                    <th>Branch</th>
+                    <th>DIvision</th>
                     <th>Group</th>
                     <th>Username</th>
                 </tr>

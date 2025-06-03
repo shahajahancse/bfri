@@ -11,7 +11,9 @@ class Purchase_model extends CI_Model {
       $this->db->from('item_purchases p');
       $this->db->join('users u', 'u.id = p.created_by', 'LEFT');
       $this->db->where('p.type', 1);
-      
+      if (!in_array($this->unit_id, array(1))) {
+         $this->db->where('p.unit_id', $this->unit_id);
+      }
       if (!empty($status)) {
          $this->db->where_in('p.status', $status);
       }
@@ -23,6 +25,9 @@ class Purchase_model extends CI_Model {
       $this->db->select('COUNT(*) as count');
       $this->db->from('item_purchases');
       $this->db->where('type', 1);
+      if (!in_array($this->unit_id, array(1))) {
+         $this->db->where('unit_id', $this->unit_id);
+      }
       if (!empty($status)) {
          $this->db->where_in('status', $status);
       }

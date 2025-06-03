@@ -45,6 +45,9 @@ class Common_model extends CI_Model {
 
          COUNT(CASE WHEN status = 3 THEN 1 END) AS dg,
       ");
+      if (!in_array($this->unit_id, array(1))) {
+         $this->db->where('unit_id', $this->unit_id);
+      }
       $row = $this->db->get('item_purchases')->row();
       return $row;
    }
@@ -53,7 +56,7 @@ class Common_model extends CI_Model {
    {
       $this->db->select("
          COUNT(CASE WHEN status = 8 THEN 1 END) AS sm,
-         COUNT(CASE WHEN status = 7 THEN 1 END) AS sm1,
+         COUNT(CASE WHEN status = 11 THEN 1 END) AS sm1,
          COUNT(CASE WHEN status = 4 THEN 1 END) AS sm2,
 
          COUNT(CASE WHEN status = 2 THEN 1 END) AS do,
@@ -61,9 +64,16 @@ class Common_model extends CI_Model {
 
          COUNT(CASE WHEN status = 3 THEN 1 END) AS div_sm,
          COUNT(CASE WHEN status = 5 THEN 1 END) AS div_do,
+         COUNT(CASE WHEN status = 7 THEN 1 END) AS ds,
 
          COUNT(CASE WHEN status = 6 THEN 1 END) AS dg,
       ");
+      if (!in_array($this->unit_id, array(1,2,3,4))) {
+         $this->db->where('unit_id', $this->unit_id);
+      }
+      if (in_array($this->unit_id, array(2,3,4))) {
+         $this->db->where('division_id', $this->unit_id);
+      }
       $row = $this->db->get('item_stock_in')->row();
       return $row;
    }

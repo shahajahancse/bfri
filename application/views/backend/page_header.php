@@ -210,6 +210,7 @@
                                 </li>
                                 <?php } ?>
 
+                                <!-- Purchase section -->
                                 <?php if($this->ion_auth->in_group(array('admin','sm','do'))){ ?>
                                 <li class="start <?=backend_activate_menu_class('purchase')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Purchase</span> <span class="selected"></span> <span class="badge badge-danger pull-right"><?=$pn + $per_ntfy->ret?></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
@@ -234,10 +235,13 @@
 
                                 <!-- Stock In section -->
                                 <?php
-                                    if (in_array($unit_id, array(1,2,3,4)) && $this->ion_auth->in_group(array('sm'))) {
+                                    $pn1 = 0;
+                                    if (in_array($unit_id, array(2,3,4)) && $this->ion_auth->in_group(array('sm'))) {
                                         $pn = $stk_ntfy->div_sm;
-                                    } elseif (in_array($unit_id, array(1,2,3,4)) && $this->ion_auth->in_group(array('do'))) {
+                                        $pn1 = $stk_ntfy->ds;
+                                    } elseif (in_array($unit_id, array(2,3,4)) && $this->ion_auth->in_group(array('do'))) {
                                         $pn = $stk_ntfy->div_do;
+                                        $pn1 = $stk_ntfy->ds;
                                     } elseif ($this->ion_auth->in_group(array('sm'))) {
                                         $pn = $stk_ntfy->sm + $stk_ntfy->sm1 + $stk_ntfy->sm2;
                                      } elseif ($this->ion_auth->in_group(array('do'))) {
@@ -249,7 +253,7 @@
                                     }
                                 ?>
                                 <?php if($this->ion_auth->in_group(array('admin','sm','do'))){ ?>
-                                <li class="start <?=backend_activate_menu_class('stock_in')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Stock In</span> <span class="selected"></span> <span class="badge badge-danger pull-right"><?=$pn?></span> <span class="arrow"></span> </a>
+                                <li class="start <?=backend_activate_menu_class('stock_in')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Stock In</span> <span class="selected"></span> <span class="badge badge-danger pull-right"><?=$pn + $pn1?></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
                                         <?php if(!in_array($unit_id, array(1,2,3,4))){ ?>
                                             <li> <a href="<?=base_url('stock_in');?>"> Stock In List </a> </li>
@@ -260,7 +264,7 @@
                                         <li> <a href="<?=base_url('stock_in/purchase_approved');?>">Approved List <span class="badge badge-danger" style="float: right; margin-right: 10px;"><?=$stk_ntfy->sm1;?></span></a> </li>
                                         <?php } else { ?>
                                         <li> <a href="<?=base_url('stock_in/purchase_pending');?>">Pending List <span class="badge badge-danger" style="float: right; margin-right: 10px;"><?=$pn?></span></a> </li>
-                                        <li> <a href="<?=base_url('stock_in/purchase_approved');?>">Approved List </a> </li>
+                                        <li> <a href="<?=base_url('stock_in/purchase_approved');?>">Approved List <span class="badge badge-danger" style="float: right; margin-right: 10px;"><?=$stk_ntfy->ds;?></span></a> </li>
                                         <?php } ?>
                                         <li> <a href="<?=base_url('stock_in/purchase_rejected');?>">Rejected List </a> </li>
                                         <li> <a href="<?=base_url('stock_in/purchase_received');?>">Received List </a> </li>

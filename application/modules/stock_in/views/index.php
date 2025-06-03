@@ -59,6 +59,8 @@
                                         $status = '<span class="label label-info"> Received </span>';
                                     }else if($row->status == 10){
                                         $status = '<span class="label label-important"> Rejected </span>';
+                                    }else if($row->status == 11){
+                                        $status = '<span class="label label-warning"> Provider Purchased </span>';
                                     }
                                 ?>
                                 <?php
@@ -100,9 +102,14 @@
                                                     <li><a href="<?=base_url('stock_in/ap_status/'.$row->id)?>"> Approval</a> </li>
                                                 <?php } ?>
 
-                                                <?php if(!in_array($this->unit_id, array(1,2,3,4)) && $this->ion_auth->in_group(array('sm')) && $row->status == 7){ ?>
+                                                <?php if(!in_array($this->unit_id, array(1,2,3,4)) && $this->ion_auth->in_group(array('sm')) && $row->status == 11){ ?>
                                                     <li><a href="<?=base_url('stock_in/received/'.$row->id)?>"> Received </a> </li>
                                                 <?php } ?>
+
+                                                <?php if ($this->ion_auth->in_group(array('sm')) && in_array($this->unit_id, array(2,3,4)) && $row->status == 7){ ?>
+                                                    <li><a href="<?=base_url('stock_in/in_received/'.$row->id)?>"> Purchase </a> </li>
+                                                <?php } ?>
+
                                                 <li><a href="<?=base_url('stock_in/details/'.$row->id)?>"> Details</a> </li>
                                                 <li><a target="_blank" href="<?=base_url('stock_in/print_stock_in/'.$row->id)?>"> Print </a> </li>
                                             </ul>

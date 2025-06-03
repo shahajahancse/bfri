@@ -17,6 +17,7 @@ class Backend_Controller extends MY_Controller{
 		$this->data['domain_title'] = 'BCCT';
 		$this->load->model('Common_model');
 		$this->userSessID = $this->session->userdata('user_id');
+		$this->unit_id = $this->session->userdata('unit_id');
       	$this->data['userDetails'] = $this->Common_model->get_user_details();
 
 		$this->data['user_ntfy'] = 0;
