@@ -64,8 +64,14 @@
                               <td class="v-align-middle"><?=($row->balance)? $row->balance:0?></td>
                               <td class="v-align-middle"><?=$row->order_level?></td>
                               <!-- <td class="v-align-middle"><?=$status?></td> -->
-                              <td class="text-center">
-                                 <a href="<?=base_url('items/stock_details/'.encrypt_url($row->id));?>" class="btn btn-info btn-xs btn-mini">Details</a>
+                              <td align="right">
+                                 <div class="btn-group">
+                                    <a class="btn btn-success dropdown-toggle btn-mini" data-toggle="dropdown" href="#"> Action <span class="caret"></span> </a>
+                                    <ul class="dropdown-menu pull-right">
+                                       <li><a href="<?=base_url('items/stock_details/'.encrypt_url($row->id))?>"> Details</a> </li>
+                                       <li><a target="_blank" href="<?=base_url('items/print_stock_in/'.$row->id)?>"> Print </a> </li>
+                                    </ul>
+                                 </div>
                               </td>
                            </tr>
                            <?php } ?>

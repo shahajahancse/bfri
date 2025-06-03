@@ -45,16 +45,13 @@
                      <thead>
                         <tr>
                            <th style="width:2%"> SL </th>
-                           <?php if($this->ion_auth->in_group(array('admin'))): ?>
-                              <th style="width:12%">Branch</th>
-                           <?php else: ?>
-                              <th style="width:12%">Category</th>
-                           <?php endif; ?>
-                           <th style="width:12%">Sub Category</th>
                            <th style="width:20%">Item Name</th>
+                           <th style="width:12%">Category</th>
+                           <th style="width:12%">Division</th>
+                           <th style="width:12%">Date</th>
                            <th style="width:8%">Quantity</th>
                            <th style="width:8%">Status</th>
-                           <th style="width:15%">Remarks</th>
+                           <!-- <th style="width:15%">Remarks</th> -->
                         </tr>
                      </thead>
                      <tbody>
@@ -76,16 +73,13 @@
                            } ?>
                            <tr>
                               <td class="v-align-middle"><?=++$i?>.</td>
-                              <?php if($this->ion_auth->in_group(array('admin'))): ?>
-                                 <td class="v-align-middle"><?=$row->branch_name?></td>
-                              <?php else: ?>
-                              <td class="v-align-middle"><?=$row->category_name?></td>
-                              <?php endif; ?>
-                              <td class="v-align-middle"><?=$row->sub_cate_name?></td>
                               <td class="v-align-middle"><strong><?=$row->item_name?></strong></td>
+                              <td class="v-align-middle"><?=$row->sub_cate_name?></td>
+                              <td class="v-align-middle"><?=$row->branch_name?></td>
+                              <td class="v-align-middle"><?= date('d-m-Y', strtotime($row->updated_at)) ?></td>
                               <td class="v-align-middle"><?=($row->qty)? $row->qty:0?></td>
                               <td class="v-align-middle"><?=$status?></td>
-                              <td class="v-align-middle"><?=$row->remarks?></td>
+                              <!-- <td class="v-align-middle"><?=$row->remarks?></td> -->
                            </tr>
                         <?php } ?>
                      </tbody>

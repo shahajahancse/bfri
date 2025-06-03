@@ -214,9 +214,6 @@
                                 <?php if($this->ion_auth->in_group(array('admin','sm','do'))){ ?>
                                 <li class="start <?=backend_activate_menu_class('purchase')?>"> <a href="javascript:;"><i class="fa fa-tags"></i> <span class="title">Purchase</span> <span class="selected"></span> <span class="badge badge-danger pull-right"><?=$pn + $per_ntfy->ret?></span> <span class="arrow"></span> </a>
                                     <ul class="sub-menu">
-                                        <?php if($this->ion_auth->in_group(array('sm'))){ ?>
-                                        <li> <a href="<?=base_url('purchase/create');?>"> Create Purchase  </a> </li>
-                                        <?php } ?>
                                         <li> <a href="<?=base_url('purchase');?>"> Purchase List </a> </li>
 
                                         <?php if($this->ion_auth->in_group(array('sm'))){ ?>

@@ -367,6 +367,20 @@ class Items extends Backend_Controller {
          echo 'success';
       }
    }
+
+   function print_stock_in( $id ) {
+      //Results
+      $info = $this->Items_model->get_stock_info($id, $this->session->userdata('unit_id'));
+      $this->data['items'] = $this->Items_model->get_stock_details($info->item_id, $info->unit_id);
+
+      // Generate PDF
+      $this->data['info'] = $info;
+      $this->data['headding'] = 'Stock in';
+      $html = $this->load->view('pdf_print_stock_in', $this->data, true);
+      $mpdf = new mPDF('', 'A4', 10, '', 10, 10, 10, 5);
+      $mpdf->WriteHtml($html);
+      $mpdf->output();
+   }
    // ================== Stock Items end ==================
 
    /*************details_pdf function pdf start**************/
