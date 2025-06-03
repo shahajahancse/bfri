@@ -12,7 +12,7 @@
                     <div class="grid-title">
                         <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
                         <div class="pull-right">
-                            <?php if(!in_array($this->unit_id, array(1,2,3,4)) &&  $this->ion_auth->in_group(array('sm'))){ ?>
+                            <?php if($this->ion_auth->in_group(array('sm'))){ ?>
                                 <a href="<?=base_url('stock_in/create')?>" class="btn btn-blueviolet btn-xs btn-mini"> Create</a>
                             <?php } ?>
                         </div>
