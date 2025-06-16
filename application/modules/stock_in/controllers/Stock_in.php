@@ -303,7 +303,7 @@ class Stock_in extends Backend_Controller {
             $this->db->update('item_stock_in_details', $form_data2);
          }
          $this->session->set_flashdata('success', 'Update successfully.');
-         redirect("stock_in");
+         redirect("stock_in/purchase_pending");
       }
    }
 
