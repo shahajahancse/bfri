@@ -103,7 +103,7 @@
                      <?php if(in_array($this->unit_id, array(2,3,4)) && $this->ion_auth->in_group(array('sm'))) { ?>
                      <div class="col-md-6" style="margin-bottom: 20px;: ">
                         <label class="form-label">Status Type <span class='required'>*</span></label>
-                        <?php if(!$info->status == 7){ ?>
+                        <?php if($info->status == 3){ ?>
                         <input type="radio" name="status" value="3"> <span style="color: black; font-size: 14px;"><strong>Draft</strong></span>
                         <input type="radio" name="status" value="5" checked> <span style="color: black; font-size: 14px;"><strong>Approve</strong></span>
                         <?php } ?>

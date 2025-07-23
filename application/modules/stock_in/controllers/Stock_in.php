@@ -263,7 +263,7 @@ class Stock_in extends Backend_Controller {
    public function ap_status($id){
       $this->data['categories'] = $this->Common_model->get_categories();
       $this->data['info'] = $this->db->where('id', $id)->get('item_stock_in')->row();
-
+      // dd($this->data['info']);
       $this->db->select('ri.*, i.item_name, iu.unit_name, c.category_name, sc.sub_cate_name');
       $this->db->from('item_stock_in_details ri');
       $this->db->join('items i', 'i.id = ri.item_id');
