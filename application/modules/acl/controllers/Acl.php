@@ -16,7 +16,11 @@ class Acl extends Backend_Controller {
     public function index($offset=0){
         //Manage list the users
         $limit = 50;
-        $results = $this->Acl_model->get_users($limit, $offset);
+        $type = true;
+        if ($this->ion_auth->is_admin()) {
+            $type = false;
+        }
+        $results = $this->Acl_model->get_users($limit, $offset, $type);
         // print_r($results); exit;
 
         $this->data['users'] = $results['rows'];

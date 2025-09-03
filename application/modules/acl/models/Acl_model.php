@@ -17,7 +17,7 @@ class Acl_model extends CI_Model {
         return $query->row();
     }
 
-    public function get_users($limit = 1000, $offset = 0) {
+    public function get_users($limit = 1000, $offset = 0, $type = false) {
         // result query
         $this->db->select('u.id, u.username, u.first_name, u.phone, u.email, u.created_on, u.last_login, u.active, dp.dept_name, dg.desig_name, un.name_en');
         $this->db->from('users u');
@@ -27,8 +27,8 @@ class Acl_model extends CI_Model {
         $this->db->limit($limit);
         $this->db->offset($offset);
         $this->db->order_by('u.id', 'ASC');
-        if($this->input->get('name') != NULL){
-            $this->db->like('u.first_name', $this->input->get('name'));
+        if($type){
+            $this->db->where('u.unit_id', $this->session->userdata('unit_id'));
         }
         if($this->input->get('username') != NULL){
             $this->db->where('u.email', $this->input->get('username'));
@@ -39,6 +39,9 @@ class Acl_model extends CI_Model {
         // count query
         $q = $this->db->select('COUNT(*) as count');
         $this->db->from('users');
+        if($type){
+            $this->db->where('unit_id', $this->session->userdata('unit_id'));
+        }
         if($this->input->get('name') != NULL){
             $this->db->like('first_name', $this->input->get('name'));
         }
