@@ -16,9 +16,10 @@
                   </div>
                </div>
                <div class="grid-body">
-                  <?php if($this->session->flashdata('success')):?>
+                  <?php if($this->session->has_userdata('success')):?>
                      <div class="alert alert-success">
-                        <?php echo $this->session->flashdata('success');;?>
+                        <?php echo $this->session->userdata('success');?>
+                        <?php $this->session->unset_userdata('success');?>
                      </div>
                   <?php endif; ?>
 
@@ -57,7 +58,7 @@
                         <?php echo form_error('type'); ?>
                         <select name="type" id="type" class="form-control input-sm">
                            <option value="1" <?=set_value('type', $info->type)==1?'selected':'';?>>Consumable</option>
-                           <option value="2" <?=set_value('type', $info->type)==2?'selected':'';?>>Non-Consumable</option>
+                           <!-- <option value="2" <?=set_value('type', $info->type)==2?'selected':'';?>>Non-Consumable</option> -->
                            <option value="3" <?=set_value('type', $info->type)==3?'selected':'';?>>Permanent</option>
                         </select>
                      </div>

@@ -14,9 +14,10 @@
                </div>
 
                <div class="grid-body">
-                  <?php if($this->session->flashdata('success')):?>
+                  <?php if($this->session->has_userdata('success')):?>
                      <div class="alert alert-success">
-                        <?php echo $this->session->flashdata('success');?>
+                        <?php echo $this->session->userdata('success');?>
+                        <?php $this->session->unset_userdata('success');?>
                      </div>
                   <?php endif; ?>
 

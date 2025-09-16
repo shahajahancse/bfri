@@ -1,4 +1,11 @@
 </div>
+  <?php if($this->session->has_userdata('success')):?>
+    <?php $this->session->unset_userdata('success');?>
+  <?php endif; ?>
+  <?php if($this->session->has_userdata('error')):?>
+    <?php $this->session->unset_userdata('error');?>
+  <?php endif; ?>
+
 <!-- END CONTAINER -->
 
 <!-- BEGIN CORE JS FRAMEWORK-->

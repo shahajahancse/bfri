@@ -3,8 +3,8 @@
   .margin-top{margin-top:20px;}
   .checkbox label {margin-bottom: 2px;}
 </style>
-<div class="page-content">     
-  <div class="content">  
+<div class="page-content">
+  <div class="content">
     <ul class="breadcrumb" style="margin-bottom: 20px;">
       <li> <a href="<?=base_url('dashboard')?>" class="active"> রিপোর্ট </a> </li>
       <li><?=$meta_title?></li>
@@ -17,12 +17,13 @@
             <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
           </div>
           <div class="grid-body">
-            <?php if($this->session->flashdata('success')):?>
-              <div class="alert alert-success">
-                <?php echo $this->session->flashdata('success');?>
-              </div>
-            <?php endif; ?>
-            <?php 
+                  <?php if($this->session->has_userdata('success')):?>
+                     <div class="alert alert-success">
+                        <?php echo $this->session->userdata('success');?>
+                        <?php $this->session->unset_userdata('success');?>
+                     </div>
+                  <?php endif; ?>
+            <?php
             $attributes = array('id' => 'validate', 'target'=>'_blank');
             echo form_open_multipart("reports/representative_result", $attributes);?>
 
@@ -106,7 +107,7 @@
 
                 <div class="row form-row">
                   <div class="col-md-12" style="text-align: center; border:1px solid #0aa699; padding:10px 5px 20px 5px; position: relative; margin-top: 40px">
-                    <label class="head"> সংখ্যা ভিত্তিক রিপোর্ট</label> 
+                    <label class="head"> সংখ্যা ভিত্তিক রিপোর্ট</label>
 
                     <button type="submit" name="btnsubmit" value="pdf_rep_number_divisional" class="btn btn-info btn-cons margin-top"> বিভাগ ভিত্তিক রিপোর্ট</button>
 
@@ -132,7 +133,7 @@
 
                 <div class="row form-row">
                   <div class="col-md-12" style="text-align: center; border:1px solid #0aa699; padding:10px 5px 20px 5px; position: relative; margin-top: 40px">
-                    <label class="head"> তালিকা ভিত্তিক রিপোর্ট</label> 
+                    <label class="head"> তালিকা ভিত্তিক রিপোর্ট</label>
 
                     <button type="submit" name="btnsubmit" value="pdf_rep_list_union" onclick="return validFunc6()" class="btn btn-info btn-cons margin-top"> ইউনিয়ন পরিষদের রিপোর্ট</button>
 
@@ -140,7 +141,7 @@
 
                     <button type="submit" name="btnsubmit" value="pdf_rep_list_upazila" onclick="return validFunc3()" class="btn btn-info btn-cons margin-top"> উপজেলা পরিষদের রিপোর্ট</button>
 
-                    
+
 
                     <button type="submit" name="btnsubmit" value="pdf_rep_list_city" onclick="return validFunc2()" class="btn btn-info btn-cons margin-top"> সিটি কর্পোরেশনের রিপোর্ট</button>
 
@@ -152,7 +153,7 @@
 
               <div class="col-md-4">
                 <div style="padding: 5px 15px 15px 15px; background:#eee; font-style: italic;">
-                  <label class="form-label">পদবি সমূহ</label> 
+                  <label class="form-label">পদবি সমূহ</label>
                   <div style="border:1px solid #0aa699; padding: 4px 0; background: #0aa699; color: #fff;">
                     <div class="row-fluid">
                       <div class="checkbox check-danger">
@@ -174,7 +175,7 @@
                     </div>
                   </div>
                 </div>
-              </div> 
+              </div>
             </div>
             <?php form_close(); ?>
 
@@ -182,7 +183,7 @@
         </div>
       </div>
 
-      
+
 
     </div> <!-- END ROW -->
   </div>
@@ -204,15 +205,15 @@
       // var upazila = document.getElementById("upazila").value;
       submitOK = "true";
 
-      if (division == '') {        
+      if (division == '') {
         $("#division").css("border", "1px solid red");
         submitOK = "false";
       }
-      // if (district == '') {        
+      // if (district == '') {
       //   $("#district").css("border", "1px solid red");
       //   submitOK = "false";
       // }
-      // if (upazila == '') {        
+      // if (upazila == '') {
       //   $("#upazila").css("border", "1px solid red");
       //   submitOK = "false";
       // }
