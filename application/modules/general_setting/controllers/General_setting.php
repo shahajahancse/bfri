@@ -439,6 +439,50 @@ class General_setting extends Backend_Controller {
       $this->load->view('backend/_layout_main', $this->data);
    }
 
+   public function item_unit_add(){
+      $this->form_validation->set_rules('unit_name', 'Name', 'required|trim');
+
+      if ($this->form_validation->run() == true){
+         $form_data = array(
+            'unit_name'      => $this->input->post('unit_name'),
+            'status'         => $this->input->post('status'),
+         );
+         if($this->Common_model->save('item_unit', $form_data)){
+            $this->session->set_flashdata('success', 'Item Unit added successfully.');
+            redirect('general_setting/item_unit');
+         }
+      }
+
+      // Load page
+      $this->data['meta_title'] = 'Create Item Unit';
+      $this->data['subview'] = 'item_unit_add';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+
+   public function item_unit_edit($id){
+      $this->form_validation->set_rules('unit_name', 'Name', 'required|trim');
+
+      if ($this->form_validation->run() == true){
+         $form_data = array(
+            'unit_name'      => $this->input->post('unit_name'),
+            'status'         => $this->input->post('status'),
+         );
+
+         if($this->Common_model->edit('item_unit', $id, 'id', $form_data)){
+            $this->session->set_flashdata('success', 'Information update successfully.');
+            redirect('general_setting/item_unit');
+         }
+      }
+
+      $this->data['info'] = $this->General_setting_model->get_info('item_unit',$id);
+      // dd( $this->data['info']);
+      // Load page
+      $this->data['meta_title'] = 'Edit Item Unit';
+      $this->data['subview'] = 'item_unit_edit';
+      $this->load->view('backend/_layout_main', $this->data);
+   }
+
+
    public function designation(){
       $this->data['results'] = $this->General_setting_model->get_designation();
       $this->data['meta_title'] = 'All designation List';
@@ -1236,40 +1280,40 @@ class General_setting extends Backend_Controller {
          $this->form_validation->set_rules('badge_type_name_en', 'Badge Type Name EN', 'trim');
 
          if(@$_FILES['badge_logo']['size'] > 0){
-         $this->form_validation->set_rules('badge_logo', '', 'callback_file_check');
-      }
-
-      if ($this->form_validation->run() == true){
-
-         if($_FILES['badge_logo']['size'] > 0){
-            $new_file_name = $_FILES["badge_logo"]['name'];
-
-            $config['allowed_types']= 'jpg|png|jpeg|gif';
-            $config['upload_path']  = $this->img_path;
-            $config['file_name']    = $new_file_name;
-            $config['max_size']     = 1000;
-
-            $this->load->library('upload', $config);
-                  //upload file to directory
-            if($this->upload->do_upload('badge_logo')){
-
-            $uploadData = $this->upload->data();
-            $uploadedFile = $uploadData['file_name'];
-                     // print_r($uploadedFile);
-            $this->data['message'] = 'File has been uploaded successfully.';
-         }else{
-            $this->data['message'] = $this->upload->display_errors();
+            $this->form_validation->set_rules('badge_logo', '', 'callback_file_check');
          }
-      }
 
-      $form_data = array(
-         'badge_type_name_bn'      => $this->input->post('badge_type_name_bn'),
-         'badge_type_name_en'      => $this->input->post('badge_type_name_en'),
+         if ($this->form_validation->run() == true){
+
+            if($_FILES['badge_logo']['size'] > 0){
+               $new_file_name = $_FILES["badge_logo"]['name'];
+
+               $config['allowed_types']= 'jpg|png|jpeg|gif';
+               $config['upload_path']  = $this->img_path;
+               $config['file_name']    = $new_file_name;
+               $config['max_size']     = 1000;
+
+               $this->load->library('upload', $config);
+                     //upload file to directory
+               if($this->upload->do_upload('badge_logo')){
+
+               $uploadData = $this->upload->data();
+               $uploadedFile = $uploadData['file_name'];
+                        // print_r($uploadedFile);
+               $this->data['message'] = 'File has been uploaded successfully.';
+            }else{
+               $this->data['message'] = $this->upload->display_errors();
+            }
+         }
+
+         $form_data = array(
+            'badge_type_name_bn'      => $this->input->post('badge_type_name_bn'),
+            'badge_type_name_en'      => $this->input->post('badge_type_name_en'),
          );
 
-      if($_FILES['badge_logo']['size'] > 0){
-         $form_data['badge_logo'] = $uploadedFile;
-      }
+         if($_FILES['badge_logo']['size'] > 0){
+            $form_data['badge_logo'] = $uploadedFile;
+         }
 
 
             // print_r($form_data); exit;
