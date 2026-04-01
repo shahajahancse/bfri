@@ -319,6 +319,7 @@ class Purchase extends Backend_Controller {
 
          foreach($purchase_data as $p){
             $items = $this->db->where('unit_id',$user['unit_id'])->where('item_id',$p->pur_item_id)->get('item_stocks')->row();
+            $item = $this->db->where('id',$p->pur_item_id)->get('items')->row();
             $aa = array(
                'stock_in'   => $items->stock_in + $p->pur_approve,
                'balance'    => $items->balance + $p->pur_approve,
@@ -331,8 +332,8 @@ class Purchase extends Backend_Controller {
             $dd = array(
                'unit_id'      => $user['unit_id'],
                'item_id'      => $items->item_id,
-               'cat_id'       => $items->cat_id,
-               'sub_cat_id'   => $items->sub_cat_id,
+               'cat_id'       => $item->cat_id,
+               'sub_cat_id'   => $item->sub_cat_id,
                'qty'          => $p->pur_approve,
                'status'       => 2,
                'updated_by'   => $user['user_id'],
