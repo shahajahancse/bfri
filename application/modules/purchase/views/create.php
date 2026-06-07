@@ -107,24 +107,18 @@
                                                 class="form-control input-sm" placeholder="">
                                         </div>
                                         <div class="col-md-6" style="color: black; font-weight: bold;">
-                                            <div class="col-md-6" style="color: black; font-weight: bold;">
-                                                <label class="form-label">Attached Document</label>
-                                                <input type="file" name="attachment" id="attachment"
-                                                    accept="application/pdf, image/*">
-                                                <div class='resizable' id='resizablec'>
-                                                    <div class='resizers'>
-                                                        <div id="preview-container"
-                                                            style="position: sticky;height: -webkit-fill-available;display: flex;">
-                                                            <iframe id="preview" frameborder="0"
-                                                                scrolling="auto"></iframe>
-                                                        </div>
-                                                        <div class='resizer top-left'></div>
-                                                        <div class='resizer top-right'></div>
-                                                        <div class='resizer bottom-left'></div>
-                                                        <div class='resizer bottom-right'></div>
+                                            <label class="form-label">Attached Document</label>
+                                            <input type="file" name="attachment" id="attachment" accept="image/jpg, image/jpeg, image/png, application/pdf">
+                                            <!-- <div class='resizable' id='resizablec'>
+                                                <div class='resizers'>
+                                                    <div id="preview-container" style="position: sticky;height: -webkit-fill-available;display: flex;"> <iframe id="preview" frameborder="0" scrolling="auto"></iframe>
                                                     </div>
+                                                    <div class='resizer top-left'></div>
+                                                    <div class='resizer top-right'></div>
+                                                    <div class='resizer bottom-left'></div>
+                                                    <div class='resizer bottom-right'></div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
 

@@ -172,7 +172,7 @@
                                         echo '<img src="' . $img . '" width="100px" height="100px" style="border-radius: 50%;"/>';
                                     } ?>
                                     <h3>Profile Image</h3>
-                                    <input type="file" name="profile_img" />
+                                    <input type="file" name="profile_img" accept="image/jpg, image/jpeg, image/png" />
                                 </div>
                             </div>
 

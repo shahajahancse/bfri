@@ -355,10 +355,10 @@ class Acl extends Backend_Controller {
             }
 
             if ($this->form_validation->run() === TRUE){
-                if ($_FILES['profile_img']) {
+                if (!empty($_FILES['profile_img']['name'])) {
                     $config['upload_path'] = './profile_img/';
                     $config['allowed_types'] = 'jpg|png|jpeg';
-                    $config['max_size'] = 10240000;
+                    $config['max_size']      = 10240; // 10 MB
 
                     $this->load->library('upload', $config);
 

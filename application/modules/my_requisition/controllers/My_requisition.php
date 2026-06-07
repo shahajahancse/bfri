@@ -40,10 +40,11 @@ class My_requisition extends Backend_Controller {
          $approve_reject_user= [];
          $final_appruver= [];
          $attachmentname='';
-         if ($_FILES['attachment']) {
-            $config['upload_path'] = './attachment/';
-            $config['allowed_types'] = 'jpg|png|jpeg|pdf';
-            $config['max_size'] = 10240000;
+         if (!empty($_FILES['attachment']['name'])) {
+            $config['upload_path']   = './attachment/';
+            $config['allowed_types'] = 'jpg|jpeg|png|pdf';
+            $config['max_size']      = 10240; // 10 MB
+
             $this->load->library('upload', $config);
             if ($this->upload->do_upload('attachment')) {
                $data = $this->upload->data();

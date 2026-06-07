@@ -44,10 +44,10 @@ class Direct_purchase extends Backend_Controller {
          $user = $this->ion_auth->user()->row();
 
          $attachmentname='';
-         if ($_FILES['attachment']) {
-            $config['upload_path'] = './attachment/';
-            $config['allowed_types'] = 'jpg|png|jpeg|pdf';
-            $config['max_size'] = 10240000;
+         if (!empty($_FILES['attachment']['name'])) {
+            $config['upload_path']   = './attachment/';
+            $config['allowed_types'] = 'jpg|jpeg|png|pdf';
+            $config['max_size']      = 10240; // 10 MB
 
             $this->load->library('upload', $config);
 
