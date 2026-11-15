@@ -1,25 +1,28 @@
+   <style type="text/css">
+      .btn-cons{font-size: 20px;}
+   </style>
+   <style type="text/css">
+      .tg  {border-collapse:collapse;border-spacing:0; border: 0px solid red;}
+      .tg td{font-size:14px;padding:5px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#bbb;color:#000000;background-color:#E0FFEB; vertical-align: middle;}
+      .tg th{font-size:14px;font-weight:bold;padding:3px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#bbb;color:#493F3F;background-color:#bce2c5;text-align: center;}
+      .tg .tg-khup{background-color:#efefef;vertical-align:top; color: black; text-align: right; width: 150px;}
+      .tg .tg-ywa9{background-color:#ffffff;vertical-align:top; color: black;}
+   </style>
 
-
-<div class="page-content">     
-   <div class="content">  
+<div class="page-content">
+   <div class="content">
       <ul class="breadcrumb">
          <li><a href="<?=base_url('dashboard')?>" class="active"> Dashboard </a></li>
          <li><a href="<?=base_url('purchase')?>" class="active"><?=$module_name?></a></li>
          <li><?=$meta_title; ?></li>
       </ul>
 
-      <style type="text/css">
-         /*#appointment, #invitation { display: none; }*/
-      </style>
-
       <div class="row">
          <div class="col-md-12">
             <div class="grid simple horizontal">
                <div class="grid-title">
                   <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
-                  <div class="pull-right">                
-                     <a href="<?=base_url('purchase')?>" class="btn btn-blueviolet btn-xs btn-mini"> Purchase List</a>  
-                  </div>
+                  <div class="pull-right"> </div>
                </div>
                <div class="grid-body">
                   <?php if($this->session->flashdata('success')):?>
@@ -27,130 +30,136 @@
                         <?=$this->session->flashdata('success');;?>
                      </div>
                   <?php endif; ?>
-                  
-                  <?php 
-                  $attributes = array('id' => 'jsvalidate');
-                  echo form_open_multipart("purchase/edited_update",$attributes);
-                  echo validation_errors();
-                  ?>
-                  <input type="hidden" name="id" value="<?= $info->id?>">
 
+                  <?php
+                     echo validation_errors();
+                     $attributes = array('id' => 'jsvalidate');
+                     echo form_open_multipart('purchase/change_status/'.$info->id, $attributes);
+                  ?>
+                  <!-- purchase title info -->
                   <div class="row">
                      <div class="col-md-12">
-                        <fieldset >      
-                           <legend>Purchase Information</legend>
-                           <div class="row form-row">
-                              <div class="col-md-6">
-                                 <label class="form-label">Title Name <span class='required'>*</span></label>
-                                 <?php echo form_error('title');?>
-                                 <input name="title" value="<?=$info->supplier_name?>" type="text" class="form-control input-sm" placeholder=""> 
+                        <fieldset >
+                           <legend>Purchase Title</legend>
+                           <?php
+                                 $status = '<span class="label label-secondary">Draft</span>';
+                                 if ($info->status == 2) {
+                                    $status = '<span class="label label-warning">On process</span>';
+                                }else if($info->status == 3){
+                                    $status = '<span class="label label-success">DO Approve</span>';
+                                }else if($info->status == 4){
+                                    $status = '<span class="label label-info">Back SM From DO</span>';
+                                }else if($info->status == 5){
+                                    $status = '<span class="label label-primary">Director Approve</span>';
+                                }else if($info->status == 6){
+                                    $status = '<span class="label label-blueviolet">Received</span>';
+                                }else if($info->status == 7){
+                                    $status = '<span class="label label-important">Rejected</span>';
+                                }else if($info->status == 8){
+                                    $status = '<span class="label label-warning">Back DO/SM From Director</span>';
+                                }
+                           ?>
+
+                           <div class="row">
+                              <div class="col-md-12">
+                                 <table class="tg" width="100%">
+                                    <tr>
+                                       <th class="tg-khup"> Title Name</th>
+                                       <td class="tg-ywa9"><?=$info->supplier_name?></td>
+                                       <th class="tg-khup"> Status </th>
+                                       <td class="tg-ywa9"><?=$status?></td>
+                                    </tr>
+
+                                    <tr>
+                                       <th class="tg-khup"> Created </th>
+                                       <td class="tg-ywa9"><?=date('d-m-Y', strtotime($info->created_at)); ?></td>
+                                       <th class="tg-khup"> Updated </th>
+                                       <td class="tg-ywa9"><?=date('d-m-Y', strtotime($info->updated_at)); ?></td>
+                                    </tr>
+                                 </table>
                               </div>
                            </div>
-                        <div class="col-md-4" >
-                           <table class="table table-bordered" >
-                             <thead>
-                              <tr>
-                                 <th>Verifier  Name</th>
-                                 <th>Role</th>
-                                 <th>Remark</th>
-                              </tr>
-                             </thead>
-                             <tbody>
-                              <?php
-                             $approver = json_decode($info->approved_id);
-                              foreach ($approver as $key => $value) {
-                                 $this->db->where('id', $value->id);
-                                 $query = $this->db->get('users')->row();
-
-                                 $this->db->select('name');
-                                 $this->db->where('id',$value->id);
-                                 $query2 = $this->db->get('groups')->row();
-                                 echo '<tr><td>'.$query->first_name.'</td><td>'.$query2->name.'</td><td>'.$value->Remark.'</td></tr>';
-
-                              }
-                              ?>
-                             </tbody>
-
-                           </table>
-                        </div>
-                        <div class="col-md-4" >
-                           <table class="table table-bordered" >
-                             <thead>
-                              <tr>
-                                 <th>Approver Name</th>
-                                 <th>Remark</th>
-                              </tr>
-                             </thead>
-                             <tbody>
-                              <?php
-                             $approver = json_decode($info->finalappr);
-                              foreach ($approver as $key => $value) {
-                                $this->db->where('id', $value->id);
-                                 $query = $this->db->get('users')->row();
-                                 
-                                 $this->db->select('name');
-                                 $this->db->where('id',$value->id);
-                                 $query2 = $this->db->get('groups')->row();
-                                 echo '<tr><td>'.$query->first_name.'</td><td>'.$query2->name.'</td><td>'.$value->Remark.'</td></tr>';
-                              }
-                              ?>
-                             </tbody>
-
-                           </table>
-                        </div>
-
-                           <div class="row form-row">
-                              <div class="col-md-12"> 
-                                 <h4 class="semi-bold margin_left_15">Item List <em style="color: #f73838; font-size: 15px;">Click <strong>Add More</strong> button for adding more item. </em></h4>
-                                 <style type="text/css">
-                                    #appRowDiv td{padding: 5px; border-color: #ccc;}
-                                    #appRowDiv th{padding: 5px;text-align:center;border-color: #ccc; color: black;}                        
-                                 </style>                              
-                                 <div class="col-md-12" >
-                                    <input type="hidden" value="<?=count($items);?>" id="count">
-                                    <table width="100%" border="1" id="appRowDiv" style="border:1px solid #a09e9e;">
-                                       <tr>
-                                          <th width="20%">Category<span class="required">*</span></th>
-                                          <th width="20%">Sub Category <span class="required">*</span></th>
-                                          <th width="20%">Item Name <span class="required">*</span></th>
-                                          <th width="20%">Quantity</th>
-                                          <th width="20%">Remark</th>
-                                          <th width="8%"> <a href="javascript:void();" id="addRow"  class="label label-success"> <i  class="fa fa-plus-circle"></i> Add More</a> </th>
-                                       </tr>
-                                       <?php foreach ($purchase_item_data as $key => $val) { ?>
-                                        <tr>
-                                          <td> <span><?=$val->category_name?></span></td>
-                                          <td> <span><?=$val->sub_cate_name?></span></td>
-                                          <td> <span><?=$val->item_name?></span> <input type="hidden" name="pur_item_id[]" value="<?= $val->pur_item_id?>"></td>
-                                          <td><input name="pur_quantity[]"  type="text" class="form-control input-sm" value="<?= $val->pur_quantity?>"></td>
-                                          <td><textarea name="pur_remark[]"   class="form-control input-sm"><?= $val->pur_remark?></textarea></td>
-                                          <td> <a href="javascript:void();" class="label label-important" onclick="removeRow(this)"> <i class="fa fa-minus-circle"></i> Remove </a></td>
-                                       </tr>
-
-                                      <?php }?>
-                                       <tr></tr>
-                                    </table>
-                                 </div>
-                              </div>
-                              
-                           </div>
-
                         </fieldset>
                      </div>
                   </div>
-                  
+                  <!-- purchase title info -->
 
-                  <div class="form-actions">  
-                     <div class="pull-right">
-                        <button type="submit" class="btn btn-primary btn-cons"><i class="icon-ok"></i> Save</button>
+                  <!-- change purchase status (app, reject)-->
+                  <div class="row form-row">
+                     <?php if($this->ion_auth->in_group(array('admin'))) { ?>
+                     <div class="col-md-6" style="margin-bottom: 20px;: ">
+                        <label class="form-label">Status Type <span class='required'>*</span></label>
+                        <input type="radio" name="status" value="3"> <span style="color: black; font-size: 14px;"><strong>Draft</strong></span>
+
+                        <input type="radio" name="status" value="8" <?=$info->status=='3'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Back To Sm/Do &nbsp;</strong></span>
+                        <input type="radio" name="status" value="5" checked> <span style="color: black; font-size: 14px;"><strong>Approve</strong></span>
+                        <input type="radio" name="status" value="7" <?=$info->status=='7'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
+                        <div id="typeerror"></div>
+                     </div>
+                     <?php } ?>
+
+                     <?php if($this->ion_auth->in_group(array('do'))) { ?>
+                     <div class="col-md-6" style="margin-bottom: 20px;: ">
+                        <label class="form-label">Status Type <span class='required'>*</span></label>
+                        <input type="radio" name="status" value="2" <?=$info->status=='2'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Draft</strong></span>
+                        <input type="radio" name="status" value="4" <?=$info->status=='6'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Back To SM</strong></span>
+                        <input type="radio" name="status" value="3" checked> <span style="color: black; font-size: 14px;"><strong>Approved</strong></span>
+                        <input type="radio" name="status" value="7" <?=$info->status=='8'?'checked':'';?>> <span style="color: black; font-size: 14px;"><strong>Reject</strong></span>
+                        <div id="typeerror"></div>
+                     </div>
+                     <?php } ?>
+                  </div>
+                  <!-- change purchase status (app, reject)-->
+
+                  <div class="row form-row">
+                     <div class="col-md-12">
+                        <style type="text/css">td{color: black; font-size: 15px;}</style>
+                        <fieldset>
+                           <legend>Purchase List</legend>
+                           <style type="text/css">
+                              #appRowDiv td{padding: 5px; border-color: #ccc;}
+                              #appRowDiv th{padding: 5px;text-align:center;border-color: #ccc; color: black;}
+                           </style>
+                           <div id="msgPerson"> </div>
+                           <table width="100%" border="1" id="appRowDiv">
+                              <tr>
+                                 <th width="20%">Item Name <span class="required">*</span></th>
+                                 <th width="15%">Qty. Request</th>
+                                 <th width="15%"> Qty. Correction </th>
+                                 <th width="10%"> Unit </th>
+                                 <th width="20%">Remark</th>
+                              </tr>
+
+                              <?php foreach($purchase_item_data as $item){
+                                 $appt_qty = ($item->pur_approve == 0)?$item->pur_quantity:$item->pur_approve;
+                              ?>
+                              <tr>
+                                 <td><?=$item->item_name?></td>
+                                 <td><?=$item->pur_quantity?>  <?=$item->unit_name?></td>
+                                 <td><input name="pur_approve[]"  value="<?=$appt_qty?>" class="form-control input-sm"></td>
+                                 <td><?=$item->unit_name?></td>
+                                 <td><?=$item->pur_remark?></td>
+                                 <input type="hidden" name="hide_id[]" value="<?=$item->id?>">
+                              </tr>
+                              <?php } ?>
+                           </table>
+                        </fieldset>
+                     </div>
+                     <div class="col-md-12">
+                        <label for=""> Description </label>
+                        <textarea name="description" id="description" class="form-control input-sm" rows="3" ><?=$info->description?></textarea>
+                     </div>
+                     <div class="col-md-12">
+                        <div class="pull-right">
+                           <button type="submit" class="btn btn-primary btn-cons"><i class="icon-ok"></i> Save</button>
+                        </div>
                      </div>
                   </div>
-                  <?php echo form_close();?>
 
-               </div>  <!-- END GRID BODY -->              
+                  <?php echo form_close();?>
+               </div>  <!-- END GRID BODY -->
             </div> <!-- END GRID -->
          </div>
-
       </div> <!-- END ROW -->
 
    </div>
@@ -175,25 +184,25 @@ foreach ($categories as $key => $value) {
 
       // JS Validation
       $('#jsvalidate').validate({
-         // focusInvalid: false, 
+         // focusInvalid: false,
          ignore: "",
          rules: {
             title: { required: true }
          },
 
          invalidHandler: function (event, validator) {
-            //display error alert on form submit    
+            //display error alert on form submit
          },
 
-         errorPlacement: function (label, element) { // render error placement for each input type   
+         errorPlacement: function (label, element) { // render error placement for each input type
             $('<span class="error"></span>').insertAfter(element).append(label)
             var parent = $(element).parent('.input-with-icon');
-            parent.removeClass('success-control').addClass('error-control');  
+            parent.removeClass('success-control').addClass('error-control');
          },
 
          highlight: function (element) { // hightlight error inputs
             var parent = $(element).parent();
-            parent.removeClass('success-control').addClass('error-control'); 
+            parent.removeClass('success-control').addClass('error-control');
          },
 
          unhighlight: function (element) { // revert the change done by hightlight
@@ -202,14 +211,14 @@ foreach ($categories as $key => $value) {
 
          success: function (label, element) {
             var parent = $(element).parent('.input-with-icon');
-            parent.removeClass('error-control').addClass('success-control'); 
+            parent.removeClass('error-control').addClass('success-control');
          },
 
          submitHandler: function (form) {
             form.submit();
          }
       });
-   });   
+   });
 
 
    // 'name[]': { required: true },
@@ -236,9 +245,9 @@ foreach ($categories as $key => $value) {
    // Add multiple person
    $("#addRow").click(function(e) {
       addNewRow();
-   }); 
+   });
    //remove row
-   function removeRow(id){ 
+   function removeRow(id){
       $(id).closest("tr").remove();
    }
    //add row function
@@ -249,7 +258,7 @@ foreach ($categories as $key => $value) {
       items+= '<tr>';
       // items+= '<td><input type="hidden" name="sl[]" value="1" ></td>';
       items+= '<td><select name="item_cate_id[]" class="form-control input-sm" id="category_'+sl+'" ><?php echo $category_data;?></select></td>';
-      items+= '<td><select name="item_sub_cate_id[]"  id="subcategory_'+sl+'" class="sub_category_val_'+sl+' form-control input-sm"><option value="">-- Select One --</option></select></td>';
+      items+= '<td><select name="item_sub_cat_id[]"  id="subcategory_'+sl+'" class="sub_category_val_'+sl+' form-control input-sm"><option value="">-- Select One --</option></select></td>';
       items+= '<td><select name="pur_item_id[]" class="item_val_'+sl+' form-control input-sm"><option value="">-- Select One --</option></select></td>';
       items+= '<td><input name="pur_quantity[]" value="" type="text" class="form-control input-sm"></td>';
       items+= '<td> <textarea name="pur_remark[]" value=""  type="text" class="form-control input-sm"></textarea></td>';
@@ -259,7 +268,7 @@ foreach ($categories as $key => $value) {
       $('#appRowDiv tr:last').after(items);
       category_dd(sl);
       subcategory_dd(sl);
-   } 
+   }
 
    function category_dd(sl){
       //Category Dropdown
@@ -310,4 +319,4 @@ foreach ($categories as $key => $value) {
       });
    }
 
-</script>  
+</script>

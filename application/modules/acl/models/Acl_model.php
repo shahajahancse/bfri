@@ -17,38 +17,40 @@ class Acl_model extends CI_Model {
         return $query->row();
     }
 
-    public function get_users($limit = 1000, $offset = 0) {
+    public function get_users($limit = 1000, $offset = 0, $type = false) {
         // result query
-        $this->db->select('u.id, u.username, u.first_name, u.phone, u.email, u.created_on, u.last_login, u.active, dp.dept_name, dg.desig_name');
+        $this->db->select('u.id, u.username, u.first_name, u.phone, u.email, u.created_on, u.last_login, u.active, dp.dept_name, dg.desig_name, un.name_en');
         $this->db->from('users u');
+        $this->db->join('units un', 'un.id = u.unit_id', 'LEFT');
         $this->db->join('department dp', 'dp.id = u.dept_id', 'LEFT');
         $this->db->join('designation dg', 'dg.id = u.desig_id', 'LEFT');
         $this->db->limit($limit);
-        $this->db->offset($offset);        
-        $this->db->order_by('u.id', 'DESC');
-        if($this->input->get('name') != NULL){
-            $this->db->like('u.first_name', $this->input->get('name'));
+        $this->db->offset($offset);
+        $this->db->order_by('u.id', 'ASC');
+        if($type){
+            $this->db->where('u.unit_id', $this->session->userdata('unit_id'));
         }
         if($this->input->get('username') != NULL){
-            $this->db->where('u.email', $this->input->get('username')); 
+            $this->db->where('u.email', $this->input->get('username'));
         }
-        // $this->db->where('id !=', 3); 
-        // echo $this->db->last_query(); exit;
+        $this->db->where_not_in('u.id', array(1,2));
         $result['rows'] = $this->db->get()->result();
 
         // count query
         $q = $this->db->select('COUNT(*) as count');
         $this->db->from('users');
+        if($type){
+            $this->db->where('unit_id', $this->session->userdata('unit_id'));
+        }
         if($this->input->get('name') != NULL){
             $this->db->like('first_name', $this->input->get('name'));
         }
         if($this->input->get('username') != NULL){
-            $this->db->where('email', $this->input->get('username')); 
+            $this->db->where('email', $this->input->get('username'));
         }
-        // $this->db->where('id !=', 3); 
+        $this->db->where_not_in('id', array(1,2));
         $tmp = $this->db->get()->result();
         $result['num_rows'] = $tmp[0]->count;
-
         return $result;
     }
 
@@ -205,11 +207,11 @@ class Acl_model extends CI_Model {
 
         return $data;
     }
-    
-    public function user_destroy($id) {        
+
+    public function user_destroy($id) {
         $query = $this->db->delete('users', array('id' => $id));
         return $query;
-    } 
+    }
 
     // public function get_members_count() {
     //     // count query

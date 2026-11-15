@@ -309,7 +309,7 @@ class Ion_auth
 	 * @author Mathew
 	 **/
 	public function logout()
-	{		
+	{
 		$this->ion_auth_model->trigger_events('logout');
 
 		$identity = $this->config->item('identity', 'ion_auth');
@@ -383,7 +383,7 @@ class Ion_auth
 	}
 
 
-	/** 
+	/**
 	 * is_admin
 	 * Access Control (ACL)
 	 * @return bool
@@ -425,9 +425,7 @@ class Ion_auth
 	public function in_group($check_group, $id=false, $check_all = false)
 	{
 		$this->ion_auth_model->trigger_events('in_group');
-
 		$id || $id = $this->session->userdata('user_id');
-
 		if (!is_array($check_group))
 		{
 			$check_group = array($check_group);
@@ -443,32 +441,18 @@ class Ion_auth
 			$groups_array = array();
 			foreach ($users_groups as $group)
 			{
-				$groups_array[$group->id] = $group->name;
+				$groups_array[$group->id] = $group->role;
 			}
 			$this->_cache_user_in_group[$id] = $groups_array;
 		}
 		foreach ($check_group as $key => $value)
 		{
 			$groups = (is_string($value)) ? $groups_array : array_keys($groups_array);
-
-			/**
-			 * if !all (default), in_array
-			 * if all, !in_array
-			 */
 			if (in_array($value, $groups) xor $check_all)
 			{
-				/**
-				 * if !all (default), true
-				 * if all, false
-				 */
 				return !$check_all;
 			}
 		}
-
-		/**
-		 * if !all (default), false
-		 * if all, true
-		 */
 		return $check_all;
 	}
 

@@ -1,1 +1,1 @@
-# BCCT_inventory# bcct
+# BFRI Inventory Management System # BFRI

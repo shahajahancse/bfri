@@ -1,7 +1,7 @@
 <?php
 include 'classes/BanglaConverter.php';
 
-class Backend_Controller extends MY_Controller{	
+class Backend_Controller extends MY_Controller{
 	var $userSessID;
 	// var $officeSess;
 
@@ -11,32 +11,24 @@ class Backend_Controller extends MY_Controller{
 
 		$this->session->set_userdata('site_lang', 'english');
 		$this->lang->load('scouts', 'english');
-		
-		
-		// $this->ci_minifier->init('html');
-		
-		// $this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
-		$this->form_validation->set_error_delimiters('<div class="alert alert-warning"> <i class="fa fa-warning"></i> ', '</div>');		
+		$this->form_validation->set_error_delimiters('<div class="alert alert-warning"> <i class="fa fa-warning"></i> ', '</div>');
 		$this->lang->load('auth');
-		$this->data['meta_title'] = 'Page Title';			
-		$this->data['domain_title'] = 'BCCT';		
-		$this->load->model('Common_model');	
-		// $this->load->model('scouts_member/Scouts_member_model');
-		// $this->load->model('offices/Offices_model');
-		// $this->load->model('committee/Committee_model');
+		$this->data['meta_title'] = 'Page Title';
+		$this->data['domain_title'] = 'BCCT';
+		$this->load->model('Common_model');
 		$this->userSessID = $this->session->userdata('user_id');
-		// $this->officeSess = $this->session->userdata('is_office');
+		$this->unit_id = $this->session->userdata('unit_id');
+      	$this->data['userDetails'] = $this->Common_model->get_user_details();
 
-		// if($this->ion_auth->logged_in()){
-		// 	// echo '<pre>';
-			// print_r($this->session->all_userdata()); exit;
-		// 	if($this->session->userdata('current_group') == 5){
-		// 		redirect('/');
-		// 	}
-      $this->data['userDetails'] = $this->Common_model->get_user_details();	
-		// }
-
-      $this->data['count_pass_req'] = $this->Common_model->get_count_pass_request();
-   }
-
+		$this->data['user_ntfy'] = 0;
+		$this->data['req_ntfy'] = 0;
+		$this->data['per_ntfy'] = 0;
+		$this->data['stk_ntfy'] = 0;
+		if ($this->ion_auth->logged_in()) {
+			$this->data['user_ntfy'] = $this->Common_model->user_ntfy($this->userSessID);
+			$this->data['req_ntfy'] = $this->Common_model->req_ntfy();
+			$this->data['per_ntfy'] = $this->Common_model->per_ntfy();
+			$this->data['stk_ntfy'] = $this->Common_model->stk_ntfy();
+		}
+    }
 }

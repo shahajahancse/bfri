@@ -2,8 +2,8 @@
   label.head{ color: #0aa699; font-size: 14px; margin-bottom: -25px; font-weight: bold; background: #fff;padding: 5px 10px; display: inline-block; position: absolute; top:-18px; left: 15px; border:1px solid #0aa699; }
   .margin-top{margin-top:20px;}
 </style>
-<div class="page-content">     
-  <div class="content">  
+<div class="page-content">
+  <div class="content">
     <ul class="breadcrumb" style="margin-bottom: 20px;">
       <li> <a href="<?=base_url('dashboard')?>" class="active"> রিপোর্ট </a> </li>
       <li><?=$meta_title?></li>
@@ -16,12 +16,13 @@
             <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
           </div>
           <div class="grid-body">
-            <?php if($this->session->flashdata('success')):?>
-              <div class="alert alert-success">
-                <?php echo $this->session->flashdata('success');?>
-              </div>
-            <?php endif; ?>
-            <?php 
+                  <?php if($this->session->has_userdata('success')):?>
+                     <div class="alert alert-success">
+                        <?php echo $this->session->userdata('success');?>
+                        <?php $this->session->unset_userdata('success');?>
+                     </div>
+                  <?php endif; ?>
+            <?php
             $attributes = array('id' => 'validate', 'target'=>'_blank');
             echo form_open_multipart("reports/nilg_employee_result", $attributes);?>
 
@@ -65,7 +66,7 @@
 
                 <div class="row form-row">
                   <div class="col-md-12" style="text-align: center; border:1px solid #0aa699; padding:10px 5px 20px 5px; position: relative; margin-top: 40px">
-                    <label class="head">ফলাফল প্রদর্শনের বাটন সমূহ</label> 
+                    <label class="head">ফলাফল প্রদর্শনের বাটন সমূহ</label>
 
                     <button type="submit" name="btnsubmit" value="pdf_nilg_employee" onclick="return validFunc1()" class="btn btn-info btn-cons margin-top"> এনআইএলজি কর্মকর্তা/কর্মচারী রিপোর্ট </button>
 
@@ -85,7 +86,7 @@
 
               <div class="col-md-4">
                 <div style="padding: 5px 15px 15px 15px; background:#eee; font-style: italic;">
-                  <label class="form-label">পদবি সমূহ</label> 
+                  <label class="form-label">পদবি সমূহ</label>
                   <div style="border:1px solid #0aa699; padding: 4px 0; background: #0aa699; color: #fff;">
                     <div class="row-fluid">
                       <div class="checkbox check-danger">
@@ -135,15 +136,15 @@
       // var upazila = document.getElementById("upazila").value;
       submitOK = "true";
 
-      if (datasheet == '') {        
+      if (datasheet == '') {
         $("#dataSheetType").css("border", "1px solid red");
         submitOK = "false";
       }
-      // if (district == '') {        
+      // if (district == '') {
       //   $("#district").css("border", "1px solid red");
       //   submitOK = "false";
       // }
-      // if (upazila == '') {        
+      // if (upazila == '') {
       //   $("#upazila").css("border", "1px solid red");
       //   submitOK = "false";
       // }
@@ -216,7 +217,7 @@
       var field = document.getElementById("courseid").value;
       submitOK = "true";
 
-      if (datasheet == '') {        
+      if (datasheet == '') {
         $("#dataSheetType").css("border", "1px solid red");
         submitOK = "false";
       }

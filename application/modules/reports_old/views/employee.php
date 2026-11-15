@@ -2,8 +2,8 @@
   label.head{ color: #0aa699; font-size: 14px; margin-bottom: -25px; font-weight: bold; background: #fff;padding: 5px 10px; display: inline-block; position: absolute; top:-18px; left: 15px; border:1px solid #0aa699; }
   .margin-top{margin-top:20px;}
 </style>
-<div class="page-content">     
-  <div class="content">  
+<div class="page-content">
+  <div class="content">
     <ul class="breadcrumb" style="margin-bottom: 20px;">
       <li> <a href="<?=base_url('dashboard')?>" class="active"> রিপোর্ট </a> </li>
       <li><?=$meta_title?></li>
@@ -16,12 +16,13 @@
             <h4><span class="semi-bold"><?=$meta_title; ?></span></h4>
           </div>
           <div class="grid-body">
-            <?php if($this->session->flashdata('success')):?>
-              <div class="alert alert-success">
-                <?php echo $this->session->flashdata('success');?>
-              </div>
-            <?php endif; ?>
-            <?php 
+                  <?php if($this->session->has_userdata('success')):?>
+                     <div class="alert alert-success">
+                        <?php echo $this->session->userdata('success');?>
+                        <?php $this->session->unset_userdata('success');?>
+                     </div>
+                  <?php endif; ?>
+            <?php
             $attributes = array('id' => 'validate', 'target'=>'_blank');
             echo form_open_multipart("reports/employee_result", $attributes);?>
 
@@ -32,7 +33,7 @@
                     <div class="alert alert-danger">এই রিপোর্ট দেখার জন্য লাল চিহ্নিত ফিল্ড গুলো পূরণ করুন।</div>
                   </div>
                   <?=validation_errors()?>
-                  <label class="head">ফলাফল প্রদর্শনের ফিল্টারিং ফিল্ড সমূহ</label>                  
+                  <label class="head">ফলাফল প্রদর্শনের ফিল্টারিং ফিল্ড সমূহ</label>
 
                   <div class="row form-row">
                     <div class="col-md-6">
@@ -105,7 +106,7 @@
 
                 <div class="row form-row">
                   <div class="col-md-12" style="text-align: center; border:1px solid #0aa699; padding:10px 5px 20px 5px; position: relative; margin-top: 40px">
-                    <label class="head">সংখ্যা ভিত্তিক রিপোর্ট</label> 
+                    <label class="head">সংখ্যা ভিত্তিক রিপোর্ট</label>
 
                     <button type="submit" name="btnsubmit" value="pdf_emp_number_divisional" onclick="return validFunc1()" class="btn btn-info btn-cons margin-top"> বিভাগ ভিত্তিক রিপোর্ট</button>
 
@@ -131,7 +132,7 @@
 
                 <div class="row form-row">
                   <div class="col-md-12" style="text-align: center; border:1px solid #0aa699; padding:10px 5px 20px 5px; position: relative; margin-top: 40px">
-                    <label class="head"> তালিকা ভিত্তিক রিপোর্ট</label> 
+                    <label class="head"> তালিকা ভিত্তিক রিপোর্ট</label>
 
                     <button type="submit" name="btnsubmit" value="pdf_emp_list_union" onclick="return validFunc10()" class="btn btn-info btn-cons margin-top"> ইউনিয়ন পরিষদের রিপোর্ট</button>
 
@@ -148,7 +149,7 @@
 
               <div class="col-md-4">
                 <div style="padding: 5px 15px 15px 15px; background:#eee; font-style: italic;">
-                  <label class="form-label">পদবি সমূহ</label> 
+                  <label class="form-label">পদবি সমূহ</label>
                   <div style="border:1px solid #0aa699; padding: 4px 0; background: #0aa699; color: #fff;">
                     <div class="row-fluid">
                       <div class="checkbox check-danger">
@@ -197,7 +198,7 @@
       var datasheet = document.getElementById("dataSheetType").value;
 
       //validation
-      if (datasheet == '') {        
+      if (datasheet == '') {
         $("#dataSheetType").css("border", "1px solid red");
         submitOK = "false";
       }
@@ -217,11 +218,11 @@
       var division = document.getElementById("division").value;
 
       //validation
-      if (datasheet == '') {        
+      if (datasheet == '') {
         $("#dataSheetType").css("border", "1px solid red");
         submitOK = "false";
       }
-      if (district == '') {        
+      if (district == '') {
         $("#division").css("border", "1px solid red");
         submitOK = "false";
       }
@@ -241,16 +242,16 @@
       var district = document.getElementById("district").value;
 
       //validation
-      if (datasheet == '') {        
+      if (datasheet == '') {
         $("#dataSheetType").css("border", "1px solid red");
         submitOK = "false";
       }
-      if (district <= 1) {        
+      if (district <= 1) {
         $("#district").css("border", "1px solid red");
         submitOK = "false";
       }
-      
-      //Success   
+
+      //Success
       if (submitOK == "false") {
         $("#error").show();
         return false;
@@ -265,11 +266,11 @@
       var upazila = document.getElementById("upazila").value;
 
       //validation
-      if (datasheet == '') {        
+      if (datasheet == '') {
         $("#dataSheetType").css("border", "1px solid red");
         submitOK = "false";
       }
-      if (upazila <= 1) {        
+      if (upazila <= 1) {
         $("#upazila").css("border", "1px solid red");
         submitOK = "false";
       }
@@ -290,15 +291,15 @@
       // var upazila = document.getElementById("upazila").value;
       submitOK = "true";
 
-      if (datasheet == '') {        
+      if (datasheet == '') {
         $("#dataSheetType").css("border", "1px solid red");
         submitOK = "false";
       }
-      // if (district == '') {        
+      // if (district == '') {
       //   $("#district").css("border", "1px solid red");
       //   submitOK = "false";
       // }
-      // if (upazila == '') {        
+      // if (upazila == '') {
       //   $("#upazila").css("border", "1px solid red");
       //   submitOK = "false";
       // }
@@ -311,7 +312,7 @@
       }
     }
 
-    
+
 
     function validFunc2() {
       var division = document.getElementById("division").value;
@@ -373,7 +374,7 @@
       var field = document.getElementById("courseid").value;
       submitOK = "true";
 
-      if (datasheet == '') {        
+      if (datasheet == '') {
         $("#dataSheetType").css("border", "1px solid red");
         submitOK = "false";
       }
@@ -397,11 +398,11 @@
       var union = document.getElementById("union").value;
 
       //validation
-      if (datasheet == '') {        
+      if (datasheet == '') {
         $("#dataSheetType").css("border", "1px solid red");
         submitOK = "false";
       }
-      if (union <= 1) {        
+      if (union <= 1) {
         $("#union").css("border", "1px solid red");
         submitOK = "false";
       }
@@ -423,11 +424,11 @@
       // var union = document.getElementById("union").value;
 
       //validation
-      if (datasheet == '') {        
+      if (datasheet == '') {
         $("#dataSheetType").css("border", "1px solid red");
         submitOK = "false";
       }
-      if (upazila <= 1) {        
+      if (upazila <= 1) {
         $("#upazila").css("border", "1px solid red");
         submitOK = "false";
       }
@@ -448,11 +449,11 @@
       // var union = document.getElementById("union").value;
 
       //validation
-      if (datasheet == '') {        
+      if (datasheet == '') {
         $("#dataSheetType").css("border", "1px solid red");
         submitOK = "false";
       }
-      if (district <= 1) {        
+      if (district <= 1) {
         $("#district").css("border", "1px solid red");
         submitOK = "false";
       }
@@ -466,7 +467,7 @@
       }
     }
 
-    
+
 
     // https://www.quora.com/How-can-I-check-if-an-input-field-has-a-certain-text-value-with-JavaScript
   </script>
